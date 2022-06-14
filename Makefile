@@ -2,7 +2,8 @@ INC_DIR		= .
 
 SRCS		=	./srcs/main.cpp \
 				./srcs/network/MasterServer.cpp \
-				./srcs/network/Client.cpp
+				./srcs/network/Client.cpp \
+				./srcs/IrcServer/IRCServer.cpp
 
 OBJS		= $(SRCS:.cpp=.o)
 

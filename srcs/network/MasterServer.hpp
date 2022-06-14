@@ -3,11 +3,12 @@
 
 #include "../../includes/ft_irc.hpp"
 #include "Client.hpp"
+#include "../IrcServer/IRCServer.hpp"
 
 class MasterServer
 {
 	public:
-		MasterServer();
+		MasterServer(int port, std::string const &password);
 		MasterServer(const MasterServer &src);
 		MasterServer &operator=(const MasterServer &rhs);
 		~MasterServer();
@@ -33,6 +34,7 @@ class MasterServer
 		std::map<int, Client*>				_clients;
         int									_maxFD;		// Current highest client FD
         fd_set								_fdReader;	// Structure to select client FD for reading
+		IRCServer							&_ircServer;
 
         void		acceptClient(int fdServer);
         void		setFDForReading();

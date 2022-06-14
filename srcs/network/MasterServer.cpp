@@ -9,8 +9,10 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-MasterServer::MasterServer()
-: _maxFD(-1)
+MasterServer::MasterServer(int port, std::string const & password, IRCServer &irc) :
+	_fdServer(-1),
+	_maxFD(-1),
+	_ircServer(irc)
 {
 
 }
