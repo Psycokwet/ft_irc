@@ -12,4 +12,7 @@
 
 #define MAX_TCP_PORT 65535
 
+#define DEFAULT_NAME	"*"
+#define VALID_CHARS		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
+
 #endif
