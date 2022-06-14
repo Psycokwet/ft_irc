@@ -8,8 +8,7 @@
 class MasterServer
 {
 	public:
-		MasterServer(int port, std::string const &password);
-		MasterServer(const MasterServer &src);
+		MasterServer(int port, std::string const &password, IRCServer &irc);
 		MasterServer &operator=(const MasterServer &rhs);
 		~MasterServer();
 
@@ -17,17 +16,17 @@ class MasterServer
 		
 		int build();
 		void run();
-
-		class AnError : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{
-					return "ERROR: ";
-				}
-		};
-
 		void print_network_map() const;
+
+		// class AnError : public std::exception
+		// {
+		// 	public:
+		// 		virtual const char *what() const throw()
+		// 		{
+		// 			return "ERROR: ";
+		// 		}
+		// };
+
 
     private:
         int				 					_fdServer;	// Server's socket
@@ -35,6 +34,8 @@ class MasterServer
         int									_maxFD;		// Current highest client FD
         fd_set								_fdReader;	// Structure to select client FD for reading
 		IRCServer							&_ircServer;
+		int									_port;
+		std::string const					_password;
 
         void		acceptClient(int fdServer);
         void		setFDForReading();

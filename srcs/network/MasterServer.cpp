@@ -12,16 +12,10 @@
 MasterServer::MasterServer(int port, std::string const & password, IRCServer &irc) :
 	_fdServer(-1),
 	_maxFD(-1),
-	_ircServer(irc)
-{
-
-}
-	
-MasterServer::MasterServer(const MasterServer &src)
-{
-	if (this != &src)
-		*this = src;
-}
+	_ircServer(irc),
+	_port(port),
+	_password(password)
+{}
 
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
@@ -32,17 +26,12 @@ MasterServer::~MasterServer()
 	std::map<int, Client *>::iterator it;
 	for (it = _clients.begin(); it != _clients.end(); ++it)
 		delete it->second;
+	close (_fdServer);
 }
 
 /*
 ** --------------------------------- OVERLOAD ---------------------------------
 */
-
-MasterServer &MasterServer::operator=(const MasterServer &rhs)
-{
-	this->_clients = rhs._clients;
-	return (*this);
-}
 
 /*
 ** --------------------------------- PUBLIC METHODS ----------------------------------
@@ -63,8 +52,6 @@ std::ostream &MasterServer::print_client_map(std::ostream &o) const
 int MasterServer::build()
 {
     int opt = TRUE;
-
-	int fdServ;
 	struct sockaddr_in address;
 
 	/************************************************************
@@ -73,8 +60,8 @@ int MasterServer::build()
 	* If PROTOCOL is zero, one is chosen automatically.
 	* Returns a file descriptor for the new socket, or -1 for errors.                                            
 	*************************************************************/
-	fdServ = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
-	if (fdServ == -1)
+	_fdServer = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	if (_fdServer == -1)
 	{
 		std::cerr << "Fail to set socket" << std::endl;
 		return EXIT_FAILURE;
@@ -83,7 +70,7 @@ int MasterServer::build()
 	/*************************************************************/
 	/* Allow socket descriptor to be reuseable                   */
 	/*************************************************************/
-	if (setsockopt(fdServ, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *)&opt, sizeof(opt)) == -1)
+	if (setsockopt(_fdServer, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *)&opt, sizeof(opt)) == -1)
 	{
 		std::cerr << "setsockopt() failed" << std::endl;
 		return EXIT_FAILURE ;
@@ -94,15 +81,15 @@ int MasterServer::build()
 	/* Set address (host) and port                               */
 	/*************************************************************/
 	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = htonl(config_listen._address);
-	address.sin_port = htons(config_listen._port);
+	address.sin_addr.s_addr = htonl(INADDR_ANY);
+	address.sin_port = htons(_port);
 
 	/*************************************************************/
 	/* Bind the socket                                           */
 	/*************************************************************/
-	if (bind(fdServ, (sockaddr *)&address, sizeof(address)) == -1)
+	if (bind(_fdServer, (sockaddr *)&address, sizeof(address)) == -1)
 	{
-		std::cerr << "Fail to bind to port " << config_listen._port << std::endl;
+		std::cerr << "Fail to bind to port " << _port << std::endl;
 		return EXIT_FAILURE ;
 	}
 
@@ -110,29 +97,20 @@ int MasterServer::build()
 	/* Try to specify maximun of client pending connection for   */
 	/*   the master socket (server_fd)                           */
 	/*************************************************************/
-	if (listen(fdServ, MAX_CLIENT_QUEUE) == -1)
+	if (listen(_fdServer, MAX_CLIENT_QUEUE) == -1)
 	{
 		std::cerr << "Fail to listen" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	std::cout	<< "Listening on port "
-				<< config_listen._port
+				<< _port
 				<< std::endl;
 
-	_fdServer.insert(fdServ);               
-
-	// std::pair< OneServer*, std::map <int, GrammarParser> > fd_map_value;
-	std::pair< OneServer*, std::map <int, std::string> > fd_map_value;
-	fd_map_value.first = _configAllServer[i];
-	_fdMap[fdServ] = fd_map_value; 
-
-	_maxFD = MAX(_maxFD, fdServ);
+	_maxFD = MAX(_maxFD, _fdServer);
 
     return EXIT_SUCCESS;
 }
-
-
 
 void MasterServer::run() // ! do like main_loops
 {

@@ -4,12 +4,13 @@
 #include <string>
 #include <iostream>
 #include <cstdlib> // atoi
-#include <sys/select.h> // FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
+#include <sys/select.h> // select FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
 #include <map>
 
+#include <unistd.h> // close
 #include <sys/types.h>         
 #include <sys/socket.h> //socket accept listen send recv bind connect setsockopt getsockname
-# include <sys/select.h> //select
+#include <netinet/in.h> // sockaddr_in
 
 #define MAX_TCP_PORT 65535
 #define TRUE 1
