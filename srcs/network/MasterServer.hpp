@@ -5,6 +5,8 @@
 #include "Client.hpp"
 #include "../IrcServer/IRCServer.hpp"
 
+class Client;
+
 class MasterServer
 {
 	public:
@@ -16,7 +18,6 @@ class MasterServer
 		
 		int build();
 		void run();
-		void print_network_map() const;
 
 		// class AnError : public std::exception
 		// {
@@ -37,9 +38,10 @@ class MasterServer
 		int									_port;
 		std::string const					_password;
 
+        int			setFDForReading();
+        void		recvProcess(int totalFf, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList);
         void		acceptClient(int fdServer);
-        void		setFDForReading();
-        void		recvProcess(void);
+		void		removeClient(int fdClient);
 };
 
 #endif /*...................MasterServer...............*/
