@@ -9,19 +9,13 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-MasterServer::MasterServer()
-: _maxFD(-1), _numberOfReadyFd(0)
-{
-	_base_request_parser = GrammarParser::build(GRAMMAR_FILE);
-	if (!_base_request_parser)
-		throw BuildError();
-}
-	
-MasterServer::MasterServer(const MasterServer &src) : AServerItem()
-{
-	if (this != &src)
-		*this = src;
-}
+MasterServer::MasterServer(int port, std::string const & password, IRCServer &irc) :
+	_fdServer(-1),
+	_maxFD(-1),
+	_ircServer(irc),
+	_port(port),
+	_password(password)
+{}
 
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
@@ -29,153 +23,94 @@ MasterServer::MasterServer(const MasterServer &src) : AServerItem()
 
 MasterServer::~MasterServer()
 {
-	for (unsigned int index = 0; index < this->_configAllServer.size(); index++)
-		delete this->_configAllServer[index];
-	if (_base_request_parser)
-		delete _base_request_parser;
+	std::map<int, Client *>::iterator it;
+	for (it = _clients.begin(); it != _clients.end(); ++it)
+		delete it->second;
+	close (_fdServer);
 }
 
 /*
 ** --------------------------------- OVERLOAD ---------------------------------
 */
 
-MasterServer &MasterServer::operator=(const MasterServer &rhs)
-{
-	this->_configAllServer = rhs._configAllServer;
-	return (*this);
-}
-
-AServerItem *MasterServer::consume(Node *node)
-{
-	(void)node;
-	
-	return this->createServer();
-}
-
 /*
 ** --------------------------------- PUBLIC METHODS ----------------------------------
 */
 
-OneServer *MasterServer::createServer()
+std::ostream &MasterServer::print_client_map(std::ostream &o) const
 {
-	this->_configAllServer.push_back(new OneServer());
-	return this->_configAllServer[this->_configAllServer.size() - 1];
-}
-
-std::ostream &MasterServer::print(std::ostream &o) const
-{
-	o << "I'm Master Server !" << std::endl;
-	for (size_t i = 0; i < this->_configAllServer.size(); i++)
-		(this->_configAllServer[i])->print(o) << std::endl;
-
-	return o;
-}
-
-void MasterServer::print_network_map() const
-{
-	std::cout << "My MasterServer now contains " << _fdMap.size() << " server(s).\n";
-	std::map<int, std::pair<OneServer*, std::map <int, std::string> > >::const_iterator it;
-	for (it = _fdMap.begin(); it != _fdMap.end(); ++it)
+	o << "I'm Client Map !" << std::endl;
+	std::map<int, Client *>::iterator it;
+	for (it = _clients.begin(); it != _clients.end(); ++it)
 	{
-		std::cout << "\nFd Server is: " << it->first << "\n";
-		std::cout << "One piece of Server's config (listen/default_server) is:\n" << it->second.first->getListen()._default_server << std::endl;
-		std::cout << "Fd Client has: " << it->second.second.size() << " elements.\n";
+		o << "Client fd: " << it->first;
+		
 	}
+	return o;
 }
 
 int MasterServer::build()
 {
     int opt = TRUE;
-    int server_size = _configAllServer.size();
+	struct sockaddr_in address;
 
-	std::set<int> port_set;
-	std::pair<std::set<int>::iterator,bool> ret;
-	for (int i = 0; i < server_size; i++)
+	/************************************************************
+	* Create an AF_INET stream socket to receive incoming       
+	* connections on
+	* If PROTOCOL is zero, one is chosen automatically.
+	* Returns a file descriptor for the new socket, or -1 for errors.                                            
+	*************************************************************/
+	_fdServer = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	if (_fdServer == -1)
 	{
-		t_listen config_listen = _configAllServer[i]->getListen();
-		ret = port_set.insert(config_listen._port);
-		if (ret.second == false)
-		{
-			std::cout << "Duplicate Ports" << std::endl;
-			return EXIT_FAILURE;
-		}
-    }
-
-    for (int i = 0; i < server_size; i++)
-    {
-		int fdServ;
-		struct sockaddr_in address;
-        t_listen config_listen = _configAllServer[i]->getListen();
-
-        /************************************************************
-        * Create an AF_INET stream socket to receive incoming       
-        * connections on
-        * If PROTOCOL is zero, one is chosen automatically.
-        * Returns a file descriptor for the new socket, or -1 for errors.                                            
-        *************************************************************/
-		fdServ = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
-		if (fdServ == -1)
-        {
-            std::cerr << "Fail to set socket" << std::endl;
-            return EXIT_FAILURE;
-        }
-
-        /*************************************************************/
-        /* Allow socket descriptor to be reuseable                   */
-        /*************************************************************/
-		if (setsockopt(fdServ, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *)&opt, sizeof(opt)) == -1)
-		{
-            std::cerr << "setsockopt() failed" << std::endl;
-            return EXIT_FAILURE ;
-        }
-
-        
-        /*************************************************************/
-        /* Set address (host) and port                               */
-        /*************************************************************/
-		address.sin_family = AF_INET;
-		address.sin_addr.s_addr = htonl(config_listen._address);
-		address.sin_port = htons(config_listen._port);
-
-		/*************************************************************/
-        /* Bind the socket                                           */
-        /*************************************************************/
-		if (bind(fdServ, (sockaddr *)&address, sizeof(address)) == -1)
-        {
-            std::cerr << "Fail to bind to port " << config_listen._port << std::endl;
-            return EXIT_FAILURE ;
-        }
-
-        /*************************************************************/
-        /* Try to specify maximun of client pending connection for   */
-        /*   the master socket (server_fd)                           */
-        /*************************************************************/
-		if (listen(fdServ, MAX_CLIENT_QUEUE) == -1)
-        {
-            std::cerr << "Fail to listen" << std::endl;
-            return EXIT_FAILURE;
-        }
-
-		std::cout	<< "Listening on port "
-					<< config_listen._port
-					<< std::endl;
-
-		_fdServer.insert(fdServ);               
-
-		// std::pair< OneServer*, std::map <int, GrammarParser> > fd_map_value;
-		std::pair< OneServer*, std::map <int, std::string> > fd_map_value;
-		fd_map_value.first = _configAllServer[i];
-		_fdMap[fdServ] = fd_map_value; 
-
-		_maxFD = MAX(_maxFD, fdServ);
+		std::cerr << "Fail to set socket" << std::endl;
+		return EXIT_FAILURE;
 	}
+
+	/*************************************************************/
+	/* Allow socket descriptor to be reuseable                   */
+	/*************************************************************/
+	if (setsockopt(_fdServer, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *)&opt, sizeof(opt)) == -1)
+	{
+		std::cerr << "setsockopt() failed" << std::endl;
+		return EXIT_FAILURE ;
+	}
+
 	
-	// print_network_map();
+	/*************************************************************/
+	/* Set address (host) and port                               */
+	/*************************************************************/
+	address.sin_family = AF_INET;
+	address.sin_addr.s_addr = htonl(INADDR_ANY);
+	address.sin_port = htons(_port);
+
+	/*************************************************************/
+	/* Bind the socket                                           */
+	/*************************************************************/
+	if (bind(_fdServer, (sockaddr *)&address, sizeof(address)) == -1)
+	{
+		std::cerr << "Fail to bind to port " << _port << std::endl;
+		return EXIT_FAILURE ;
+	}
+
+	/*************************************************************/
+	/* Try to specify maximun of client pending connection for   */
+	/*   the master socket (server_fd)                           */
+	/*************************************************************/
+	if (listen(_fdServer, MAX_CLIENT_QUEUE) == -1)
+	{
+		std::cerr << "Fail to listen" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	std::cout	<< "Listening on port "
+				<< _port
+				<< std::endl;
+
+	_maxFD = MAX(_maxFD, _fdServer);
 
     return EXIT_SUCCESS;
 }
-
-
 
 void MasterServer::run() // ! do like main_loops
 {
