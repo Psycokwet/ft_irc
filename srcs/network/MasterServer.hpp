@@ -1,59 +1,47 @@
 #ifndef MASTERSERVER_HPP
 #define MASTERSERVER_HPP
 
-#include "../config/Node.hpp"
-#include "../requests/GrammarParser.hpp"
-#include "../../includes/webserv.h"
-#include "OneServer.hpp"
-#include "AServerItem.hpp"
-#include "../util/containerTo.hpp"
-#include <sys/select.h> // FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
+#include "../../includes/ft_irc.hpp"
+#include "Client.hpp"
+#include "../IrcServer/IRCServer.hpp"
 
-class GrammarParser;
+class Client;
 
-class MasterServer : public AServerItem
+class MasterServer
 {
 	public:
-		MasterServer();
-		MasterServer(const MasterServer &src);
+		MasterServer(int port, std::string const &password, IRCServer &irc);
 		MasterServer &operator=(const MasterServer &rhs);
-		virtual ~MasterServer();
-		virtual AServerItem *consume(Node *node);
-		std::ostream &print(std::ostream &o) const;
+		~MasterServer();
+
+		std::ostream &print_client_map(std::ostream &o) const;
+		
 		int build();
 		void run();
 
-		class BuildError : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{
-					return "ERROR: Couldn't finish the build";
-				}
-		};
+		// class AnError : public std::exception
+		// {
+		// 	public:
+		// 		virtual const char *what() const throw()
+		// 		{
+		// 			return "ERROR: ";
+		// 		}
+		// };
 
-		void print_network_map() const;
 
     private:
-        std::vector< OneServer* >           _configAllServer;
-        std::map<int, std::pair<OneServer*, std::map <int, GrammarParser> > > 	_fdMap;		// map<int (fd server), pair<configserver, map <int (fd client), parser>>>
-        std::map<int, std::pair<OneServer*, std::map <int, std::string> > > 	_fdMap;		// map<int (fd server), pair<configserver, map <int (fd client), parser>>>
+        int				 					_fdServer;	// Server's socket
+		std::map<int, Client*>				_clients;
         int									_maxFD;		// Current highest client FD
-        std::set< int > 					_fdServer;	// _fdServer set
         fd_set								_fdReader;	// Structure to select client FD for reading
-        int									_numberOfReadyFd;
+		IRCServer							&_ircServer;
+		int									_port;
+		std::string const					_password;
 
-       
-    	GrammarParser*				   		_base_request_parser;
-         
-		OneServer   *createServer();
-
-        void	acceptClient(int fdServer);
-        int 	findFdServer(int value);
-        // Make all open socket ready to be read then select them. Return the number of FDs ready to be read
-        void		setFDForReading();
-
-        void	recvProcess(void);
+        int			setFDForReading();
+        void		recvProcess(int totalFf, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList);
+        void		acceptClient(int fdServer);
+		void		removeClient(int fdClient);
 };
 
 #endif /*...................MasterServer...............*/

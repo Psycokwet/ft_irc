@@ -1,4 +1,5 @@
 #include "../includes/ft_irc.hpp"
+#include "network/MasterServer.hpp"
 
 static bool checkArguments(int ac, char **av, int &port, std::string &password)
 {
@@ -26,5 +27,15 @@ int main (int ac, char **av)
     if (!checkArguments(ac, av, port, password))
         exit(1);
     
-    
+    IRCServer *myIrc = new IRCServer();
+    MasterServer *myServer = new MasterServer(port, password, *myIrc);
+
+    if (myServer->build() == EXIT_FAILURE)
+    {
+        delete myIrc;
+        delete myServer;
+        return (1);
+    }
+    myServer->run();
+    return (0);
 }
