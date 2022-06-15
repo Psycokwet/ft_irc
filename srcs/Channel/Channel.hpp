@@ -11,21 +11,21 @@ class Channel
 
     std::string const _name; //nom du channell
 
-    std::set<Users *> _users; //liste des users inscrit
+    std::set<User *> _user; //liste des users inscrit
 
     std::string     _topic; //sujet de la channel
 
     bool _userInvit;//seulement les joueur inscrit
     bool _nottopic;//no subjet
-    std::set<Users *> _op; //liste operateur
+    std::set<User *> _op; //liste operateur
     std::string _key; //clee channel
 
-    std::set<Users *> _inv; //liste des user invitee
+    std::set<User *> _inv; //liste des user invitee
 
 
     public:
 
-    Channel(const std::string &name, Users *create);
+    Channel(const std::string &name, User *create);
     virtual ~Channel();
 
     //int checkAddUsers(Users *users, std::string const &key);
