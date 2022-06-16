@@ -4,7 +4,7 @@ SRCS		=	./srcs/main.cpp \
 				./srcs/network/MasterServer.cpp \
 				./srcs/network/Client.cpp \
 				./srcs/Channel/Channel.cpp \
-				./srcs/Users/Users.cpp \
+				./srcs/User/User.cpp \
 				./srcs/IrcServer/IRCServer.cpp
 
 OBJS		= $(SRCS:.cpp=.o)

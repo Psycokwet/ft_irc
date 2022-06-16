@@ -1,5 +1,6 @@
 #include "../includes/ft_irc.hpp"
 #include "network/MasterServer.hpp"
+#include "IRCServer/IRCServer.hpp"
 
 static bool checkArguments(int ac, char **av, int &port, std::string &password)
 {

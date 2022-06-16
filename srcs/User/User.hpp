@@ -2,8 +2,8 @@
 #define USER_HPP
 
 
-#include "../Channel/Channel.hpp"
 #include "../../includes/ft_irc.hpp"
+#include "../Channel/Channel.hpp"
 
 class User
 {

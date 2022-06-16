@@ -2,8 +2,8 @@
 #define CHANNEL_HPP
 
 
-#include "../Users/Users.hpp"
-#include "../../../includes/ft_irc.hpp"
+#include "../User/User.hpp"
+#include "../../includes/ft_irc.hpp"
 
 class Channel
 {
