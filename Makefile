@@ -6,10 +6,86 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 18:19:07 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 19:02:36 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+#
+# -------------------------------- Paths --------------------------------
+#
+
+RESET			= "\033[0m"
+BLACK			= "\033[30m"
+RED				= "\033[31m"
+GREEN			= "\033[32m"
+YELLOW			=  "\033[33m"
+BLUE			= "\033[34m"
+MAGENTA			= "\033[35m"
+CYAN			= "\033[36m"
+WHITE			= "\033[37m"
+BOLDBLACK		= "\033[1m\033[30m"
+BOLDRED			= "\033[1m\033[31m"
+BOLDGREEN		= "\033[1m\033[32m"
+BOLDYELLOW		= "\033[1m\033[33m"
+BOLDBLUE		= "\033[1m\033[34m"
+BOLDMAGENTA		= "\033[1m\033[35m"
+BOLDCYAN		= "\033[1m\033[36m"
+BOLDWHITE		= "\033[1m\033[37m"
+
+$(RESET)		= RESET
+$(BLACK)		= BLACK
+$(RED)			= RED
+$(GREEN)		= GREEN
+$(YELLOW)		= YELLOW
+$(BLUE)			= BLUE
+$(MAGENTA)		= MAGENTA
+$(CYAN)			= CYAN
+$(WHITE)		= WHITE
+$(BOLDBLACK)	= BOLDBLACK
+$(BOLDRED)		= BOLDRED
+$(BOLDGREEN)	= BOLDGREEN
+$(BOLDYELLOW)	= BOLDYELLOW
+$(BOLDBLUE)		= BOLDBLUE
+$(BOLDMAGENTA)	= BOLDMAGENTA
+$(BOLDCYAN)		= BOLDCYAN
+$(BOLDWHITE)	= BOLDWHITE
+
+COLORS = 		$($(RESET))\
+				$($(BLACK))\
+				$($(RED))\
+				$($(GREEN))\
+				$($(YELLOW))\
+				$($(BLUE))\
+				$($(MAGENTA))\
+				$($(CYAN))\
+				$($(WHITE))\
+				$($(BOLDBLACK))\
+				$($(BOLDRED))\
+				$($(BOLDGREEN))\
+				$($(BOLDYELLOW))\
+				$($(BOLDBLUE))\
+				$($(BOLDMAGENTA))\
+				$($(BOLDCYAN))\
+				$($(BOLDWHITE))
+
+DCOLORS :=  	$($(RESET))=$(RESET)\
+				$($(BLACK))=$(BLACK)\
+				$($(RED))=$(RED)\
+				$($(GREEN))=$(GREEN)\
+				$($(YELLOW))=$(YELLOW)\
+				$($(BLUE))=$(BLUE)\
+				$($(MAGENTA))=$(MAGENTA)\
+				$($(CYAN))=$(CYAN)\
+				$($(WHITE))=$(WHITE)\
+				$($(BOLDBLACK))=$(BOLDBLACK)\
+				$($(BOLDRED))=$(BOLDRED)\
+				$($(BOLDGREEN))=$(BOLDGREEN)\
+				$($(BOLDYELLOW))=$(BOLDYELLOW)\
+				$($(BOLDBLUE))=$(BOLDBLUE)\
+				$($(BOLDMAGENTA))=$(BOLDMAGENTA)\
+				$($(BOLDCYAN))=$(BOLDCYAN)\
+				$($(BOLDWHITE))=$(BOLDWHITE)
+DCOLORS :=  	$(addprefix -D, $(DCOLORS))
 #
 # -------------------------------- Paths --------------------------------
 #
@@ -98,6 +174,7 @@ CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
+CPPFLAGS		+= $(DCOLORS)
 
 #
 # -------------------------------- automated tests treatments --------------------------------
@@ -116,10 +193,21 @@ else
 	CPPFLAGS += -DDEBUG=true
 endif
 
+
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
 OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
 # HEADERS_FILES 		= 	$(SRCS:cpp=hpp)
+
+#
+# -------------------------------- FUNCTIONS --------------------------------
+#
+
+define colorize # ! Focus on this
+	@echo $(1)
+	@$(2)
+	@echo $(RESET)
+endef
 #
 # -------------------------------- Rules implementations --------------------------------
 #
@@ -128,11 +216,12 @@ OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
 ## -------------------------------- COMPILE --------------------------------
 #
 
-all:		$(NAME)
-# all:		
-	@echo $(SRCS)
-	@echo
-	@echo $(OBJS)
+# all:		$(NAME)
+all:		
+	$(call colorize, $(RED), echo $(SRCS) ;\
+	echo ;\
+	echo $(OBJS))
+
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
 	echo $(<:.cpp=.o) $< -o $@
@@ -162,6 +251,11 @@ $(NAME): $(COMPILE)
 #
 ## -------------------------------- LOGS --------------------------------
 #
+
+# exemple_colorize:		
+# 	$(call colorize, $(RED), echo $(SRCS) ;\
+# 	echo ;\
+# 	echo $(OBJS))
 
 $(SAVE_LAST_LOGS)	:
 	@echo "Saving previous logs"
