@@ -1,38 +1,211 @@
-INC_DIR		= .
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
+#    Updated: 2022/06/17 18:19:07 by scarboni         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRCS		=	./srcs/main.cpp \
-				./srcs/network/MasterServer.cpp \
-				./srcs/network/Client.cpp \
-				./srcs/IrcServer/IRCServer.cpp
+#
+# -------------------------------- Paths --------------------------------
+#
 
-OBJS		= $(SRCS:.cpp=.o)
+INC_DIR					= .
 
-NAME		= ircserv
+LAST_RUN_LOGS_FOLDER	= logs
+SAVED_LOGS_FOLDER		= pastLogs
 
-CC			= c++
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+TEST_SRCS				= test_srcs/
+TEST_DATAS				= test_datas/
+TEST_DATAS_GENERATED	= $(TEST_DATAS)generated/
 
-RM			= rm -f
+OBJ_PATH				= bin/
 
-.cpp.o:
-			@$(CC) $(FLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
+SRC_PATH				= srcs/
 
-$(NAME):	$(OBJS)
-			@echo "Object files compiled"
-			@$(CC) $(FLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
-			@echo "Executable created"
-			@echo "Compilation finished"
+CPP_EXTENSION 			= .cpp
+
+UTIL_PATH				= util/
+NETWORK_PATH			= network/
+SERVER_PATH				= IrcServer/
+
+OBJ_PATHS				+= $(OBJ_PATH) $(addprefix $(OBJ_PATH), $(UTIL_PATH) $(NETWORK_PATH) $(SERVER_PATH) )
+
+ALL_PATHS_TO_INIT		= $(OBJ_PATHS) $(SAVED_LOGS_FOLDER) $(LAST_RUN_LOGS_FOLDER)
+
+#
+# -------------------------------- Rules names --------------------------------
+#
+
+CLEAN_UNWANTED_PATHS 	= CleanPreviousPaths
+SAVE_LAST_LOGS 			= SaveLastLogs
+NAME					= ircserv
+CLEAN_LOGS				= cleanLogs
+COMPILE 				= compile
+PATHS_INIT				= paths_init_rule
+
+
+ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
+						$(SAVE_LAST_LOGS) \
+						$(NAME) \
+						$(CLEAN_LOGS) \
+						$(COMPILE) \
+						$(PATHS_INIT)
+
+ALL_EXECS_NAMES =		$(NAME)
+
+#
+# -------------------------------- TEST SRCS definitions --------------------------------
+#
+
+GENERATE_EXAMPLES_REQUESTS_FILES = 	writeRequestsExamples
+
+GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(addprefix $(TEST_SRCS), $(GENERATE_EXAMPLES_REQUESTS_FILES))
+GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
+
+GENERATE_EXAMPLES_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_EXAMPLES_REQUESTS_SRCS_RAW))
+
+GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_REQUESTS_SRCS_EXT))
+#
+# -------------------------------- SRCS definitions --------------------------------
+#
+
+NETWORK_FILES = 	MasterServer \
+					Client
+SRCS_FILES += $(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
+					
+NETWORK_FILES = 	IRCServer
+SRCS_FILES += $(addprefix $(SERVER_PATH), $(NETWORK_FILES))
+
+UTIL_FILES =	parse \
+				numbers \
+				logger
+SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
+
+
+
+
+#
+# -------------------------------- Building configurations --------------------------------
+#
+
+CXX				= c++
+CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
+
+RM				= rm -f
+
+#
+# -------------------------------- automated tests treatments --------------------------------
+#
+
+ifndef LEAKS
+	LEAKS = 
+	# LEAKS = valgrind --leak-check=full #must not be use at the same time than fsanitize
+endif
+
+ifndef TESTS
+	TESTS=""
+	SRCS_FILES += 	main
+	CPPFLAGS += -DDEBUG=false
+else
+	CPPFLAGS += -DDEBUG=true
+endif
+
+SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
+SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
+OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
+# HEADERS_FILES 		= 	$(SRCS:cpp=hpp)
+#
+# -------------------------------- Rules implementations --------------------------------
+#
+
+#
+## -------------------------------- COMPILE --------------------------------
+#
 
 all:		$(NAME)
+# all:		
+	@echo $(SRCS)
+	@echo
+	@echo $(OBJS)
 
-clean:
-			@$(RM) $(OBJS)
-			@echo "Deleted all but executable"
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
+	echo $(<:.cpp=.o) $< -o $@
+	${CXX} ${CPPFLAGS}   -c $< -o $@
+# $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp $(HEADERS_FILES)
+# 	${CXX} ${CPPFLAGS}   -c $< -o $@
+# $(OBJ_PATH)%.o: $(SRCS)
+# 	${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
+
+# $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp $(HEADERS_FILES)
+# 	@echo ${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
+# 	${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
+# .cpp.o:
+# 			@$(CXX) $(CPPFLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
+
+$(COMPILE):  $(PATHS_INIT)  $(OBJS)
+	@echo $(OBJS)
+	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS) coucou
+	
+$(NAME): $(COMPILE)
+
+# $(NAME):	$(OBJS)
+# 			@echo "Object files compiled"
+# 			@$(CXX) $(CPPFLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
+# 			@echo "Executable created"
+# 			@echo "Compilation finished"
+#
+## -------------------------------- LOGS --------------------------------
+#
+
+$(SAVE_LAST_LOGS)	:
+	@echo "Saving previous logs"
+	@mv  $(LAST_RUN_LOGS_FOLDER)  $(SAVED_LOGS_FOLDER)/$(shell date "+%y_%m_%d_%H_%M_%S")
+
+$(CLEAN_UNWANTED_PATHS)	: 
+	@echo "deleting previous run special paths..." $(LAST_RUN_LOGS_FOLDER)
+	@rm -rf  $(LAST_RUN_LOGS_FOLDER) 
+
+#
+## -------------------------------- TESTS --------------------------------
+#
+
+generateParsingTestFiles :
+	@echo "Deleting previous generation..."
+	@rm -rf $(TEST_DATAS_GENERATED)
+	@mkdir -pv $(TEST_DATAS_GENERATED)
+	@echo "Attempting generation"
+	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS) 
+	@./a.out $(TEST_DATAS_GENERATED)
+	@echo "Cleaning intermediate tools..."
+	@$(RM) ./a.out
+
+#
+## -------------------------------- OTHERS --------------------------------
+#
+
+$(PATHS_INIT): $(CLEAN_UNWANTED_PATHS)
+	@echo "Generating bin folders" $(ALL_PATHS_TO_INIT)
+	@mkdir -p $(ALL_PATHS_TO_INIT)
+
+$(CLEAN_LOGS):
+	@echo "Deleting last logs..."
+	@rm -rf $(LAST_RUN_LOGS_FOLDER)
+	
+clean:  $(CLEAN_LOGS)
+	@echo "Deleting objects..."
+	@rm -rf $(OBJ_PATH)
+	@echo "Deleted all but executable"
 
 fclean:		clean
-			@$(RM) $(NAME)
-			@echo "Everything deleted"
+	@$(RM) $(ALL_EXECS_NAMES)
+	@echo "Everything deleted"
 
 re:			fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all clean fclean re $(ALL_RULES_NAMES)
