@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 19:04:04 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 19:56:52 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,7 +85,9 @@ DCOLORS :=  	$($(RESET))=$(RESET)\
 				$($(BOLDMAGENTA))=$(BOLDMAGENTA)\
 				$($(BOLDCYAN))=$(BOLDCYAN)\
 				$($(BOLDWHITE))=$(BOLDWHITE)
+
 DCOLORS :=  	$(addprefix -D, $(DCOLORS))
+
 #
 # -------------------------------- Paths --------------------------------
 #
@@ -154,8 +156,8 @@ NETWORK_FILES = 	MasterServer \
 					Client
 SRCS_FILES += $(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 					
-NETWORK_FILES = 	IRCServer
-SRCS_FILES += $(addprefix $(SERVER_PATH), $(NETWORK_FILES))
+SERVER_FILES = 	IRCServer
+SRCS_FILES += $(addprefix $(SERVER_PATH), $(SERVER_FILES))
 
 UTIL_FILES =	parse \
 				numbers \
@@ -216,40 +218,16 @@ endef
 ## -------------------------------- COMPILE --------------------------------
 #
 
-# all:		$(NAME)
-all:		
-	$(call colorize, $(RED), \
-		echo $(SRCS) ;\
-		echo ;\
-		echo $(OBJS) ;\
-	)
+all:		$(NAME)
 
-
-$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
-	echo $(<:.cpp=.o) $< -o $@
-	${CXX} ${CPPFLAGS}   -c $< -o $@
-# $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp $(HEADERS_FILES)
-# 	${CXX} ${CPPFLAGS}   -c $< -o $@
-# $(OBJ_PATH)%.o: $(SRCS)
-# 	${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
-
-# $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp $(HEADERS_FILES)
-# 	@echo ${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
-# 	${CXX} ${CPPFLAGS} -I$(INC_DIR)  -c $< -o $@
-# .cpp.o:
-# 			@$(CXX) $(CPPFLAGS) -I$(INC_DIR) -c $< -o $(<:.cpp=.o)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp  $(HEADERS_FILES)
+	${CXX} ${CPPFLAGS} -I$(INC_DIR) -c $< -o $@
 
 $(COMPILE):  $(PATHS_INIT)  $(OBJS)
-	@echo $(OBJS)
-	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS) coucou
+	@$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 	
 $(NAME): $(COMPILE)
 
-# $(NAME):	$(OBJS)
-# 			@echo "Object files compiled"
-# 			@$(CXX) $(CPPFLAGS) $(OBJS) -I$(INC_DIR) -o $(NAME)
-# 			@echo "Executable created"
-# 			@echo "Compilation finished"
 #
 ## -------------------------------- LOGS --------------------------------
 #

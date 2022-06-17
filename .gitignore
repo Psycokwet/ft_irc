@@ -1,5 +1,6 @@
 # personnalised
 *.DS_Store
+ircserv
 
 # Prerequisites
 *.d
