@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 20:08:09 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 21:48:31 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -124,15 +124,13 @@ SAVE_LAST_LOGS 			= SaveLastLogs
 NAME					= ircserv
 CLEAN_LOGS				= cleanLogs
 COMPILE 				= compile
-PATHS_INIT				= paths_init_rule
 
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(SAVE_LAST_LOGS) \
 						$(NAME) \
 						$(CLEAN_LOGS) \
-						$(COMPILE) \
-						$(PATHS_INIT)
+						$(COMPILE)
 
 ALL_EXECS_NAMES =		$(NAME)
 
@@ -205,11 +203,12 @@ OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
 # -------------------------------- FUNCTIONS --------------------------------
 #
 
-define colorize # ! Focus on this
+define colorize
 	@echo $(1)
 	@$(2)
 	@echo $(RESET)
 endef
+
 #
 # -------------------------------- Rules implementations --------------------------------
 #
@@ -218,15 +217,16 @@ endef
 ## -------------------------------- COMPILE --------------------------------
 #
 
-all:		$(NAME)
+all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp  $(HEADERS_FILES)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	${CXX} ${CPPFLAGS} -I$(INC_DIR) -c $< -o $@
 
-$(COMPILE):  $(PATHS_INIT)  $(OBJS)
-	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
+# $(COMPILE): $(OBJS)
+# 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 	
-$(NAME): $(COMPILE)
+$(NAME):  $(OBJS)
+	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 
 #
 ## -------------------------------- LOGS --------------------------------
@@ -265,9 +265,13 @@ generateParsingTestFiles :
 ## -------------------------------- OTHERS --------------------------------
 #
 
-$(PATHS_INIT): $(CLEAN_UNWANTED_PATHS)
-	@echo "Generating bin folders" $(ALL_PATHS_TO_INIT)
-	@mkdir -p $(ALL_PATHS_TO_INIT)
+# $(ALL_PATHS_TO_INIT): $(CLEAN_UNWANTED_PATHS)
+$(ALL_PATHS_TO_INIT): 
+	@echo "Generating bin folder and subfolders" $@
+	@mkdir -p  $@  
+
+# @echo "Generating bin folders" $(ALL_PATHS_TO_INIT)
+# @mkdir -p $(ALL_PATHS_TO_INIT)
 
 $(CLEAN_LOGS):
 	@echo "Deleting last logs..."
