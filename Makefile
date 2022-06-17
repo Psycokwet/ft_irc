@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 19:02:36 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 19:04:04 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -218,9 +218,11 @@ endef
 
 # all:		$(NAME)
 all:		
-	$(call colorize, $(RED), echo $(SRCS) ;\
-	echo ;\
-	echo $(OBJS))
+	$(call colorize, $(RED), \
+		echo $(SRCS) ;\
+		echo ;\
+		echo $(OBJS) ;\
+	)
 
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
@@ -252,10 +254,12 @@ $(NAME): $(COMPILE)
 ## -------------------------------- LOGS --------------------------------
 #
 
-# exemple_colorize:		
-# 	$(call colorize, $(RED), echo $(SRCS) ;\
-# 	echo ;\
-# 	echo $(OBJS))
+# exemple_colorize:	
+# 	$(call colorize, $(RED), \
+# 		echo $(SRCS) ;\
+# 		echo ;\
+# 		echo $(OBJS) ;\
+# 	)
 
 $(SAVE_LAST_LOGS)	:
 	@echo "Saving previous logs"
