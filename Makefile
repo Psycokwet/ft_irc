@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 21:52:43 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 21:58:11 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -224,20 +224,13 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
 
 # $(COMPILE): $(OBJS)
 # 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
-	
+
 $(NAME):  $(OBJS)
 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 
 #
 ## -------------------------------- LOGS --------------------------------
 #
-
-# exemple_colorize:	
-# 	$(call colorize, $(RED), \
-# 		echo $(SRCS) ;\
-# 		echo ;\
-# 		echo $(OBJS) ;\
-# 	)
 
 $(SAVE_LAST_LOGS)	:
 	@echo "Saving previous logs"
@@ -265,13 +258,9 @@ generateParsingTestFiles :
 ## -------------------------------- OTHERS --------------------------------
 #
 
-# $(ALL_PATHS_TO_INIT): $(CLEAN_UNWANTED_PATHS)
 $(ALL_PATHS_TO_INIT): 
 	@echo "Generating bin folder and subfolders" $@
 	@mkdir -p  $@  
-
-# @echo "Generating bin folders" $(ALL_PATHS_TO_INIT)
-# @mkdir -p $(ALL_PATHS_TO_INIT)
 
 $(CLEAN_LOGS):
 	$(call colorize, $(YELLOW), \
