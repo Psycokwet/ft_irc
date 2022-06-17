@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 21:48:31 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 21:52:43 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -204,9 +204,9 @@ OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
 #
 
 define colorize
-	@echo $(1)
+	@echo -n $(1)
 	@$(2)
-	@echo $(RESET)
+	@echo -n $(RESET)
 endef
 
 #
@@ -274,17 +274,23 @@ $(ALL_PATHS_TO_INIT):
 # @mkdir -p $(ALL_PATHS_TO_INIT)
 
 $(CLEAN_LOGS):
-	@echo "Deleting last logs..."
-	@rm -rf $(LAST_RUN_LOGS_FOLDER)
+	$(call colorize, $(YELLOW), \
+		echo "Deleting last logs...";\
+		rm -rf $(LAST_RUN_LOGS_FOLDER);\
+	)
 	
 clean:  $(CLEAN_LOGS)
-	@echo "Deleting objects..."
-	@rm -rf $(OBJ_PATH)
-	@echo "Deleted all but executable"
+	$(call colorize, $(MAGENTA), \
+		echo "Deleting objects...";\
+		rm -rf $(OBJ_PATH);\
+		echo "Deleted all but executable";\
+	)
 
 fclean:		clean
-	@$(RM) $(ALL_EXECS_NAMES)
-	@echo "Everything deleted"
+	$(call colorize, $(RED), \
+		$(RM) $(ALL_EXECS_NAMES);\
+		echo "Everything deleted";\
+	)
 
 re:			fclean all
 
