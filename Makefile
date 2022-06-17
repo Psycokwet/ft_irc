@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 19:56:52 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/17 20:08:09 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -224,7 +224,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp  $(HEADERS_FILES)
 	${CXX} ${CPPFLAGS} -I$(INC_DIR) -c $< -o $@
 
 $(COMPILE):  $(PATHS_INIT)  $(OBJS)
-	@$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
+	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 	
 $(NAME): $(COMPILE)
 
