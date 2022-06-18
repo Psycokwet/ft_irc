@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/17 21:58:11 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/18 09:31:48 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -128,7 +128,6 @@ COMPILE 				= compile
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(SAVE_LAST_LOGS) \
-						$(NAME) \
 						$(CLEAN_LOGS) \
 						$(COMPILE)
 
@@ -162,9 +161,6 @@ UTIL_FILES =	parse \
 				logger
 SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
 
-
-
-
 #
 # -------------------------------- Building configurations --------------------------------
 #
@@ -175,6 +171,8 @@ CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
 CPPFLAGS		+= $(DCOLORS)
+
+LDFLAGS			= -I$(INC_DIR)
 
 #
 # -------------------------------- automated tests treatments --------------------------------
@@ -192,7 +190,6 @@ ifndef TESTS
 else
 	CPPFLAGS += -DDEBUG=true
 endif
-
 
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
@@ -220,7 +217,7 @@ endef
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
-	${CXX} ${CPPFLAGS} -I$(INC_DIR) -c $< -o $@
+	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
 
 # $(COMPILE): $(OBJS)
 # 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
