@@ -16,3 +16,15 @@ flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install flathub io.github.Hexchat --user
 flatpak run io.github.Hexchat
 ```
+
+config linter :
+ctrl + p in vscode then :
+	ext install ms-vscode.cpptools-extension-pack
+Aller dans parametre puis cocher format on save (auto format lors de la sauvegarde)
+
+Creation de classe :
+ctrl + p in vscode then :
+	ext install canonicalclasscpp
+Generate a class template
+	macOS : ⌘ + ⌥ + C
+	Linux / Windows : Ctrl + alt + C.
