@@ -3,7 +3,6 @@
 
 class IRCServer
 {
-
 };
 
 #endif
