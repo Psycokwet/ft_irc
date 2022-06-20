@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/18 10:07:42 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/20 19:18:51 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -107,10 +107,6 @@ SRC_PATH				= srcs/
 
 CPP_EXTENSION 			= .cpp
 
-UTIL_PATH				= util/
-NETWORK_PATH			= network/
-SERVER_PATH				= IrcServer/
-
 OBJ_PATHS				+= $(OBJ_PATH) $(addprefix $(OBJ_PATH), $(UTIL_PATH) $(NETWORK_PATH) $(SERVER_PATH) )
 
 ALL_PATHS_TO_INIT		= $(OBJ_PATHS) $(SAVED_LOGS_FOLDER) $(LAST_RUN_LOGS_FOLDER)
@@ -149,17 +145,28 @@ GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_
 # -------------------------------- SRCS definitions --------------------------------
 #
 
-NETWORK_FILES = 	MasterServer \
-					Client
-SRCS_FILES += $(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
-					
-SERVER_FILES = 	IRCServer
-SRCS_FILES += $(addprefix $(SERVER_PATH), $(SERVER_FILES))
+REQUEST_PATH	=	requests/
+REQUESTS_FILES 	= 	GrammarParser \
+					GrammarVariables \
+					GrammarParserBuilderMarker \
+					ParsedRequest \
+					Statements
+SRCS 			+=	$(addprefix $(REQUEST_PATH), $(REQUESTS_FILES))
 
-UTIL_FILES =	parse \
-				numbers \
-				logger
-SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
+NETWORK_PATH	=	network/
+NETWORK_FILES 	= 	MasterServer \
+					Client
+SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
+					
+SERVER_PATH		=	IrcServer/
+SERVER_FILES 	= 	IRCServer
+SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
+
+UTIL_PATH		=	util/
+UTIL_FILES 		=	parse \
+					numbers \
+					logger
+SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 
 #
 # -------------------------------- Building configurations --------------------------------
