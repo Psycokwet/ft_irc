@@ -27,7 +27,7 @@ int main (int ac, char **av)
     if (!checkArguments(ac, av, port, password))
         exit(1);
     
-    IRCServer *myIrc = new IRCServer();
+    IRCServer *myIrc = new IRCServer(password);
     MasterServer *myServer = new MasterServer(port, password, *myIrc);
 
     if (myServer->build() == EXIT_FAILURE)

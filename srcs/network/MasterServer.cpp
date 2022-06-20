@@ -34,7 +34,7 @@ MasterServer::~MasterServer()
 */
 
 /*
-** --------------------------------- PUBLIC METHODS ----------------------------------
+** --------------------------------- PUBLIC METHODS ---------------------------
 */
 
 int MasterServer::build()
@@ -179,18 +179,14 @@ void	MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 				bool ret = _clients[fd]->receiveCommand(received_command);
 				if ( ret == false)
 				{
-					// ! update / tell IRCServer about the fd that is disconnected
+					_ircServer.removeDisconnectUser(fd);
 					removeClient(fd);
 				}
-				else
-				{
-					// ! process the command here, add result to resQueue. Below is just to check.
-					for (unsigned int i = 0; i < resQueue.size(); i++)
-					{
-						std::cout << "We need to do something on Client's socket: " << resQueue[i].first;
-						std::cout << "What to do is: " << resQueue[i].second;
-					}
-				}
+				else if (!received_command.empty() && _ircServer.processCommand(std::make_pair(fd, received_command), resQueue))
+					disconnectList.insert(fd);
+				int killed_by_operater_fd = _ircServer.getVictim();
+				if (killed_by_operater_fd != -1)
+					disconnectList.insert(killed_by_operater_fd);
 			}
 			--totalFd;
 		}
@@ -228,4 +224,4 @@ void	MasterServer::removeClient(int fdClient)
 */
 
 
-/* ************************************************************************** */ 
+/* ************************************************************************* */ 
