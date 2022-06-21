@@ -37,8 +37,6 @@ int main (int ac, char **av)
         delete myServer;
         return (1);
     }
-    
-
-
+    myServer->run();
     return (0);
 }

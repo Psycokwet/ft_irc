@@ -37,18 +37,6 @@ MasterServer::~MasterServer()
 ** --------------------------------- PUBLIC METHODS ----------------------------------
 */
 
-std::ostream &MasterServer::print_client_map(std::ostream &o) const
-{
-	o << "I'm Client Map !" << std::endl;
-	std::map<int, Client *>::iterator it;
-	for (it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		o << "Client fd: " << it->first;
-		
-	}
-	return o;
-}
-
 int MasterServer::build()
 {
     int opt = TRUE;
@@ -114,11 +102,30 @@ int MasterServer::build()
 
 void MasterServer::run() // ! do like main_loops
 {
-    while (TRUE)
+    int total_opened_fd;
+	std::vector<t_clientCmd>	responseQueue;
+	std::vector<t_clientCmd>::iterator	itRes;
+	std::set<int>				disconnectList;
+	std::set<int>::iterator		itDisconnect;
+
+	while (TRUE)
     {
-        FD_ZERO(&_fdReader);
-        setFDForReading();
-        recvProcess();
+        responseQueue.clear();
+		disconnectList.clear();
+		total_opened_fd = setFDForReading();
+		if (total_opened_fd == -1)
+			break ;
+        recvProcess(total_opened_fd, responseQueue, disconnectList);
+		
+		for (itRes = responseQueue.begin(); itRes != responseQueue.end(); ++ itRes)
+		{
+			int clientFd = itRes->first;
+			if (_clients.find(clientFd) != _clients.end())
+				_clients[clientFd]->sendResp(itRes->second);
+		}
+		
+		for (itDisconnect = disconnectList.begin(); itDisconnect != disconnectList.end(); ++ itDisconnect)
+			removeClient(*itDisconnect);
     }
 }
 
@@ -126,116 +133,66 @@ void MasterServer::run() // ! do like main_loops
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */
 
-void	MasterServer::setFDForReading()
+int	MasterServer::setFDForReading()
 {
-	//  std::map<int, std::pair<OneServer*, std::map <int, GrammarParser> > >::iterator it;
-	 std::map<int, std::pair<OneServer*, std::map <int, std::string> > >::iterator it;
-	for (it = _fdMap.begin(); it!=_fdMap.end(); ++it)
+	_maxFD = MAX(_maxFD, _fdServer);
+	FD_ZERO(&_fdReader);
+	FD_SET(_fdServer, &_fdReader);
+
+	std::map< int, Client* >::iterator 		clientIter;
+	for (clientIter = _clients.begin(); clientIter != _clients.end(); ++clientIter)
 	{
-		int 			fdServer = it->first;
-		// std::map <int, GrammarParser> 	fdClientMap = it->second.second;
-		std::map <int, std::string> 	fdClientMap = it->second.second;
-
-		_maxFD = MAX(_maxFD, fdServer);
-		FD_SET(fdServer, &_fdReader);
-
-		// std::map <int, GrammarParser>::iterator	clientIter;
-		std::map <int, std::string>::iterator	clientIter;
-		for (clientIter = fdClientMap.begin(); clientIter != fdClientMap.end(); ++clientIter)
-		{
-			int	clientFD = clientIter->first;
-			FD_SET(clientFD, &_fdReader);
-			_maxFD = MAX(_maxFD, clientFD);
-		}
+		int	clientFD = clientIter->first;
+		FD_SET(clientFD, &_fdReader);
+		_maxFD = MAX(_maxFD, clientFD);
 	}
-
-    struct timeval      timeout;
-    /*************************************************************/
-    /* Initialize the timeval struct to 1 minutes.               */
-    /*************************************************************/
-    timeout.tv_sec = 1 * 60;
-    timeout.tv_usec = 0;
     /*************************************************************/
     /* Call select() and wait 1 minutes for it to complete.      */
     /* Wait for one or more fd become "ready" to read and write  */
     /*************************************************************/
 	int new_r;
-	new_r = select(_maxFD + 1, &_fdReader, NULL, NULL, &timeout);
+	new_r = select(_maxFD + 1, &_fdReader, NULL, NULL, NULL);
 	if (new_r == -1)
-		SERVER_ERR("select");
-    if (new_r == 0)
-		SERVER_ERR("Select: Time Out");
-        
-	_numberOfReadyFd = MAX(_numberOfReadyFd, new_r);
+	{
+		std::cout << "Error: select()\n";
+		return (-1);
+	}
+    return new_r;    
 }
 
 
-void	MasterServer::recvProcess()
+void	MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList)
 {
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
 	// to read from 0 (stdin), 1 (stdout) and 2 (stderr)
-	for (int fd = 3; fd <= _maxFD && _numberOfReadyFd; ++fd)
+
+	std::string received_command;
+	for (int fd = 3; fd <= _maxFD && totalFd; ++fd)
 	{
 		if (FD_ISSET(fd, &_fdReader))
 		{
-			if (_fdServer.count(fd) == 1) // if fd is Server
+			if (fd == _fdServer) // if fd is Server
 				acceptClient(fd);
-			else
+			else if (disconnectList.find(fd) == disconnectList.end()) // if fd client is not in disconnected list
 			{
-				char http_request[BUF_SIZE + 1];
-				int valread;
-
-				std::cout << "I'm receiving stuff from fd = " << fd << std::endl;
-
-				valread = recv(fd, http_request, BUF_SIZE, 0);
-				valread = '\0';
-				std::cout << valread << std::endl;
-
-				// parser->feed(http_request);
-
-				if (valread == BUF_SIZE)
+				received_command.clear();
+				bool ret = _clients[fd]->receiveCommand(received_command);
+				if ( ret == false)
 				{
-					//Because of this case, you need to keep track of the parser used for a listen. Since you may use it again later to finish reading. Or, you must restart reading until you read it all.
-					std::cout << "client read incomplete \n";
-					// parser.parse();
-					return;
+					// ! update / tell IRCServer about the fd that is disconnected
+					removeClient(fd);
 				}
-				else if (valread <= 0) // If receive nothing from clients
-				{  
-					//Close the socket and erase it from fd of clients
-					int fdServ = findFdServer(fd); 
-					std::cout << "BEFORE CLOSING: My client fd has: " << _fdMap[fdServ].second.size() << " elements.\n" << std::endl;
-					close(fd);
-					_fdMap[fdServ].second.erase(fd);
-					std::cout << "Closing fd = " << fd << ". It belonged to " << fdServ << std::endl;
-					std::cout << "My client fd has: " << _fdMap[fdServ].second.size() << " elements.\n" << std::endl;
-				}
-				// else if ((resp = parser.finishParse()) == NULL)
-				// {
-				// 	std::cout << "THIS SHOULD NOT HAPPEN EVER, SOMETHING IS VERY WRONG\n";
-				// }
-				else // send response
+				else
 				{
-					// resp->execute(this);
-					// std::string finalResponsefake =
-					// 	streamFunctionToString(&ResponseBuilder::print_response, resp);
-					// std::cout
-					// 	<< "finalResponsefake" << std::endl
-					// 	<< finalResponsefake << std::endl;
-					// send(fd, finalResponsefake.c_str(), finalResponsefake.size(), 0);
-
-					std::string finalResponse = "HTTP/1.1 200 OK\nDate:Fri, 16 Mar 2020 17:21:12 GMT\nServer: my_server\nContent-Type: text/html;charset=UTF-8\nContent-Length: 1846\n\n<!DOCTYPE html>\n<html><h1>Hello world</h1></html>\n";
-					std::cout << "A http response is sent\n" ;
-					send(fd, finalResponse.c_str(), finalResponse.size(), 0);
-
-					//Close the socket and erase it from client_fd of clients
-					close (fd);
-					int fdServ = findFdServer(fd); 
-					_fdMap[fdServ].second.erase(fd);
-					std::cout << "Closing " << fd << ". It belongs to " << fdServ << std::endl;
-				}  
+					// ! process the command here, add result to resQueue. Below is just to check.
+					for (unsigned int i = 0; i < resQueue.size(); i++)
+					{
+						std::cout << "We need to do something on Client's socket: " << resQueue[i].first;
+						std::cout << "What to do is: " << resQueue[i].second;
+					}
+				}
 			}
-			--_numberOfReadyFd;
+			--totalFd;
 		}
 	}
 }
@@ -249,42 +206,22 @@ void	MasterServer::acceptClient(int fdServer)
 	if (clientFD == -1)
 	{
 		std::cerr << "Failed to accept a new connection\n";
-		return; // ! do something more than that
+		return;
 	}
 	std::cout 	<< "New client on socket #" << clientFD 
-				<< ". This socket belongs to Server at socket #" << fdServer
 				<< std::endl;
-	// GrammarParser parser = GrammarParser(*_base_request_parser);
-	std::string parser = "I'm a GrammarParser";
-	_fdMap[fdServer].second[clientFD] = parser;
-	std::cout << "My server socket at :" << fdServer << " has client socket: " << clientFD << std::endl;
+	_clients.insert(std::make_pair(clientFD, new Client(clientFD)));
 }
 
-
-int	MasterServer::findFdServer(int value)
+void	MasterServer::removeClient(int fdClient)
 {
-	int fdServer = -1;
-
-	// std::map<int, std::pair<OneServer*, std::map <int, GrammarParser> > >::iterator itFdMap;
-	std::map<int, std::pair<OneServer*, std::map <int, std::string> > >::iterator itFdMap;
-
-	for (itFdMap = _fdMap.begin(); itFdMap != _fdMap.end(); ++itFdMap)
+	if (_clients.find(fdClient) != _clients.end())
 	{
-		// std::map<int, GrammarParser> clientMap;
-		std::map<int, std::string> clientMap;
-		clientMap = itFdMap->second.second;
-
-		// std::map<int, GrammarParser>::iterator it_clientMap;
-		std::map<int, std::string>::iterator it_clientMap;
-		it_clientMap = clientMap.find(value);
-		if (it_clientMap != clientMap.end())
-		{
-			fdServer = itFdMap->first;
-			break; // to stop searching
-		}
-   }
-   return fdServer;
+		delete _clients[fdClient];
+		_clients.erase(fdClient);
+	}
 }
+
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------

@@ -4,6 +4,7 @@
 #include "../Channel/Channel.hpp"
 #include "../User/User.hpp"
 #include "../../includes/ft_irc.hpp"
+#include "../../includes/code.hpp"
 
 
 
