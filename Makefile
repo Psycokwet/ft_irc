@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/18 10:07:42 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/20 10:54:17 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -113,7 +113,7 @@ SERVER_PATH				= IrcServer/
 
 OBJ_PATHS				+= $(OBJ_PATH) $(addprefix $(OBJ_PATH), $(UTIL_PATH) $(NETWORK_PATH) $(SERVER_PATH) )
 
-ALL_PATHS_TO_INIT		= $(OBJ_PATHS) $(SAVED_LOGS_FOLDER) $(LAST_RUN_LOGS_FOLDER)
+ALL_PATHS_TO_INIT		= $(SAVED_LOGS_FOLDER) $(LAST_RUN_LOGS_FOLDER)
 
 #
 # -------------------------------- Rules names --------------------------------
@@ -166,7 +166,7 @@ SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
 #
 
 CXX				= c++
-CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address -MD
 CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
@@ -194,7 +194,8 @@ endif
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
 OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
-# HEADERS_FILES 		= 	$(SRCS:cpp=hpp)
+DEPS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=d))
+-include $(DEPS)
 
 #
 # -------------------------------- FUNCTIONS --------------------------------
@@ -213,10 +214,11 @@ endef
 #
 ## -------------------------------- COMPILE --------------------------------
 #
-
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
+
+	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
 
 # $(COMPILE): $(OBJS)
@@ -230,12 +232,18 @@ $(NAME):  $(OBJS)
 #
 
 $(SAVE_LAST_LOGS)	:
-	@echo "Saving previous logs"
-	@mv  $(LAST_RUN_LOGS_FOLDER)  $(SAVED_LOGS_FOLDER)/$(shell date "+%y_%m_%d_%H_%M_%S")
+	$(call colorize, $(GREEN), \
+		echo "Saving previous logs" ;\
+		mv  $(LAST_RUN_LOGS_FOLDER)  $(SAVED_LOGS_FOLDER)/$(shell date "+%y_%m_%d_%H_%M_%S") ;\
+	)
+
 
 $(CLEAN_UNWANTED_PATHS)	: 
-	@echo "deleting previous run special paths..." $(LAST_RUN_LOGS_FOLDER)
-	@rm -rf  $(LAST_RUN_LOGS_FOLDER) 
+	$(call colorize, $(YELLOW), \
+		echo "deleting previous run special paths..." $(LAST_RUN_LOGS_FOLDER) ;\
+		rm -rf  $(LAST_RUN_LOGS_FOLDER) ;\
+	)
+	
 
 #
 ## -------------------------------- TESTS --------------------------------
@@ -256,8 +264,12 @@ generateParsingTestFiles :
 #
 
 $(ALL_PATHS_TO_INIT): 
-	@echo "Generating bin folder and subfolders" $@
-	@mkdir -p  $@  
+
+	$(call colorize, $(GREEN), \
+		echo "Generating bin folder and subfolders" $@ ;\
+		mkdir -p  $@   ;\
+	)
+	
 
 $(CLEAN_LOGS):
 	$(call colorize, $(YELLOW), \
@@ -266,14 +278,14 @@ $(CLEAN_LOGS):
 	)
 	
 clean:  $(CLEAN_LOGS)
-	$(call colorize, $(MAGENTA), \
+	$(call colorize, $(RED), \
 		echo "Deleting objects...";\
 		rm -rf $(OBJ_PATH);\
 		echo "Deleted all but executable";\
 	)
 
 fclean:		clean
-	$(call colorize, $(RED), \
+	$(call colorize, $(BOLDRED), \
 		$(RM) $(ALL_EXECS_NAMES);\
 		echo "Everything deleted";\
 	)
