@@ -3,17 +3,51 @@
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
+
 Channel::Channel(std::string const &name, User *create) :
     _name(name), _userInvit(false), _nottopic(false)
 {
     _op.insert(create);
     _user.insert(create);
 }
-/*
-** ------------------------------- DESTRUCTOR --------------------------------
-*/
-Channel::~Channel(){}
 
+Channel::Channel( const Channel & src )
+{
+}
+
+
+/*
+** -------------------------------- DESTRUCTOR --------------------------------
+*/
+
+Channel::~Channel()
+{
+}
+
+
+/*
+** --------------------------------- OVERLOAD ---------------------------------
+*/
+
+Channel &				Channel::operator=( Channel const & rhs )
+{
+	//if ( this != &rhs )
+	//{
+		//this->_value = rhs.getValue();
+	//}
+	return *this;
+}
+
+std::ostream &			operator<<( std::ostream & o, Channel const & i )
+{
+	//o << "Value = " << i.getValue();
+	return o;
+}
+
+
+/*
+** --------------------------------- METHODS ----------------------------------
+*/
 
 //check channel prefix start = #
 
@@ -62,3 +96,10 @@ int	Channel::addUser(User *user, std::string const &key)
 bool Channel::isUser(User *user) const { return _user.find(user) != _user.end(); }
 bool Channel::isInvited(User *user) const{ return (_inv.find(user) != _inv.end()); }
 bool Channel::isKey() const {return !_key.empty();}
+
+/*
+** --------------------------------- ACCESSOR ---------------------------------
+*/
+
+
+/* ************************************************************************** */
