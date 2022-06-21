@@ -53,9 +53,6 @@ bool    IRCServer::processCommand(t_clientCmd const &command, std::vector<t_clie
     int     fd = command.first;
 
     // ! Need to finish this (execCommand here)
-
-
-
 }
 
 // Get the fd being killed by a server operator

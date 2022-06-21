@@ -19,9 +19,14 @@ bool Client::receiveCommand(std::string &command)
         return false;
     _buffer[r] = '\0';
 
-    // ! Parsing here, getting value to `command`
-    command += _buffer;
+    _commandTemp += _buffer;
 
+    std::size_t found = _commandTemp.find(END_OF_COMMAND, _commandTemp.size() - LEN_END_OF_COMMAND);
+    if (found != std::string::npos)
+    {
+        command = _commandTemp;
+        _commandTemp.clear();
+    }
     return true;
 }
 

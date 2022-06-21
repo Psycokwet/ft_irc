@@ -5,6 +5,9 @@
 
 #include "../../includes/ft_irc.hpp"
 
+#define END_OF_COMMAND "\r\n"
+#define LEN_END_OF_COMMAND 2
+
 class Client
 {
     public:
@@ -14,8 +17,10 @@ class Client
         friend class MasterServer;
 
     private:
-        int     _fd;
-        char    _buffer[BUF_SIZE + 1];
+        int             _fd;
+        char            _buffer[BUF_SIZE + 1];
+        std::string     _commandTemp;
+        
 
         Client();
         Client(int fd);
