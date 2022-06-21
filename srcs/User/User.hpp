@@ -27,26 +27,26 @@ class User
 
 	private:
 
-	int _fd;
-    bool _passOK;
-    bool _log;
+		int _fd;
+    	bool _passOK;
+    	bool _log;
 
-    std::string _nickName;
-    std::string _userName;
-    std::string _realName;
-    std::string _prefixUser;
+    	std::string _nickName;
+    	std::string _userName;
+    	std::string _realName;
+    	std::string _prefixUser;
 
-    std::set<Channel *> _add;//list channel user add
+    	std::set<Channel *> _add;//list channel user add
 
 
-    std::string _Msg;
-    bool	_invisible;		// (i) Is invisible
-	bool	_oper;			// (o) Is server operator
+    	std::string _Msg;
+    	bool	_invisible;		// (i) Is invisible
+		bool	_oper;			// (o) Is server operator
 
 	protected:
 	
-	User(int fd, std::string const &origin);
-	void	registrationOK();
+		User(int fd, std::string const &origin);
+		void	registrationOK();
 };
 
 std::ostream &			operator<<( std::ostream & o, User const & i );

@@ -27,16 +27,16 @@ class Channel
 
 	private:
 
-	std::string const _name; //nom du channell
-    std::set<User *> _user; //liste des users inscrit
-    std::string     _topic; //sujet de la channel
+		std::string const _name; //nom du channell
+    	std::set<User *> _user; //liste des users inscrit
+    	std::string     _topic; //sujet de la channel
 
-    bool _userInvit;//seulement les user inscrit
-    bool _nottopic;//no subjet
+    	bool _userInvit;//seulement les user inscrit
+    	bool _nottopic;//no subjet
 
-    std::set<User *> _op; //liste operateur
-    std::string _key; //clee channel
-    std::set<User *> _inv; //liste des user invitee
+    	std::set<User *> _op; //liste operateur
+    	std::string _key; //clee channel
+    	std::set<User *> _inv; //liste des user invitee
 
 };
 
