@@ -168,14 +168,14 @@ ONLY_VALUE!channel_target = channel_target_int
 start    =  [ ":" prefix SPACE ] command [ params ] crlf
 message    =  [ ":" prefix SPACE ] command [ params ] crlf
 prefix     =  servername / ( nickname [ [ "!" user ] "@" host ] )
-command    =  1* letter / 3 DIGIT
+command    =  1*letter / 3digit
 params     =  *14 ( SPACE middle ) [ SPACE ":" trailing ]
                =/ 14 ( SPACE middle ) [ SPACE [ ":" ] trailing ]
 
 nospcrlfcl =  0x01-09 / 0x0B-0C / 0x0E-1F / 0x21-39 / 0x3B-FF
                     ; any octet except NUL, CR, LF, " " and ":"
-middle     =  nospcrlfcl * ( ":" / nospcrlfcl )
-trailing   =  * ( ":" / " " / nospcrlfcl )
+middle     =  nospcrlfcl *( ":" / nospcrlfcl )
+trailing   =  *( ":" / " " / nospcrlfcl )
 
 SPACE      =  0x20        ; space character
 crlf       =  0x0D 0x0A   ; "carriage return" "linefeed"

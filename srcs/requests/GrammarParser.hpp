@@ -65,7 +65,7 @@ class GrammarParserBuilderMarker;
 typedef std::pair<bool (*)(std::string, t_grammar_map &gm), e_parsing_states (GrammarParser::*)(std::string, GrammarParserBuilderMarker *, int)> t_pair_checker_consume;
 typedef std::vector<t_pair_checker_consume> t_builder_dictionary;
 
-#define ID_BASE_REQUEST "HTTP_message"
+#define ID_BASE_REQUEST "start"
 class GrammarParser
 {
 public:

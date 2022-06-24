@@ -1,1 +1,1 @@
->>>> PRIVMSG #new_channel :bla bla
+PRIVMSG #new_channel :bla bla
