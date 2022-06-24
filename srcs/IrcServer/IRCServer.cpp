@@ -37,7 +37,7 @@ void    IRCServer::removeDisconnectUser(int fd)
 {
     if(_users.find(fd) != _users.end())
     {
-        User *one_user = _users[fd];
+        User *one_user(_users[fd]);
         if (one_user->getRegistered() == true)
             removeUserFromAllChannels(one_user);
         delete one_user;
@@ -52,7 +52,17 @@ bool    IRCServer::processCommand(t_clientCmd const &command, std::vector<t_clie
     User    *one_user;
     int     fd = command.first;
 
-    // ! Need to finish this (execCommand here)
+    if (_users.find(fd) == _users.end())
+    {
+        // make new users, get Notice message, put it and the user, fd into responseQueue
+        _users[fd] = new User(fd);
+        one_user = _users[fd];
+        
+    }
+    else
+        one_user = _users[fd];
+    
+
 }
 
 // Get the fd being killed by a server operator
@@ -74,7 +84,7 @@ int     IRCServer::getVictim()
 */
 void	IRCServer::removeUserFromAllChannels(User *user)
 {
-    // ! update user in channel
+    // ! Erate user in the channel map
 
 
 }
