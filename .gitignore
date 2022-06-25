@@ -34,3 +34,5 @@ ircserv
 *.exe
 *.out
 *.app
+
+testParser

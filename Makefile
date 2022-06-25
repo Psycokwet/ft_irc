@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/25 22:24:36 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/25 22:29:23 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -154,7 +154,7 @@ REQUESTS_FILES 	= 	GrammarParser \
 					GrammarParserBuilderMarker \
 					ParsedRequest \
 					Statements
-SRCS 			+=	$(addprefix $(REQUEST_PATH), $(REQUESTS_FILES))
+SRCS_FILES		+=	$(addprefix $(REQUEST_PATH), $(REQUESTS_FILES))
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
@@ -267,8 +267,12 @@ endef
 #
 ## -------------------------------- COMPILE --------------------------------
 #
-all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
+all: | hello $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 	
+hello:
+	echo $(SRCS_FILES)
+
+
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} $(LDFLAGS) -DDEBUG=false -c $< -o $@
