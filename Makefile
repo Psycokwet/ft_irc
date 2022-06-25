@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/25 18:09:51 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/25 22:15:07 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -190,11 +190,11 @@ TESTERS_FLAGS	= -DDEBUG=true
 
 ifndef TESTS 
 	TESTS=""
-	SRCS = 	main
+	SRCS_FILES += 	main
 else
 	ifeq ($(TESTS), $(TESTPARSERRULE))
 		NAME_TESTER=$(TESTPARSER)
-		SRCS = mainParserTest
+		SRCS_FILES += mainParserTest
 		NAME = $(TESTPARSER)
 	endif
 endif
@@ -267,7 +267,7 @@ endef
 ## -------------------------------- COMPILE --------------------------------
 #
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
-
+	
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} $(LDFLAGS) -DDEBUG=false -c $< -o $@
@@ -354,3 +354,4 @@ fclean:		clean
 re:			fclean all
 
 .PHONY:		all clean fclean re $(ALL_RULES_NAMES)
+.DEFAULT_GOAL := all
