@@ -23,7 +23,7 @@ class IRCServer
     private:
         std::map< int, User * >		            _users;		// Users list
         std::map< std::string, Channel * >	    _channels;	// Channels list
-        std::string const                       _password;
+        std::string const                       _serverPassword;
         int                                     _fdToKill;  // Fd of user killed by operater
 
         void	removeUserFromAllChannels(User *user);

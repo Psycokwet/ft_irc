@@ -5,3 +5,9 @@ PRIVMSG thi-nguy :hello\r\n
 NAMES #new_channel\r\n
 NAMES #new_channel,#other_channel\r\n
 KICK #new_channel thi-nguy :Speaking_English\r\n
+MODE #new_channel meo +i\r\n
+PASS abc\r\n
+NICK thi-nguy\r\n
+USER thi-nguy 0 * :realname\r\n
+
+

@@ -9,7 +9,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 IRCServer::IRCServer(std::string const &password):
-    _password(password)
+    _serverPassword(password)
 {}
 
 /*
@@ -52,7 +52,7 @@ bool    IRCServer::processCommand(t_clientCmd const &command, std::vector<t_clie
     User    *one_user;
     int     fd = command.first;
 
-    if (_users.find(fd) == _users.end())
+    if (_users.find(fd) == _users.end()) // if a new user comes to server
     {
         // make new users, get Notice message, put it and the user, fd into responseQueue
         _users[fd] = new User(fd);
@@ -84,7 +84,7 @@ int     IRCServer::getVictim()
 */
 void	IRCServer::removeUserFromAllChannels(User *user)
 {
-    // ! Erate user in the channel map
+    // ! Erase user in the channel map
 
 
 }
