@@ -1,0 +1,7 @@
+WHO #new_channel\r\n
+PART #new_channel :I quit\r\n
+JOIN #new_channel\r\n
+PRIVMSG thi-nguy :hello\r\n
+NAMES #new_channel\r\n
+NAMES #new_channel,#other_channel\r\n
+KICK #new_channel thi-nguy :Speaking_English\r\n
