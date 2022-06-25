@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/webserv.h"
-#include "requests/GrammarParser.hpp"
+#include "../requests/GrammarParser.hpp"
 #include <ctype.h>
 #include <iostream>
 #include <sstream>

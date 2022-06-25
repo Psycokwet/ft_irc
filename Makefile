@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/25 22:15:07 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/25 22:22:55 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,23 +68,23 @@ COLORS = 		$($(RESET))\
 				$($(BOLDCYAN))\
 				$($(BOLDWHITE))
 
-DCOLORS :=  	$($(RESET))=$(RESET)\
-				$($(BLACK))=$(BLACK)\
-				$($(RED))=$(RED)\
-				$($(GREEN))=$(GREEN)\
-				$($(YELLOW))=$(YELLOW)\
-				$($(BLUE))=$(BLUE)\
-				$($(MAGENTA))=$(MAGENTA)\
-				$($(CYAN))=$(CYAN)\
-				$($(WHITE))=$(WHITE)\
-				$($(BOLDBLACK))=$(BOLDBLACK)\
-				$($(BOLDRED))=$(BOLDRED)\
-				$($(BOLDGREEN))=$(BOLDGREEN)\
-				$($(BOLDYELLOW))=$(BOLDYELLOW)\
-				$($(BOLDBLUE))=$(BOLDBLUE)\
-				$($(BOLDMAGENTA))=$(BOLDMAGENTA)\
-				$($(BOLDCYAN))=$(BOLDCYAN)\
-				$($(BOLDWHITE))=$(BOLDWHITE)
+DCOLORS :=  	$($(RESET))='$(RESET)'\
+				$($(BLACK))='$(BLACK)'\
+				$($(RED))='$(RED)'\
+				$($(GREEN))='$(GREEN)'\
+				$($(YELLOW))='$(YELLOW)'\
+				$($(BLUE))='$(BLUE)'\
+				$($(MAGENTA))='$(MAGENTA)'\
+				$($(CYAN))='$(CYAN)'\
+				$($(WHITE))='$(WHITE)'\
+				$($(BOLDBLACK))='$(BOLDBLACK)'\
+				$($(BOLDRED))='$(BOLDRED)'\
+				$($(BOLDGREEN))='$(BOLDGREEN)'\
+				$($(BOLDYELLOW))='$(BOLDYELLOW)'\
+				$($(BOLDBLUE))='$(BOLDBLUE)'\
+				$($(BOLDMAGENTA))='$(BOLDMAGENTA)'\
+				$($(BOLDCYAN))='$(BOLDCYAN)'\
+				$($(BOLDWHITE))='$(BOLDWHITE)'
 
 DCOLORS :=  	$(addprefix -D, $(DCOLORS))
 
@@ -194,7 +194,7 @@ ifndef TESTS
 else
 	ifeq ($(TESTS), $(TESTPARSERRULE))
 		NAME_TESTER=$(TESTPARSER)
-		SRCS_FILES += mainParserTest
+		SRCS_FILES += $(TEST_SRCS)mainParserTest
 		NAME = $(TESTPARSER)
 	endif
 endif
