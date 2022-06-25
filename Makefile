@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/20 10:54:17 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/25 18:09:51 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -120,14 +120,17 @@ SAVE_LAST_LOGS 			= SaveLastLogs
 NAME					= ircserv
 CLEAN_LOGS				= cleanLogs
 COMPILE 				= compile
+TESTPARSERRULE			= testParserRule
+TESTPARSER				= testParser
 
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(SAVE_LAST_LOGS) \
 						$(CLEAN_LOGS) \
-						$(COMPILE)
+						$(COMPILE) 
 
-ALL_EXECS_NAMES =		$(NAME)
+ALL_EXECS_NAMES =		$(NAME)\
+						$(TESTPARSERRULE)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
@@ -180,27 +183,33 @@ RM				= rm -f
 CPPFLAGS		+= $(DCOLORS)
 
 LDFLAGS			= -I$(INC_DIR)
-
+TESTERS_FLAGS	= -DDEBUG=true
 #
 # -------------------------------- automated tests treatments --------------------------------
 #
+
+ifndef TESTS 
+	TESTS=""
+	SRCS = 	main
+else
+	ifeq ($(TESTS), $(TESTPARSERRULE))
+		NAME_TESTER=$(TESTPARSER)
+		SRCS = mainParserTest
+		NAME = $(TESTPARSER)
+	endif
+endif
+
 
 ifndef LEAKS
 	LEAKS = 
 	# LEAKS = valgrind --leak-check=full #must not be use at the same time than fsanitize
 endif
 
-ifndef TESTS
-	TESTS=""
-	SRCS_FILES += 	main
-	CPPFLAGS += -DDEBUG=false
-else
-	CPPFLAGS += -DDEBUG=true
-endif
 
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
 OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
+OBJS_TESTER			= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o_tester.o))
 DEPS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=d))
 -include $(DEPS)
 
@@ -214,6 +223,42 @@ define colorize
 	@echo -n $(RESET)
 endef
 
+define tester_sep
+	printf "\n\n\n\n____.--.--.____.--.--.____.--.--.____.--.--.__** $(1) **__.--.--.____.--.--.____.--.--.____.--.--.____\n" ;\
+	$(MAKE) $(OBJ) TESTS=$(1) LEAKS="$(LEAKS)" ;\
+	$(MAKE) $(1) TESTS=$(1) LEAKS="$(LEAKS)"
+endef
+
+define launch_one_test_without_sep
+	printf "Command : $(LEAKS) ./$(NAME) $(1) \n"  ;\
+	$(LEAKS) ./$(NAME) $(1)
+endef
+
+define launch_one_test_with_sep
+	$(call launch_one_test_without_sep,$(1)) ;\
+	printf "____.--.--.____.--.--.____.--.--.____.--.--.__Weeeeeeeeee__.--.--.____.--.--.____.--.--.____.--.--.____\n"
+endef
+
+define launch_only_legal_tests
+	@ if [ $(TESTS) = $(1) ]; then \
+		$(2)
+	else \
+		$(call tester_sep,$(1)) ;\
+	fi ;
+endef
+
+define launch_test_from_array_args
+	COUNT=0;\
+	for ARG in $(1) ; do \
+		COUNT=$$(( 1 + $$COUNT ));\
+		LAST=$$ARG;\
+		[ "$(words $(1))" -eq $$COUNT ] && break ;\
+		$(call launch_one_test_with_sep,$$ARG) ;\
+	done ;\
+	$(call launch_one_test_without_sep,$$LAST)
+endef
+
+
 #
 # -------------------------------- Rules implementations --------------------------------
 #
@@ -224,12 +269,15 @@ endef
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
-
 	@mkdir -p $(dir $@)
-	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
+	${CXX} ${CPPFLAGS} $(LDFLAGS) -DDEBUG=false -c $< -o $@
+	${CXX} ${CPPFLAGS} ${TESTERS_FLAGS} $(LDFLAGS) -c $< -o $@_tester.o
 
 # $(COMPILE): $(OBJS)
 # 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
+
+$(NAME_TESTER): | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(OBJS)
+	$(CXX) $(CPPFLAGS) ${TESTERS_FLAGS} $(LDFLAGS) -o $(NAME_TESTER) $(OBJS_TESTER)
 
 $(NAME):  $(OBJS)
 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
@@ -256,6 +304,14 @@ $(CLEAN_UNWANTED_PATHS)	:
 ## -------------------------------- TESTS --------------------------------
 #
 
+REQUESTS_FOLDER=test_datas/generated/
+CLIENTS_REQUESTS:= $(addprefix $(REQUESTS_FOLDER), $(shell ls $(REQUESTS_FOLDER)))
+
+$(TESTPARSERRULE):
+	$(call launch_only_legal_tests,$(TESTPARSERRULE),\
+		$(call launch_test_from_array_args,$(CLIENTS_REQUESTS)) ;\)
+
+
 generateParsingTestFiles :
 	@echo "Deleting previous generation..."
 	@rm -rf $(TEST_DATAS_GENERATED)
@@ -271,13 +327,11 @@ generateParsingTestFiles :
 #
 
 $(ALL_PATHS_TO_INIT): 
-
 	$(call colorize, $(GREEN), \
 		echo "Generating bin folder and subfolders" $@ ;\
 		mkdir -p  $@   ;\
 	)
 	
-
 $(CLEAN_LOGS):
 	$(call colorize, $(YELLOW), \
 		echo "Deleting last logs...";\
