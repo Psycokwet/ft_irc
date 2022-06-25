@@ -23,11 +23,26 @@ OCTET 						= 0x00-FF
 message_int 				= * OCTET
 ONLY_VALUE!message 			= message_int
 
-start    					=    [ ":" prefix SPACE ] any_command [ params ] [ ":" message ] crlf
+
+;   Channels names are strings (beginning with a '&', '#', '+' or '!'
+;   character) of length up to fifty (50) characters.  Apart from the
+;   requirement that the first character is either '&', '#', '+' or '!',
+;   the only restriction on a channel name is that it SHALL NOT contain
+;   any spaces (' '), a control G (^G or ASCII 7), a comma (',').  Space
+;   is used as parameter separator and command is used as a list item
+;   separator by the protocol).  A colon (':') can also be used as a
+;   delimiter for the channel mask.  Channel names are case insensitive.
+
+
+channel_names_int 			=  ( ( '#' 1* ( letter / digit / special ) )
+ONLY_VALUE!channel_names 	= channel_names_int
+
+start    					=    [ ":" prefix SPACE ] any_command [ *14 parameters ] [ ":" message ] crlf
 ;message    				=    [ ":" prefix SPACE ] command [ params ] crlf
 prefix     					=    servername / ( nickname [ [ "!" user ] "@" host ] )
 any_command    				=    valid_commands / ignored_commands
 params     					=    *14 ( SPACE middle ) [ SPACE ":" trailing ] / 14 ( SPACE middle ) [ SPACE [ ":" ] trailing ]
+;params     					=    *14 ( SPACE middle ) [ SPACE ":" trailing ] / 14 ( SPACE middle ) [ SPACE [ ":" ] trailing ]
 
 nospcrlfcl 					=    0x01-09 / 0x0B-0C / 0x0E-1F / 0x21-39 / 0x3B-FF
             ; any octet except NUL, CR, LF, " " and ":"
