@@ -23,6 +23,7 @@
 
 int main(int ac, char **av)
 {
+
 	(void)av;
 	if (ac != 2)
 	{
@@ -31,7 +32,10 @@ int main(int ac, char **av)
 	}
 	GrammarParser *gp = GrammarParser::build(GRAMMAR_FILE);
 	if (!gp)
+	{
+		std::cout << "FAILURE" << std::endl;
 		return 0;
+	}
 	// std::cout << *gp << std::endl;
 	std::cout << "\nGrammar parser is valid" << std::endl;
 
