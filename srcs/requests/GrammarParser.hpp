@@ -12,6 +12,7 @@
 #define INDEX_OPTIONAL 8
 #define INDEX_VAR 9
 
+#include "../../grammar/Grammar.h"
 #include "../../includes/enumFactory.h"
 #define E_PARSING_STATE_ENUM(XX)          \
 	XX(PARSE_SUCCESS, = 1)                \

@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/25 22:29:23 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/26 09:17:20 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -181,7 +181,7 @@ CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
 CPPFLAGS		+= $(DCOLORS)
-CPPFLAGS		+= -DGRAMMAR_FILE='"./grammar/grammar.gram"'
+# CPPFLAGS		+= -DGRAMMAR_FILE='"./grammar/grammar.gram"'
 
 LDFLAGS			= -I$(INC_DIR)
 TESTERS_FLAGS	= -DDEBUG=true
@@ -207,10 +207,12 @@ ifndef LEAKS
 endif
 
 
+TESTER_OBJ_EXT		=o_tester.o
+
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
 OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
-OBJS_TESTER			= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o_tester.o))
+OBJS_TESTER			= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=$(TESTER_OBJ_EXT)))
 DEPS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=d))
 -include $(DEPS)
 
