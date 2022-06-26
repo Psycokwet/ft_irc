@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/26 09:17:20 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/26 18:46:47 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,7 +130,7 @@ ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(COMPILE) 
 
 ALL_EXECS_NAMES =		$(NAME)\
-						$(TESTPARSERRULE)
+						$(TESTPARSER)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
