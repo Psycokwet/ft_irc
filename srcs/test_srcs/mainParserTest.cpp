@@ -33,7 +33,8 @@ int main(int ac, char **av)
 	GrammarParser *gp = GrammarParser::build(GRAMMAR_FILE);
 	if (!gp)
 	{
-		std::cout << "FAILURE" << std::endl;
+		std::cout << std::endl
+				  << "FAILURE" << std::endl;
 		return 0;
 	}
 	// std::cout << *gp << std::endl;
