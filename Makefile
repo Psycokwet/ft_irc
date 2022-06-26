@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/26 18:46:47 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/26 19:06:59 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -196,7 +196,6 @@ else
 	ifeq ($(TESTS), $(TESTPARSERRULE))
 		NAME_TESTER=$(TESTPARSER)
 		SRCS_FILES += $(TEST_SRCS)mainParserTest
-		NAME = $(TESTPARSER)
 	endif
 endif
 
@@ -228,13 +227,13 @@ endef
 
 define tester_sep
 	printf "\n\n\n\n____.--.--.____.--.--.____.--.--.____.--.--.__** $(1) **__.--.--.____.--.--.____.--.--.____.--.--.____\n" ;\
-	$(MAKE) $(OBJ) TESTS=$(1) LEAKS="$(LEAKS)" ;\
+	$(MAKE) $(2) TESTS=$(1)  ;\
 	$(MAKE) $(1) TESTS=$(1) LEAKS="$(LEAKS)"
 endef
 
 define launch_one_test_without_sep
-	printf "Command : $(LEAKS) ./$(NAME) $(1) \n"  ;\
-	$(LEAKS) ./$(NAME) $(1)
+	printf "Command : $(LEAKS) ./$(NAME_TESTER) $(1) \n"  ;\
+	$(LEAKS) ./$(NAME_TESTER) $(1)
 endef
 
 define launch_one_test_with_sep
@@ -244,9 +243,9 @@ endef
 
 define launch_only_legal_tests
 	@ if [ $(TESTS) = $(1) ]; then \
-		$(2)
+		$(3)
 	else \
-		$(call tester_sep,$(1)) ;\
+		$(call tester_sep,$(1), $(2)) ;\
 	fi ;
 endef
 
@@ -269,11 +268,7 @@ endef
 #
 ## -------------------------------- COMPILE --------------------------------
 #
-all: | hello $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
-	
-hello:
-	echo $(SRCS_FILES)
-
+all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
@@ -315,7 +310,7 @@ REQUESTS_FOLDER=test_datas/generated/
 CLIENTS_REQUESTS:= $(addprefix $(REQUESTS_FOLDER), $(shell ls $(REQUESTS_FOLDER)))
 
 $(TESTPARSERRULE):
-	$(call launch_only_legal_tests,$(TESTPARSERRULE),\
+	$(call launch_only_legal_tests,$(TESTPARSERRULE),$(TESTPARSER),\
 		$(call launch_test_from_array_args,$(CLIENTS_REQUESTS)) ;\)
 
 
