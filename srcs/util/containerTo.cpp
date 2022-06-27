@@ -23,3 +23,16 @@ std::list<std::string> stringToList(std::string base, char tokenizer, std::strin
 	}
 	return result;
 }
+std::list<std::string> stringToList(std::string base, std::string tokenizer)
+{
+	std::list<std::string> result;
+	std::string tmp_block;
+	int index_end;
+	while ((index_end = base.find(tokenizer)) != -1)
+	{
+		result.push_back(base.substr(0, index_end));
+		base = base.substr(index_end + tokenizer.size());
+	}
+	result.push_back(base.substr(0, index_end));
+	return result;
+}

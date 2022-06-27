@@ -8,9 +8,11 @@
 #include <set>
 #include <list>
 #include <vector>
+#include <iostream>
 #include <sstream>
 
 std::list<std::string> stringToList(std::string base, char tokenizer);
 std::list<std::string> stringToList(std::string base, char tokenizer, std::string filterOut);
+std::list<std::string> stringToList(std::string base, std::string tokenizer);
 
 #endif

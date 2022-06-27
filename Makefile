@@ -168,6 +168,8 @@ SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
 UTIL_PATH		=	util/
 UTIL_FILES 		=	parse \
 					numbers \
+					compareContainers \
+					containerTo \
 					logger
 SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 

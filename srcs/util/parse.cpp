@@ -31,22 +31,69 @@ std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container)
 	}
 	return o;
 }
+
+#define CHANNELS "channels"
+#define MESSAGE "message"
+#define PARAMS "params"
+#define COMMAND "command"
 lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
 	if (input.rfind("\r\n") != input.size() - 2)
 		return NULL;
-	std::stringstream ss(input);
+	input = input.substr(0, input.size() - 2);
+	std::cout << "[" << input << "]\n";
 	lazyParsedType *parsedDatas = new lazyParsedType();
 
-	std::list<std::string> cut = stringToList(input, ' ');
-	if (cut.size() > 1)
+	int message_index = input.find(':');
+	if (message_index != -1)
 	{
-		(*parsedDatas)["method"] = lazyParsedSubType();
-		(*parsedDatas)["method"].push_back(cut.front());
-		cut.pop_front();
-		return parsedDatas;
+		(*parsedDatas)[MESSAGE] = lazyParsedSubType();
+		(*parsedDatas)[MESSAGE].push_back(input.substr(message_index + 1));
+		input = input.substr(0, message_index);
 	}
-	print_lazyrequest(std::cout, *parsedDatas);
+
+	lazyParsedSubType cut = stringToList(input, ' ');
+	if (cut.size() >= 1)
+	{
+		(*parsedDatas)[COMMAND] = lazyParsedSubType();
+		(*parsedDatas)[COMMAND].push_back(cut.front());
+		cut.pop_front();
+	}
+	else
+	{
+		std::cout << "QUIT !!!!\n";
+		delete parsedDatas;
+		return NULL;
+	}
+	// std::cout << "BACK CHJECK " << cut.back() << std::endl;
+	// if (cut.size() >= 1 && cut.back().at(0) == ':')
+	// {
+	// 	(*parsedDatas)[MESSAGE] = lazyParsedSubType();
+	// 	(*parsedDatas)[MESSAGE].push_back(cut.back().substr(1));
+	// 	cut.pop_back();
+	// }
+	for (lazyParsedSubType::iterator it = cut.begin(); it != cut.end(); it++)
+	{
+		if (it->at(0) == '#')
+		{
+			std::cout << *it << std::endl;
+			if (parsedDatas->find(CHANNELS) != parsedDatas->end())
+			{
+				std::cout << "QUIT !!!!\n";
+				delete parsedDatas;
+				return NULL;
+			}
+			lazyParsedSubType sub = stringToList((*it).substr(1), ",#");
+			(*parsedDatas)[CHANNELS] = lazyParsedSubType(sub);
+			cut.erase(it++);
+			continue;
+		}
+	}
+	if (cut.size() >= 1)
+	{
+		std::cout << "STILL SOMETHING HERE \n";
+		(*parsedDatas)[PARAMS] = lazyParsedSubType(cut);
+	}
 	return parsedDatas;
 }
