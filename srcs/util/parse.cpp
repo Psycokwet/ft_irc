@@ -21,3 +21,18 @@ int isReallyBlank(int c)
 		return true;
 	return false;
 }
+
+std::map<std::string, std::list<std::string> > *LazyRequestParser(std::string input)
+{
+	std::string tmp_block;
+	if (input.rfind("\r\n") != input.size() - 2)
+		return NULL;
+	std::stringstream ss(input);
+	std::map<std::string, std::list<std::string> > *parsedDatas = new std::map<std::string, std::list<std::string> >();
+	while (std::getline(ss, tmp_block, ' '))
+	{
+		std::cout << "hello " << tmp_block << std::endl;
+	}
+
+	return parsedDatas;
+}

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../util/parse.hpp"
 #include "../requests/GrammarParser.hpp"
 #include <ctype.h>
 #include <iostream>
@@ -23,48 +24,64 @@
 
 int main(int ac, char **av)
 {
-
 	(void)av;
 	if (ac != 2)
 	{
 		std::cout << "I'm only a request parser for test, what do you expect by not giving me any file name to read from?" << std::endl;
 		return 0;
 	}
-	GrammarParser *gp = GrammarParser::build(GRAMMAR_FILE);
-	if (!gp)
-	{
-		std::cout << std::endl
-				  << "FAILURE" << std::endl;
-		return 0;
-	}
+	// GrammarParser *gp = GrammarParser::build(GRAMMAR_FILE);
+	// if (!gp)
+	// {
+	// 	std::cout << std::endl
+	// 			  << "FAILURE" << std::endl;
+	// 	return 0;
+	// }
 	// std::cout << *gp << std::endl;
-	std::cout << "\nGrammar parser is valid" << std::endl;
+	// std::cout << "\nGrammar parser is valid" << std::endl;
 
 	std::ifstream ifs(av[1]);
-	std::string tmp_line = "";
-	std::stringstream ss;
-	while (std::getline(ifs, tmp_line))
-	{
-		gp->feed(tmp_line); // BEWARE it may need to be \r\n depending on OS
-		if (gp->parse() >= PARSE_FAILURE)
-		{
-			std::cout << RED << "Incorrect request, must quit treatment from line :" << tmp_line << std::endl
-					  << "with intermediate result :";
-			std::cout << *gp->getParsedRequest() << RESET << std::endl;
-			delete gp;
-			return 0;
-		}
-	}
-	ParsedRequest *pr = gp->finishParse();
+	// std::string tmp_line = "";
+	// std::stringstream ss;
+	// while (std::getline(ifs, tmp_line))
+	// {
+	// 	gp->feed(tmp_line); // BEWARE it may need to be \r\n depending on OS
+	// 	if (gp->parse() >= PARSE_FAILURE)
+	// 	{
+	// 		std::cout << RED << "Incorrect request, must quit treatment from line :" << tmp_line << std::endl
+	// 				  << "with intermediate result :";
+	// 		std::cout << *gp->getParsedRequest() << RESET << std::endl;
+	// 		delete gp;
+	// 		return 0;
+	// 	}
+	// }
+	// ParsedRequest *pr = gp->finishParse();
 
-	delete gp;
-	if (!pr)
+	// delete gp;
+	// if (!pr)
+	// {
+	// 	std::cout << "An error occured at the end of the parsing" << std::endl;
+	// 	return 0;
+	// }
+	// std::cout << "BILAN "
+	// 		  << "[" << *pr << "]" << std::endl;
+	// delete pr;
+
+	std::string tmp;
+	std::string buff;
+	while (std::getline(ifs, tmp))
 	{
-		std::cout << "An error occured at the end of the parsing" << std::endl;
-		return 0;
+		buff += tmp + "\n";
 	}
-	std::cout << "BILAN "
-			  << "[" << *pr << "]" << std::endl;
-	delete pr;
+	lazyParsedType *lad = LazyRequestParser(buff);
+	if (!lad)
+	{
+		std::cout << RED << "FAILURE\n"
+				  << RESET;
+		return -1;
+	}
+	std::cout << BLUE << "Parsed\n"
+			  << RESET;
+	delete lad;
 	return 0;
 }

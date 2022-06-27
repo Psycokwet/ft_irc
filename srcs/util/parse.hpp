@@ -1,10 +1,14 @@
 #ifndef PARSE_HPP
-# define PARSE_HPP
-# include <cstring>
-# include <string.h>
-# include <ctype.h>
-# include <algorithm>
-# include <fstream>
+#define PARSE_HPP
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <list>
+#include <map>
+#include <string.h>
+#include <ctype.h>
+#include <algorithm>
+#include <fstream>
 void ltrim(std::string &s);
 void rtrim(std::string &s);
 void trim(std::string &s);
@@ -15,4 +19,7 @@ int isReallyBlank(int c);
 	trim(str);                                                   \
 	if (str == "" || str[0] == ';')                              \
 		continue;
+typedef std::list<std::string> lazyParsedSubType;
+typedef std::map<std::string, lazyParsedSubType> lazyParsedType;
+lazyParsedType *LazyRequestParser(std::string input);
 #endif
