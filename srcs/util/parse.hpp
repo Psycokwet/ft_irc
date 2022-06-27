@@ -16,6 +16,10 @@ void rtrim(std::string &s);
 void trim(std::string &s);
 int isReallyBlank(int c);
 
+#define CHANNELS "channels"
+#define MESSAGE "message"
+#define PARAMS "params"
+#define COMMAND "command"
 #define PREPARE_AND_SKIP_EMPTY_LIGNES(str)                       \
 	std::replace_if(str.begin(), str.end(), isReallyBlank, ' '); \
 	trim(str);                                                   \

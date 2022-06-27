@@ -45,7 +45,9 @@ int main(int ac, char **av)
 				  << RESET;
 		return -1;
 	}
-	std::cout << BLUE << "Parsed\n"
+	std::cout << BLUE << "Parsed, original:\n"
+			  << GREEN
+			  << buff
 			  << RESET;
 	print_lazyrequest(std::cout, *lad);
 	delete lad;

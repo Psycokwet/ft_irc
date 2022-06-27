@@ -32,10 +32,6 @@ std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container)
 	return o;
 }
 
-#define CHANNELS "channels"
-#define MESSAGE "message"
-#define PARAMS "params"
-#define COMMAND "command"
 lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
