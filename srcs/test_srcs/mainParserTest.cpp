@@ -82,6 +82,7 @@ int main(int ac, char **av)
 	}
 	std::cout << BLUE << "Parsed\n"
 			  << RESET;
+	print_lazyrequest(std::cout, *lad);
 	delete lad;
 	return 0;
 }

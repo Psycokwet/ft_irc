@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include <algorithm>
 #include <fstream>
+#include "print.hpp"
+#include "containerTo.hpp"
 void ltrim(std::string &s);
 void rtrim(std::string &s);
 void trim(std::string &s);
@@ -22,4 +24,5 @@ int isReallyBlank(int c);
 typedef std::list<std::string> lazyParsedSubType;
 typedef std::map<std::string, lazyParsedSubType> lazyParsedType;
 lazyParsedType *LazyRequestParser(std::string input);
+std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container);
 #endif

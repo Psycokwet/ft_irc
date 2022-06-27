@@ -22,17 +22,31 @@ int isReallyBlank(int c)
 	return false;
 }
 
-std::map<std::string, std::list<std::string> > *LazyRequestParser(std::string input)
+std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container)
+{
+	for (typename lazyParsedType::const_iterator it = container.begin(); it != container.end(); it++)
+	{
+		o << it->first << ": [\n";
+		print_cont(o, it->second) << "]\n";
+	}
+	return o;
+}
+lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
 	if (input.rfind("\r\n") != input.size() - 2)
 		return NULL;
 	std::stringstream ss(input);
-	std::map<std::string, std::list<std::string> > *parsedDatas = new std::map<std::string, std::list<std::string> >();
-	while (std::getline(ss, tmp_block, ' '))
-	{
-		std::cout << "hello " << tmp_block << std::endl;
-	}
+	lazyParsedType *parsedDatas = new lazyParsedType();
 
+	std::list<std::string> cut = stringToList(input, ' ');
+	if (cut.size() > 1)
+	{
+		(*parsedDatas)["method"] = lazyParsedSubType();
+		(*parsedDatas)["method"].push_back(cut.front());
+		cut.pop_front();
+		return parsedDatas;
+	}
+	print_lazyrequest(std::cout, *parsedDatas);
 	return parsedDatas;
 }
