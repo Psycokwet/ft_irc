@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/26 19:06:59 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/27 18:24:58 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -148,13 +148,6 @@ GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_
 # -------------------------------- SRCS definitions --------------------------------
 #
 
-REQUEST_PATH	=	requests/
-REQUESTS_FILES 	= 	GrammarParser \
-					GrammarVariables \
-					GrammarParserBuilderMarker \
-					ParsedRequest \
-					Statements
-SRCS_FILES		+=	$(addprefix $(REQUEST_PATH), $(REQUESTS_FILES))
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \

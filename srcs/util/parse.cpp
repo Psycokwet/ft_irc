@@ -42,7 +42,6 @@ lazyParsedType *LazyRequestParser(std::string input)
 	if (input.rfind("\r\n") != input.size() - 2)
 		return NULL;
 	input = input.substr(0, input.size() - 2);
-	std::cout << "[" << input << "]\n";
 	lazyParsedType *parsedDatas = new lazyParsedType();
 
 	int message_index = input.find(':');
@@ -62,25 +61,15 @@ lazyParsedType *LazyRequestParser(std::string input)
 	}
 	else
 	{
-		std::cout << "QUIT !!!!\n";
 		delete parsedDatas;
 		return NULL;
 	}
-	// std::cout << "BACK CHJECK " << cut.back() << std::endl;
-	// if (cut.size() >= 1 && cut.back().at(0) == ':')
-	// {
-	// 	(*parsedDatas)[MESSAGE] = lazyParsedSubType();
-	// 	(*parsedDatas)[MESSAGE].push_back(cut.back().substr(1));
-	// 	cut.pop_back();
-	// }
 	for (lazyParsedSubType::iterator it = cut.begin(); it != cut.end(); it++)
 	{
 		if (it->at(0) == '#')
 		{
-			std::cout << *it << std::endl;
 			if (parsedDatas->find(CHANNELS) != parsedDatas->end())
 			{
-				std::cout << "QUIT !!!!\n";
 				delete parsedDatas;
 				return NULL;
 			}
@@ -92,7 +81,6 @@ lazyParsedType *LazyRequestParser(std::string input)
 	}
 	if (cut.size() >= 1)
 	{
-		std::cout << "STILL SOMETHING HERE \n";
 		(*parsedDatas)[PARAMS] = lazyParsedSubType(cut);
 	}
 	return parsedDatas;
