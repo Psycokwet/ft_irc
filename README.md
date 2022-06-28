@@ -91,3 +91,7 @@ this we can ignore:
         "WATCH",
         "WHOIS",
         "WHOWAS",`****
+
+
+Parsing result: From `KICK #new_channel thi-nguy :Speaking_English\r\n` to `std::map<std::string, std::string> parsing_map`
+`Keys are:  #command #channel #username #message #params`

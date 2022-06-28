@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/27 18:24:58 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/28 11:26:08 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -148,6 +148,15 @@ GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_
 # -------------------------------- SRCS definitions --------------------------------
 #
 
+
+USER_PATH	=	User/
+USER_FILES 	= 	User
+SRCS_FILES 		+=	$(addprefix $(USER_PATH), $(USER_FILES))
+
+CHANNEL_PATH	=	Channel/
+CHANNEL_FILES 	= 	Channel
+
+SRCS_FILES 		+=	$(addprefix $(CHANNEL_PATH), $(CHANNEL_FILES))
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
