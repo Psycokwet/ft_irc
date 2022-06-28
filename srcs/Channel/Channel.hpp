@@ -29,6 +29,8 @@ public:
 	int setChannelMode(IRCServer *IRCServer, bool plus, char mode, std::string const &param);
 	std::string Channel::getChannelMode() const;
 
+	friend class IRCServer;
+
 private:
 	std::string const _name; // nom du channell
 	std::set<User *> _user;	 // liste des users inscrit
@@ -42,8 +44,6 @@ private:
 	std::string _key;	  // clee channel (k)
 	bool _nottopic;		  // no subjet (t)
 	bool _invit;		  // seulement les user inscrit (i)
-
-	friend class IRCServer;
 };
 
 std::ostream &operator<<(std::ostream &o, Channel const &i);

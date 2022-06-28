@@ -1,8 +1,8 @@
 #ifndef IRCSERVER_HPP
-# define IRCSERVER_HPP
+#define IRCSERVER_HPP
 
-# include <iostream>
-# include <string>
+#include <iostream>
+#include <string>
 
 #include "../Channel/Channel.hpp"
 #include "../User/User.hpp"
@@ -12,37 +12,37 @@
 class IRCServer
 {
 
-	public:
+public:
+	IRCServer(std::string const &password);
+	IRCServer(IRCServer const &src);
+	virtual ~IRCServer();
 
-		IRCServer(std::string const &password);
-		IRCServer( IRCServer const & src );
-		virtual ~IRCServer();
+	IRCServer &operator=(IRCServer const &rhs);
 
-		IRCServer &		operator=( IRCServer const & rhs );
+	User *getUserByNick(std::string const &nick) const;
+	Channel *getChannelByName(std::string const &name) const;
 
+private:
+	std::map<int, User *> _User_list;				// Users list
+	std::map<std::string, Channel *> _channel_list; // Channels list
 
-		User	*getUserByNick(std::string const &nick) const;
-		Channel	*getChannelByName(std::string const &name) const;
+	int _killing; // fd users killing by operator
 
-	private:
-	
-	std::map<int, User *>		           _User;		// Users list
-	std::map<std::string, Channel *>	_channels;	// Channels list
+	// USERS //
 
-    int	_killing; //fd users killing by operator
+	void leave(User *user, Channel *chan); // leave channel
+	void remove(User *user);			   // remove all channel
+	void welcome();
 
+	Channel *newChannel(std::string const &name, User *creat);
+	std::set<User *> getCommonUser(User *user) const;
+	Channel *getChannelName(std::string const &name) const;
 
-    // USERS //
+	// command
 
-    void	leave(User *user, Channel *chan); //leave channel
-	void	remove(User *user);//remove all channel
-    void    welcome();
-
-	Channel	*newChannel(std::string const &name, User *creator);
-	std::set<User *>	getCommonUser(User *user) const;
-
+	void PASS(Command const &cmd, std::vector<t_clientCmd> &responseQueue);
 };
 
-std::ostream &			operator<<( std::ostream & o, IRCServer const & i );
+std::ostream &operator<<(std::ostream &o, IRCServer const &i);
 
 #endif /* ******************************************************* IRCSERVER_H */
