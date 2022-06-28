@@ -22,15 +22,12 @@ static bool checkArguments(int ac, char **av, int &port, std::string &password)
 }
 int main(int ac, char **av)
 {
-    int port;
-    std::string password;
-    if (!checkArguments(ac, av, port, password))
-        exit(1);
-    
-    IRCServer *myIrc = new IRCServer(password);
-    MasterServer *myServer = new MasterServer(port, password, *myIrc);
+	int port;
+	std::string password;
+	if (!checkArguments(ac, av, port, password))
+		exit(1);
 
-	IRCServer *myIrc = new IRCServer();
+	IRCServer *myIrc = new IRCServer(password);
 	MasterServer *myServer = new MasterServer(port, password, *myIrc);
 
 	if (myServer->build() == EXIT_FAILURE)
