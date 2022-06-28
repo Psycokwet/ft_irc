@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/21 12:12:08 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/06/24 13:48:49 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ SRCS		=	./srcs/main.cpp \
 				./srcs/network/Client.cpp \
 				./srcs/Channel/Channel.cpp \
 				./srcs/User/User.cpp \
+				./srcs/IRCServer/IRCUSER.cpp \
 				./srcs/IrcServer/IRCServer.cpp
 #
 # -------------------------------- Paths --------------------------------
