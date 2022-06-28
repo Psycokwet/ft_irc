@@ -46,7 +46,7 @@ void IRCServer::removeDisconnectUser(int fd)
 
 // Called by the server. Process a command from a client, then queue responses
 // into responseQueue. Return true if client is disconnecting, otherwise false.
-bool IRCServer::processCommand(t_clientCmd const &command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::processCommand(t_client_ParsedCmd command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)respQueue;
 	User *one_user;
@@ -60,6 +60,7 @@ bool IRCServer::processCommand(t_clientCmd const &command, std::vector<t_clientC
 	}
 	else
 		one_user = _users[fd];
+	delete command.second; // if NULL then we never got inside process command in the first place
 	return false;
 }
 

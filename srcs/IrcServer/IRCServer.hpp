@@ -15,7 +15,7 @@ public:
 	~IRCServer();
 
 	void removeDisconnectUser(int fd);
-	bool processCommand(t_clientCmd const &command, std::vector<t_clientCmd> &respQueue);
+	bool processCommand(t_client_ParsedCmd command, std::vector<t_clientCmd> &respQueue);
 	int getVictim();
 
 private:

@@ -158,6 +158,17 @@ int MasterServer::setFDForReading()
 	return new_r;
 }
 
+bool isLegalCmd(lazyParsedType **lad)
+{
+	if ((*lad)->find(COMMAND) == (*lad)->end())
+	{
+		delete (*lad);
+		*lad = NULL;
+		return false;
+	}
+	return true;
+}
+
 void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList)
 {
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
@@ -173,13 +184,17 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 			else if (disconnectList.find(fd) == disconnectList.end()) // if fd client is not in disconnected list
 			{
 				received_command.clear();
+				lazyParsedType *parsed_command;
 				bool ret = _clients[fd]->receiveCommand(received_command);
 				if (ret == false)
 				{
 					_ircServer.removeDisconnectUser(fd);
 					removeClient(fd);
 				}
-				else if (!received_command.empty() && _ircServer.processCommand(std::make_pair(fd, received_command), resQueue))
+				else if (!received_command.empty()										   //
+						 && (parsed_command = LazyRequestParser(received_command)) != NULL //
+						 && isLegalCmd(&parsed_command)									   //
+						 && _ircServer.processCommand(std::make_pair(fd, parsed_command), resQueue))
 					disconnectList.insert(fd);
 				int killed_by_operater_fd = _ircServer.getVictim();
 				if (killed_by_operater_fd != -1)
