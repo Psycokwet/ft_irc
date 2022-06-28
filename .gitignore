@@ -1,6 +1,8 @@
 # personnalised
 *.DS_Store
 ircserv
+testParser
+logs/*
 
 # Prerequisites
 *.d
@@ -34,3 +36,4 @@ ircserv
 *.exe
 *.out
 *.app
+
