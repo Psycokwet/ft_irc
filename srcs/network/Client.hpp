@@ -10,24 +10,18 @@
 
 class Client
 {
-    public:
-        
+public:
+	friend class MasterServer;
 
-        
-        friend class MasterServer;
+private:
+	int _fd;
+	char _buffer[BUF_SIZE + 1];
+	std::string _commandTemp;
 
-    private:
-        int             _fd;
-        char            _buffer[BUF_SIZE + 1];
-        std::string     _commandTemp;
-        
-
-        Client();
-        Client(int fd);
-        bool receiveCommand(std::string &command);
-        void sendResp(std::string const &resp);
-
+	Client();
+	Client(int fd);
+	bool receiveCommand(std::string &command);
+	void sendResp(std::string const &resp);
 };
-
 
 #endif
