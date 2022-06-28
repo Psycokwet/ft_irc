@@ -9,7 +9,7 @@ class User
     public:
         User(int fd);
 
-        void getRegistered() const;
+        bool getRegistered() const;
 
 
     private:

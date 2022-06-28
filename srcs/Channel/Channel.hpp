@@ -11,3 +11,5 @@ class Channel
     private:
 
 };
+
+#endif

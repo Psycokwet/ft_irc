@@ -21,7 +21,7 @@ User::~User()
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
-void User::getRegistered() const
+bool User::getRegistered() const
 {
     return (_registered);
 }
