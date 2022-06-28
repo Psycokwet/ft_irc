@@ -5,7 +5,9 @@
 
 class Channel
 {
-    public: 
+    public:
+        Channel();
+        ~Channel();
 
 
     private:

@@ -18,7 +18,7 @@ IRCServer::IRCServer(std::string const &password):
 IRCServer::~IRCServer()
 {
     std::map<int, User *>::iterator itUser;
-    std::map<int, Channel *>::iterator itChannel;
+    std::map<std::string, Channel *>::iterator itChannel;
 
     for (itUser = _users.begin(); itUser != _users.end(); ++itUser)
         delete itUser->second;
