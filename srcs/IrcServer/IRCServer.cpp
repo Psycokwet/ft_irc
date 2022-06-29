@@ -143,6 +143,7 @@ void IRCServer::removeDisconnectUser(int fd)
 bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)respQueue;
+	bool isCommandExecuted = false;
 	User *one_user;
 	std::string cmd_name = ((*(parsed_command.second))[COMMAND]).front(); // if we got in here, we already check that there is something here
 	int fd = parsed_command.first;
@@ -165,8 +166,14 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 				// manage error case
 				std::cout << " Command returned false, is there an error ?\n";
 			}
+			isCommandExecuted = true;
 			break;
 		}
+	}
+	if (!isCommandExecuted)
+	{
+		// should we send an error or something ?
+		std::cout << "No command correspond to " << cmd_name << "\n";
 	}
 	delete parsed_command.second; // if NULL then we never got inside process command in the first place
 	return false;
