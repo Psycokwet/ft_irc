@@ -11,7 +11,7 @@ class User
 
 public:
 	User(int fd);
-	User(User const &src);
+	User(int fd, std::string const &src);
 	virtual ~User();
 
 	User &operator=(User const &rhs);

@@ -59,6 +59,11 @@ bool User::IsUsernameDefault() const
 {
 	return (_userName == DEFAULT_NAME);
 }
+void User::registrationOK()
+{
+	_log = true;
+	_prefixUser = std::string(":") + _nickName + '!' + _userName + '@' + USR_HOST;
+}
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
@@ -75,8 +80,20 @@ std::string User::GetModes() const
 		mode += "o";
 	return mode;
 }
-void User::setNickname(const std::string &nickname) { _nickName = nickname; };
-void User::setUsername(const std::string &username) { _userName = username; };
+
+void User::setNickname(const std::string &nickname)
+{
+	_nickName = nickname;
+	if (_userName != DEFAULT_NAME)
+		registrationOK();
+};
+
+void User::setUsername(const std::string &username)
+{
+	_userName = username;
+	if (_nickName != DEFAULT_NAME)
+		registrationOK();
+};
 void User::setRealName(const std::string &realname) { _realName = realname; };
 
 std::string User::getNickname() const { return _nickName; };

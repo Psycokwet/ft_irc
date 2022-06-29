@@ -6,7 +6,7 @@
 #include "../User/User.hpp"
 #include "../../includes/ft_irc.hpp"
 #include "../../includes/code.hpp"
-#include "../IRCServer/IRCServer.hpp"
+#include "../../IRCServer/IRCServer.hpp"
 
 class Channel
 {

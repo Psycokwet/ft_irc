@@ -28,6 +28,7 @@
 #define DEFAULT_NAME "*"
 #define VALID_CHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-^_[]{}\\|"
 #define ERROR_CHAR "\a,: "
+#define USR_HOST "user.ft-irc.42.fr"
 
 // channel mode
 #define EVERY_MODE "biklmnopstv"

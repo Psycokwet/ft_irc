@@ -56,7 +56,7 @@ private:
 
 	// command execute
 
-	void PASS(Command const &cmd, std::vector<t_clientCmd> &respQueue);
+	void PASS(t_client_ParsedCmd command, std::vector<t_clientCmd> &respQueue);
 
 	// command
 
