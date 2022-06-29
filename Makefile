@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
+#    By: thi-nguy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/28 11:26:08 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/29 16:52:49 by thi-nguy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -169,6 +169,12 @@ SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 SERVER_PATH		=	IrcServer/
 SERVER_FILES 	= 	IRCServer
 SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
+
+COMMAND_PATH	=	Execute_command/
+COMMAND_FILES 	= 	example_command \
+					NICK
+
+SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
 UTIL_PATH		=	util/
 UTIL_FILES 		=	parse \
