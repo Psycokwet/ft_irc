@@ -122,6 +122,8 @@ CLEAN_LOGS				= cleanLogs
 COMPILE 				= compile
 TESTPARSERRULE			= testParserRule
 TESTPARSER				= testParser
+TESTDISPATCHRULE		= testDispatchRule
+TESTDISPATCH			= testDispatch
 
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
@@ -130,7 +132,8 @@ ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(COMPILE) 
 
 ALL_EXECS_NAMES =		$(NAME)\
-						$(TESTPARSER)
+						$(TESTPARSER)\
+						$(TESTDISPATCH)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
@@ -200,6 +203,11 @@ else
 	ifeq ($(TESTS), $(TESTPARSERRULE))
 		NAME_TESTER=$(TESTPARSER)
 		SRCS_FILES += $(TEST_SRCS)mainParserTest
+	else
+		ifeq ($(TESTS), $(TESTDISPATCHRULE))
+			NAME_TESTER=$(TESTDISPATCH)
+			SRCS_FILES += $(TEST_SRCS)mainDispatchTest
+		endif
 	endif
 endif
 
@@ -312,6 +320,10 @@ $(CLEAN_UNWANTED_PATHS)	:
 
 REQUESTS_FOLDER=test_datas/generated/
 CLIENTS_REQUESTS:= $(addprefix $(REQUESTS_FOLDER), $(shell ls $(REQUESTS_FOLDER)))
+
+$(TESTDISPATCHRULE):
+	$(call launch_only_legal_tests,$(TESTDISPATCHRULE),$(TESTDISPATCH),\
+		$(call launch_test_from_array_args,$(CLIENTS_REQUESTS)) ;\)
 
 $(TESTPARSERRULE):
 	$(call launch_only_legal_tests,$(TESTPARSERRULE),$(TESTPARSER),\
