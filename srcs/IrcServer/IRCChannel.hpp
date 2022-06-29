@@ -4,7 +4,7 @@
 Channel *IRCServer::newChannel(std::string const &name, User *creat)
 {
     Channel *chan(new Channel(name, creat));
-    _channel_list[name] = chan;
+    _channels[name] = chan;
     creat->_add.insert(chan);
     return chan;
 }
@@ -23,7 +23,7 @@ std::set<User *> IRCServer::getCommonUser(User *user) const
 // return pointer du channel trouve sinon null
 Channel *IRCServer::getChannelName(std::string const &name) const
 {
-    if (_channel_list.find(name) != _channel_list.end())
-        return _channel_list.at(name);
+    if (_channels.find(name) != _channels.end())
+        return _channels.at(name);
     return NULL;
 }

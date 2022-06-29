@@ -28,6 +28,7 @@ public:
 
 	int setChannelMode(IRCServer *IRCServer, bool plus, char mode, std::string const &param);
 	std::string Channel::getChannelMode() const;
+	int Channel::RemoveUser(User *user);
 
 	friend class IRCServer;
 

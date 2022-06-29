@@ -85,6 +85,13 @@ int Channel::addUser(User *user, std::string const &key)
 	_userInv.erase(user);
 	return 0;
 }
+// Remove a user from channel. Return number of user left in the channel
+int Channel::RemoveUser(User *user)
+{
+	_user.erase(user);
+	_op.erase(user);
+	return _user.size();
+}
 
 bool Channel::isUser(User *user) const { return _user.find(user) != _user.end(); }
 bool Channel::isInvited(User *user) const { return (_userInv.find(user) != _userInv.end()); }

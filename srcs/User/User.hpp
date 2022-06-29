@@ -24,12 +24,20 @@ public:
 	std::string getUsername() const;
 	std::string getRealName() const;
 
+	std::string GetModes() const;
+
 	friend class IRCServer;
 
 private:
 	int _fd;
 	bool _passOK;
 	bool _log;
+
+	// user mode
+
+	bool IsUsernameDefault() const;
+	bool IsAway() const;
+	bool IsVisible() const;
 
 	std::string _nickName;
 	std::string _userName;
@@ -39,12 +47,12 @@ private:
 	std::set<Channel *> _add; // list channel user add
 
 	// USER MODE
-	std::string _Msg;
+	std::string _awayMsg;
 	bool _invisible; // (i) Is invisible
 	bool _op;		 // (o) Is server operator
 
 protected:
-	User(int fd, std::string const &origin);
+	// User(int fd, std::string const &origin);
 	void registrationOK();
 };
 
