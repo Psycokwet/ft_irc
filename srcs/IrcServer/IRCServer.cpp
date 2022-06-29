@@ -191,3 +191,8 @@ void IRCServer::removeUserFromAllChannels(User *user)
 	(void)user;
 	// ! Erase user in the channel map
 }
+
+void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
+{
+	respQueue.push_back(std::make_pair(fd, msg));
+}
