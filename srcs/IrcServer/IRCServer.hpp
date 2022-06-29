@@ -23,6 +23,10 @@ private:
 	std::map<std::string, Channel *> _channels; // Channels list
 	std::string const _serverPassword;
 	int _fdToKill; // Fd of user killed by operater
+	std::vector<std::string> _params;
+
+	// command execute
+	void PASS(t_client_ParsedCmd command, std::vector<t_clientCmd> &respQueue);
 
 	void removeUserFromAllChannels(User *user);
 };
