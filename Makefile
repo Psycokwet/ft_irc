@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thi-nguy <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/29 16:52:49 by thi-nguy         ###   ########.fr        #
+#    Updated: 2022/06/30 10:45:57 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -172,7 +172,8 @@ SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
 
 COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	example_command \
-					NICK
+					NICK \
+					PASS
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

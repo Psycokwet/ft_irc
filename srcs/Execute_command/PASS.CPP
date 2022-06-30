@@ -1,25 +1,19 @@
-#include "IRCServer.hpp"
+#include "../IrcServer/IRCServer.hpp"
 
-/*
-** ============================================== = ===============
-** Commande : PASS
-** ============================================== = ===============
-** Paramètres : <mot de passe>
-** ============================================== = ===============
-*
-** ============================================== = ================
-*/
-void IRCServer::PASS(t_client_ParsedCmd command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::execPASS(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
-    User *user;
-    std::string response;
+     User *user;
+     std::string response;
 
-    // check password
-    if (user->_passOK)
-        response = ERR_ALREADYREGISTRED;
-    // check parametre
-    if (_params.empty())
-        response = ERR_NEEDMOREPARAMS;
-    // else if (_params ==  _serverPassword)
-    //   user->_passOK = true;
+    if ( ((*(parsed_command.second))[PARAMS]).empty() )
+	    {
+		    response = ":Not enough parameters";
+		    //pushToQueue(parsed_command.first, response, respQueue);
+	    }
+    if ((user._passOK))
+        {
+            response = ":You may not reregister";
+            //pushToQueue(parsed_command.first, response, respQueue);
+        }
+    return true;
 }
