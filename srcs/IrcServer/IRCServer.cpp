@@ -73,7 +73,10 @@ t_commands_dictionary IRCServer::_commandsDictionnary = IRCServer::initCommandsD
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-IRCServer::IRCServer(std::string const &password) : _serverPassword(password)
+IRCServer::IRCServer(std::string const &password) : 
+	_serverPassword(password),
+	_fdToKill(-1),
+	_prefix(std::string(":") + SERVER_NAME)
 {
 }
 
@@ -151,9 +154,9 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 
 	for (t_commands_dictionary::iterator it = IRCServer::_commandsDictionnary.begin(); it != IRCServer::_commandsDictionnary.end(); it++)
 	{
-		if (it->first == cmd_name)
+		if (it->first == cmd_name) // find command on the supported command list
 		{
-			if (!(this->*(it->second))(parsed_command, respQueue))
+			if (!(this->*(it->second))(parsed_command, respQueue)) // execute it
 			{
 				// manage error case
 				std::cout << " Command returned false, is there an error ?\n";
@@ -164,8 +167,7 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 	}
 	if (!isCommandExecuted)
 	{
-		// should we send an error or something ?
-		std::cout << "No command correspond to " << cmd_name << "\n";
+		unknownCmd(parsed_command, one_user, respQueue);
 	}
 	delete parsed_command.second; // if NULL then we never got inside process command in the first place
 	return false;
@@ -195,4 +197,23 @@ void IRCServer::removeUserFromAllChannels(User *user)
 void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
 {
 	respQueue.push_back(std::make_pair(fd, msg));
+}
+
+void IRCServer::unknownCmd(t_client_ParsedCmd cmd, User *one_user, std::vector<t_clientCmd> &responseQueue) const
+{
+	int userFd =  cmd.first;
+	std::string	resp;
+	resp = getResponseFromCode(one_user, ERR_UNKNOWNCOMMAND, (*(cmd.second))[COMMAND]);
+	pushToQueue(userFd, resp, responseQueue);
+}
+
+std::string	IRCServer::getResponseFromCode(User *one_user, int code, std::list<std::string> params) const
+{
+	std::stringstream	msg;
+	msg << _prefix << " "
+		<< getCodeWithZero(code, 3) << " "
+		<< one_user->_nick << " ";
+
+	msg << END_OF_COMMAND;
+	return msg.str();
 }
