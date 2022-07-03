@@ -28,7 +28,7 @@ t_commands_dictionary IRCServer::initCommandsDictionnary()
 	map["QUIT"] = &IRCServer::example_command;
 	map["TIME"] = &IRCServer::example_command;
 	map["TOPIC"] = &IRCServer::example_command;
-	map["USER"] = &IRCServer::example_command;
+	map["USER"] = &IRCServer::execUSER;
 	map["VERSION"] = &IRCServer::example_command;
 	map["WHO"] = &IRCServer::example_command;
 	// ignored commands
@@ -190,4 +190,9 @@ void IRCServer::removeUserFromAllChannels(User *user)
 {
 	(void)user;
 	// ! Erase user in the channel map
+}
+
+void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
+{
+	respQueue.push_back(std::make_pair(fd, msg));
 }

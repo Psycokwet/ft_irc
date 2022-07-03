@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/30 10:45:57 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/01 16:33:40 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -173,7 +173,8 @@ SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
 COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	example_command \
 					NICK \
-					PASS
+					PASS \
+					USER
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
