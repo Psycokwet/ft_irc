@@ -6,6 +6,8 @@
 #include "../Channel/Channel.hpp"
 #include "../User/User.hpp"
 
+#define TOO_MANY_ARGS ": Too many params"
+
 class User;
 class Channel;
 class IRCServer;

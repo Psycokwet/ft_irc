@@ -8,6 +8,12 @@ Client::Client(int fd) : _fd(fd)
 {
 }
 
+Client::~Client()
+{
+	std::cout << "Remove client " << _fd << std::endl;
+	close(_fd);
+}
+
 /*
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */

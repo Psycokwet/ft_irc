@@ -9,6 +9,7 @@ class Client
 {
 public:
 	friend class MasterServer;
+	~Client();
 
 private:
 	int _fd;

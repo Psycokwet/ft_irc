@@ -134,7 +134,7 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 				std::cout << "Command returned false, must quit client processing.\n";
 				return false;
 			}
-			std::cout << "Command done\n";
+			std::cout << "Command " << cmd_name << " done\n";
 			delete parsed_command.second; // if NULL then we never got inside process command in the first place
 			return true;
 		}

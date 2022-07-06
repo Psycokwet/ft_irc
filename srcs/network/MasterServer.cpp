@@ -123,7 +123,9 @@ void MasterServer::run() // ! do like main_loops
 		}
 
 		for (itDisconnect = disconnectList.begin(); itDisconnect != disconnectList.end(); ++itDisconnect)
+		{
 			removeClient(*itDisconnect);
+		}
 	}
 }
 
