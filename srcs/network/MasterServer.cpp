@@ -179,28 +179,40 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 	{
 		if (FD_ISSET(fd, &_fdReader))
 		{
+			--totalFd;
 			if (fd == _fdServer) // if fd is Server
-				acceptClient(fd);
-			else if (disconnectList.find(fd) == disconnectList.end()) // if fd client is not in disconnected list
 			{
-				received_command.clear();
-				lazyParsedType *parsed_command;
-				bool ret = _clients[fd]->receiveCommand(received_command);
+				acceptClient(fd);
+				continue;
+			}
+			else if (disconnectList.find(fd) != disconnectList.end()) // if fd client is not in disconnected list
+				continue;
+
+			received_command.clear();
+			lazyParsedType *parsed_command;
+			bool ret = _clients[fd]->receiveCommand(received_command);
+
+			std::list<std::string> command_list(stringToListKeepTokenizer(received_command, CMD_SEP));
+			for (std::list<std::string>::iterator it = command_list.begin(); it != command_list.end(); it++)
+			{
+				if (it->size() == 0)
+					continue;
 				if (ret == false)
 				{
 					_ircServer.removeDisconnectUser(fd);
 					removeClient(fd);
 				}
-				else if (!received_command.empty()										   //
-						 && (parsed_command = LazyRequestParser(received_command)) != NULL //
-						 && isLegalCmd(&parsed_command)									   //
-						 && _ircServer.processCommand(std::make_pair(fd, parsed_command), resQueue))
+				else if (!(parsed_command = LazyRequestParser(*it)) //
+						 || !isLegalCmd(&parsed_command)			//
+						 || !_ircServer.processCommand(std::make_pair(fd, parsed_command), resQueue))
+				{
 					disconnectList.insert(fd);
-				int killed_by_operater_fd = _ircServer.getVictim();
-				if (killed_by_operater_fd != -1)
-					disconnectList.insert(killed_by_operater_fd);
+					break; // if a false, then stop treating client
+				}
+				// int killed_by_operater_fd = _ircServer.getVictim();
+				// if (killed_by_operater_fd != -1)
+				// 	disconnectList.insert(killed_by_operater_fd);
 			}
-			--totalFd;
 		}
 	}
 }

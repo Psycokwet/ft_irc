@@ -4,6 +4,8 @@
 #include "../../includes/ft_irc.hpp"
 #include "Client.hpp"
 #include "../IrcServer/IRCServer.hpp"
+#include "../util/containerTo.hpp"
+#define CMD_SEP "\r\n"
 
 class Client;
 
