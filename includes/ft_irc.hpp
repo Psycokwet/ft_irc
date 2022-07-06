@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <cstdlib>      // atoi
+#include <cstdlib>		// atoi
 #include <sys/select.h> // select FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
 #include <map>
 #include <vector>
@@ -36,8 +36,6 @@
 
 typedef std::pair<int, std::string> t_clientCmd; // it: fd client, string: command
 
-typedef std::pair<int, lazyParsedType *> t_client_ParsedCmd; // it: fd client, lazyParsedType: parsed command
-
-std::string	getCodeWithZero(unsigned int n, int width);
+std::string getCodeWithZero(unsigned int n, int width);
 
 #endif

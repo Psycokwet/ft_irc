@@ -8,11 +8,10 @@
 bool IRCServer::execPASS(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	std::string response;
-	int fd = parsed_command.first;
-	User *user = _users[fd]; // should not be null regarding hgow we got here
-	if (user->_passOK)
+	Client *client = parsed_command.first; // should not be null regarding hgow we got here
+	if (client->_passOK)
 	{
-		pushToQueue(fd, ": You may not reregister", respQueue);
+		pushToQueue(client->_fd, ": You may not reregister", respQueue);
 		// already registered
 		std::cout << "1\n";
 		return false;
@@ -23,20 +22,20 @@ bool IRCServer::execPASS(t_client_ParsedCmd &parsed_command, std::vector<t_clien
 	switch (params.size())
 	{
 	case 0:
-		pushToQueue(fd, ": Not enough parameters", respQueue); // ERR_NEEDMOREPARAMS 461
+		pushToQueue(client->_fd, ": Not enough parameters", respQueue); // ERR_NEEDMOREPARAMS 461
 		break;
 	case 1:
 		if (params.front() == _serverPassword)
 		{
-			user->_passOK = true;
+			client->_passOK = true;
 			return true;
 		}
 		else
-			pushToQueue(fd, ": Password incorrect", respQueue); // ERR_PASSWDMISMATCH 464
+			pushToQueue(client->_fd, ": Password incorrect", respQueue); // ERR_PASSWDMISMATCH 464
 		break;
 
 	default:
-		pushToQueue(fd, TOO_MANY_ARGS, respQueue);
+		pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue);
 		// too much params
 		break;
 	}

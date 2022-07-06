@@ -201,12 +201,12 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 					continue;
 				if (ret == false)
 				{
-					_ircServer.removeDisconnectUser(fd);
+					// _ircServer.removeDisconnectUser(fd);
 					removeClient(fd);
 				}
 				else if (!(parsed_command = LazyRequestParser(*it)) //
 						 || !isLegalCmd(&parsed_command)			//
-						 || !_ircServer.processCommand(std::make_pair(fd, parsed_command), resQueue))
+						 || !_ircServer.processCommand(std::make_pair(_clients[fd], parsed_command), resQueue))
 				{
 					disconnectList.insert(fd);
 					break; // if a false, then stop treating client

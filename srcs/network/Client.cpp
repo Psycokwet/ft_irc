@@ -4,7 +4,10 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Client::Client(int fd) : _fd(fd)
+Client::Client(int fd) : _fd(fd),
+						 _passOK(false),
+						 _registered(false),
+						 _nick("")
 {
 }
 

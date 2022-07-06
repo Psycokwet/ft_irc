@@ -8,6 +8,7 @@
 #define CMD_SEP "\r\n"
 
 class Client;
+class IRCServer;
 
 class MasterServer
 {

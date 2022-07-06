@@ -82,13 +82,13 @@ IRCServer::IRCServer(std::string const &password) : _serverPassword(password)
 */
 IRCServer::~IRCServer()
 {
-	std::map<int, User *>::iterator itUser;
-	std::map<std::string, Channel *>::iterator itChannel;
+	// std::map<int, User *>::iterator itUser;
+	// std::map<std::string, Channel *>::iterator itChannel;
 
-	for (itUser = _users.begin(); itUser != _users.end(); ++itUser)
-		delete itUser->second;
-	for (itChannel = _channels.begin(); itChannel != _channels.end(); ++itChannel)
-		delete itChannel->second;
+	// // for (itUser = _users.begin(); itUser != _users.end(); ++itUser)
+	// // 	delete itUser->second;
+	// for (itChannel = _channels.begin(); itChannel != _channels.end(); ++itChannel)
+	// 	delete itChannel->second;
 }
 
 /*
@@ -99,29 +99,29 @@ IRCServer::~IRCServer()
 ** --------------------------------- PUBLIC METHODS ---------------------------
 */
 
-void IRCServer::removeDisconnectUser(int fd)
-{
-	if (_users.find(fd) != _users.end())
-	{
-		User *one_user(_users[fd]);
-		if (one_user->getRegistered() == true)
-			removeUserFromAllChannels(one_user);
-		delete one_user;
-		_users.erase(fd);
-	}
-}
+// void IRCServer::removeDisconnectUser(int fd)
+// {
+// 	if (_users.find(fd) != _users.end())
+// 	{
+// 		User *one_user(_users[fd]);
+// 		if (one_user->getRegistered() == true)
+// 			removeUserFromAllChannels(one_user);
+// 		delete one_user;
+// 		_users.erase(fd);
+// 	}
+// }
 
 // Called by the server. Process a command from a client, then queue responses
 // into responseQueue. Return true if client is disconnecting, otherwise false.
 bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
 {
-	User *one_user;
+	// User *one_user;
 	std::string cmd_name = ((*(parsed_command.second))[COMMAND]).front(); // if we got in here, we already check that there is something here
-	int fd = parsed_command.first;
-	(void)one_user;
-	if (_users.find(fd) == _users.end()) // make new users, get Notice message, put it and the user, fd into responseQueue
-		_users[fd] = new User(fd);
-	one_user = _users[fd];
+	// int fd = parsed_command.first->get_fd();
+	// (void)one_user;
+	// if (_users.find(fd) == _users.end()) // make new users, get Notice message, put it and the user, fd into responseQueue
+	// 	_users[fd] = new User(fd);
+	// one_user = _users[fd];
 	for (t_commands_dictionary::iterator it = IRCServer::_commandsDictionnary.begin(); it != IRCServer::_commandsDictionnary.end(); it++)
 	{
 		if (it->first == cmd_name)
@@ -159,11 +159,11 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 /*
 ** --------------------------------- PRIVATE METHODS --------------------------
 */
-void IRCServer::removeUserFromAllChannels(User *user)
-{
-	(void)user;
-	// ! Erase user in the channel map
-}
+// void IRCServer::removeUserFromAllChannels(User *user)
+// {
+// 	(void)user;
+// 	// ! Erase user in the channel map
+// }
 
 void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
 {

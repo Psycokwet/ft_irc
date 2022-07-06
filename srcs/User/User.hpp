@@ -1,6 +1,8 @@
 #ifndef USER_HPP
 #define USER_HPP
 
+class User;
+class Channel;
 #include "../../includes/ft_irc.hpp"
 #include "../Channel/Channel.hpp"
 
@@ -18,6 +20,7 @@ public:
 	User(int fd);
 	~User();
 
+	int get_fd() const;
 	bool getRegistered() const;
 };
 

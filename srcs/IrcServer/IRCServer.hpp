@@ -2,15 +2,18 @@
 #define IRCServer_HPP
 
 #include "../../includes/ft_irc.hpp"
+#include "../network/Client.hpp"
 #include "../../includes/code.hpp"
-#include "../Channel/Channel.hpp"
-#include "../User/User.hpp"
+// #include "../Channel/Channel.hpp"
+// #include "../User/User.hpp"
 
 #define TOO_MANY_ARGS ": Too many params"
 
-class User;
-class Channel;
+// class Channel;
+class Client;
 class IRCServer;
+
+typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd; // it: fd client, lazyParsedType: parsed command
 
 #define COMMAND_METHODS_PROTOTYPE bool (IRCServer::*)(t_client_ParsedCmd &, std::vector<t_clientCmd> &)
 typedef std::map<std::string, COMMAND_METHODS_PROTOTYPE> t_commands_dictionary;
@@ -20,7 +23,7 @@ public:
 	IRCServer(std::string const &password);
 	~IRCServer();
 
-	void removeDisconnectUser(int fd);
+	// void removeDisconnectUser(int fd);
 	bool processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
 	// int getVictim();
 
@@ -28,8 +31,8 @@ public:
 	static t_commands_dictionary initCommandsDictionnary();
 
 private:
-	std::map<int, User *> _users;				// Users list
-	std::map<std::string, Channel *> _channels; // Channels list
+	// std::map<int, User *> _users;				// Users list
+	// std::map<std::string, Channel *> _channels; // Channels list
 	std::string const _serverPassword;
 	// int 								_fdToKill; // Fd of user killed by operater
 	std::string const _prefix;
@@ -42,10 +45,10 @@ private:
 	bool execNICK(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execUSER(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
-	void removeUserFromAllChannels(User *user);
+	// void removeUserFromAllChannels(User *user);
 	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;
-	void unknownCmd(t_client_ParsedCmd cmd, User *one_user, std::vector<t_clientCmd> &responseQueue) const;
-	std::string getResponseFromCode(User *user, int code, std::list<std::string> params) const;
+	// void unknownCmd(t_client_ParsedCmd cmd, User *one_user, std::vector<t_clientCmd> &responseQueue) const;
+	// std::string getResponseFromCode(User *user, int code, std::list<std::string> params) const;
 };
 
 #endif

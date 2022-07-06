@@ -4,7 +4,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 User::User(int fd) : _fd(fd),
-                     _passOK(false)
+					 _passOK(false)
 {
 }
 
@@ -25,5 +25,10 @@ User::~User()
 */
 bool User::getRegistered() const
 {
-    return (_registered);
+	return (_registered);
+}
+
+int User::get_fd() const
+{
+	return (_fd);
 }
