@@ -22,13 +22,13 @@ t_commands_dictionary IRCServer::initCommandsDictionnary()
 	map["NOTICE"] = &IRCServer::example_command;
 	map["OPER"] = &IRCServer::example_command;
 	map["PART"] = &IRCServer::example_command;
-	map["PASS"] = &IRCServer::example_command;
+	map["PASS"] = &IRCServer::execPASS;
 	map["PING"] = &IRCServer::example_command;
 	map["PRIVMSG"] = &IRCServer::example_command;
 	map["QUIT"] = &IRCServer::example_command;
 	map["TIME"] = &IRCServer::example_command;
 	map["TOPIC"] = &IRCServer::example_command;
-	map["USER"] = &IRCServer::example_command;
+	map["USER"] = &IRCServer::execUSER;
 	map["VERSION"] = &IRCServer::example_command;
 	map["WHO"] = &IRCServer::example_command;
 	// ignored commands

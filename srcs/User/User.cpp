@@ -3,16 +3,18 @@
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-User::User(int fd):
-    _fd(fd)
-{}
+User::User(int fd) : _fd(fd),
+                     _passOK(false)
+{
+}
 
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
 
 User::~User()
-{}
+{
+}
 
 /*
 ** --------------------------------- PUBLIC METHODS ---------------------------
@@ -25,5 +27,3 @@ bool User::getRegistered() const
 {
     return (_registered);
 }
-
-

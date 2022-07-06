@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <cstdlib>		// atoi
+#include <cstdlib>      // atoi
 #include <sys/select.h> // select FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
 #include <map>
 #include <vector>
@@ -17,6 +17,8 @@
 #include <netinet/in.h> // sockaddr_in
 
 #include "../srcs/util/parse.hpp" //parsing
+
+#include "code.hpp" //code command
 
 #define MAX_TCP_PORT 65535
 #define TRUE 1

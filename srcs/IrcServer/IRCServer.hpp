@@ -35,7 +35,10 @@ private:
 	// COMMANDS definitions
 	bool ignore_command(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);  // please add needed arg as specified in "command_method"
 	bool example_command(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue); // please add needed arg as specified in "command_method"
-	bool execNICK(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue); 
+
+	bool execPASS(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execNICK(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execUSER(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
 	void removeUserFromAllChannels(User *user);
 	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;

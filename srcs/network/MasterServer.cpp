@@ -47,7 +47,7 @@ int MasterServer::build()
 	 * If PROTOCOL is zero, one is chosen automatically.
 	 * Returns a file descriptor for the new socket, or -1 for errors.
 	 *************************************************************/
-	_fdServer = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	_fdServer = socket(AF_INET, SOCK_STREAM, 0); // SOCK_NONBLOCK, 0);
 	if (_fdServer == -1)
 	{
 		std::cerr << "Fail to set socket" << std::endl;

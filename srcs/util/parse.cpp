@@ -24,7 +24,7 @@ int isReallyBlank(int c)
 
 std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container)
 {
-	for (typename lazyParsedType::const_iterator it = container.begin(); it != container.end(); it++)
+	for (lazyParsedType::const_iterator it = container.begin(); it != container.end(); it++)
 	{
 		o << it->first << ": [\n";
 		print_cont(o, it->second) << "]\n";
