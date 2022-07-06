@@ -16,6 +16,12 @@ public:
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
 
+	bool always_true();
+	bool always_false();
+	bool is_not_connected();
+	bool is_connected();
+	bool is_registered();
+
 private:
 	int _fd; // is the fd of client socket
 	// std::set<Channel *> _joinedList; // List of channels user has joined

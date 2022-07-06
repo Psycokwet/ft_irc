@@ -43,3 +43,24 @@ void Client::sendResp(std::string const &resp)
 {
 	send(_fd, resp.c_str(), resp.size(), 0);
 }
+
+bool Client::always_true()
+{
+	return true;
+}
+bool Client::always_false()
+{
+	return false;
+}
+bool Client::is_not_connected()
+{
+	return !is_connected();
+}
+bool Client::is_connected()
+{
+	return _passOK;
+}
+bool Client::is_registered()
+{
+	return _passOK && _registered;
+}

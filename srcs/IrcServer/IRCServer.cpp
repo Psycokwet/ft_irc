@@ -7,65 +7,64 @@
 t_commands_dictionary IRCServer::initCommandsDictionnary()
 {
 	t_commands_dictionary map;
-	map["ADMIN"] = &IRCServer::example_command;
-	map["AWAY"] = &IRCServer::example_command;
-	map["DIE"] = &IRCServer::example_command;
-	map["INVITE"] = &IRCServer::example_command;
-	map["JOIN"] = &IRCServer::example_command;
-	map["KICK"] = &IRCServer::example_command;
-	map["KILL"] = &IRCServer::example_command;
-	map["LIST"] = &IRCServer::example_command;
-	map["MODE"] = &IRCServer::example_command;
-	map["MOTD"] = &IRCServer::example_command;
-	map["NAMES"] = &IRCServer::example_command;
-	map["NICK"] = &IRCServer::execNICK;
-	map["NOTICE"] = &IRCServer::example_command;
-	map["OPER"] = &IRCServer::example_command;
-	map["PART"] = &IRCServer::example_command;
-	map["PASS"] = &IRCServer::execPASS;
-	map["PING"] = &IRCServer::example_command;
-	map["PRIVMSG"] = &IRCServer::example_command;
-	map["QUIT"] = &IRCServer::example_command;
-	map["TIME"] = &IRCServer::example_command;
-	map["TOPIC"] = &IRCServer::example_command;
-	map["USER"] = &IRCServer::execUSER;
-	map["VERSION"] = &IRCServer::example_command;
-	map["WHO"] = &IRCServer::example_command;
+	map["ADMIN"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["AWAY"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["DIE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["INVITE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["JOIN"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["KICK"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["KILL"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["LIST"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["MODE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["MOTD"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["NAMES"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["NICK"] = std::make_pair(&Client::is_connected, &IRCServer::execNICK);
+	map["NOTICE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["OPER"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PART"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PASS"] = std::make_pair(&Client::is_not_connected, &IRCServer::execPASS);
+	map["PING"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PRIVMSG"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["QUIT"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["TIME"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["TOPIC"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["USER"] = std::make_pair(&Client::is_connected, &IRCServer::execUSER);
+	map["VERSION"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["WHO"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
 	// ignored commands
-	map["CAP"] = &IRCServer::ignore_command;
-	map["CNOTICE"] = &IRCServer::ignore_command;
-	map["CPRIVMSG"] = &IRCServer::ignore_command;
-	map["CONNECT"] = &IRCServer::ignore_command;
-	map["ENCAP"] = &IRCServer::ignore_command;
-	map["ERROR"] = &IRCServer::ignore_command;
-	map["HELP"] = &IRCServer::ignore_command;
-	map["INFO"] = &IRCServer::ignore_command;
-	map["ISON"] = &IRCServer::ignore_command;
-	map["KNOCK"] = &IRCServer::ignore_command;
-	map["LINKS"] = &IRCServer::ignore_command;
-	map["LUSERS"] = &IRCServer::ignore_command;
-	map["NAMESX"] = &IRCServer::ignore_command;
-	map["PONG"] = &IRCServer::ignore_command;
-	map["REHASH"] = &IRCServer::ignore_command;
-	map["RULES"] = &IRCServer::ignore_command;
-	map["SERVER"] = &IRCServer::ignore_command;
-	map["SERVICE"] = &IRCServer::ignore_command;
-	map["SERVLIST"] = &IRCServer::ignore_command;
-	map["SQUIT"] = &IRCServer::ignore_command;
-	map["SETNAME"] = &IRCServer::ignore_command;
-	map["SILENCE"] = &IRCServer::ignore_command;
-	map["STATS"] = &IRCServer::ignore_command;
-	map["SUMMON"] = &IRCServer::ignore_command;
-	map["TRACE"] = &IRCServer::ignore_command;
-	map["UHNAMES"] = &IRCServer::ignore_command;
-	map["USERHOST"] = &IRCServer::ignore_command;
-	map["USERIP"] = &IRCServer::ignore_command;
-	map["USERS"] = &IRCServer::ignore_command;
-	map["WALLOPS"] = &IRCServer::ignore_command;
-	map["WATCH"] = &IRCServer::ignore_command;
-	map["WHOIS"] = &IRCServer::ignore_command;
-	map["WHOWAS"] = &IRCServer::ignore_command;
-
+	map["CAP"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["CNOTICE"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["CPRIVMSG"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["CONNECT"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["ENCAP"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["ERROR"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["HELP"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["INFO"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["ISON"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["KNOCK"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["LINKS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["LUSERS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["NAMESX"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["PONG"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["REHASH"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["RULES"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SERVER"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SERVICE"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SERVLIST"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SQUIT"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SETNAME"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SILENCE"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["STATS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["SUMMON"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["TRACE"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["UHNAMES"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["USERHOST"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["USERIP"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["USERS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["WALLOPS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["WATCH"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["WHOIS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
+	map["WHOWAS"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
 	return map;
 }
 
@@ -126,7 +125,15 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 	{
 		if (it->first == cmd_name)
 		{
-			if (!(this->*(it->second))(parsed_command, respQueue))
+			if (!((parsed_command.first)->*(it->second.first))())
+			{
+				delete parsed_command.second; // if NULL then we never got inside process command in the first place
+
+				// manage error or end process case
+				std::cout << "Command not valid at this point of client use, ignore.\n";
+				return true;
+			}
+			if (!(this->*(it->second.second))(parsed_command, respQueue))
 			{
 				delete parsed_command.second; // if NULL then we never got inside process command in the first place
 
