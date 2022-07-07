@@ -176,3 +176,7 @@ void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_client
 {
 	respQueue.push_back(std::make_pair(fd, msg));
 }
+std::string IRCServer::getHost() const
+{
+	return HOST;
+}

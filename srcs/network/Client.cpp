@@ -64,3 +64,5 @@ bool Client::is_registered()
 {
 	return _passOK && _registered;
 }
+
+std::string Client::getNick() { return _nick; }

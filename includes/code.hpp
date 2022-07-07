@@ -1,6 +1,10 @@
 #ifndef CODE_HPP
 #define CODE_HPP
 
+#define SSTR(x) static_cast<std::ostringstream &>(            \
+					(std ::ostringstream() << std::dec << x)) \
+					.str()
+
 #include "ft_irc.hpp"
 
 /*// ? "1 Welcome to the Internet Relay Network <nick>!<user>@<host>"

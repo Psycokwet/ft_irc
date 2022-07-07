@@ -3,13 +3,16 @@
 
 #include "../../includes/ft_irc.hpp"
 #include "../network/Client.hpp"
+#include "../util/CodeBuilder.hpp"
 #include "../../includes/code.hpp"
 // #include "../Channel/Channel.hpp"
 // #include "../User/User.hpp"
 
 #define TOO_MANY_ARGS ": Too many params"
+#define HOST "ourirc.42.paris.fr"
 
 // class Channel;
+class CodeBuilder;
 class Client;
 class IRCServer;
 
@@ -24,6 +27,7 @@ public:
 	IRCServer(std::string const &password);
 	~IRCServer();
 
+	std::string getHost() const;
 	// void removeDisconnectUser(int fd);
 	bool processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
 	// int getVictim();

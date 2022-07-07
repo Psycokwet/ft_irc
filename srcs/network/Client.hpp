@@ -15,8 +15,10 @@ public:
 	Client(int fd);
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
+	std::string getNick();
 
-	bool always_true();
+	bool
+	always_true();
 	bool always_false();
 	bool is_not_connected();
 	bool is_connected();

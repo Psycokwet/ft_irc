@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/06 18:43:02 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/07 11:30:27 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -184,7 +184,8 @@ UTIL_FILES 		=	parse \
 					numbers \
 					compareContainers \
 					containerTo \
-					logger
+					logger \
+					CodeBuilder
 SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 
 #
