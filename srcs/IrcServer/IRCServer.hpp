@@ -28,6 +28,7 @@ public:
 	~IRCServer();
 
 	std::string getHost() const;
+	std::string getFullClientID(Client *c) const;
 	// void removeDisconnectUser(int fd);
 	bool processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
 	// int getVictim();

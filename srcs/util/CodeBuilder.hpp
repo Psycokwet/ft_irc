@@ -26,13 +26,14 @@ private:
 	static std::string errorCodeToString(int err);
 
 	static std::string toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringNEEDMOREPARAMS(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringERR_NEEDMOREPARAMS(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringERR_NICKNAMEINUSE(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringPLACEHOLDER(std::string *nick, IRCServer *server, Client *client);
+
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);
 	~CodeBuilder();
 	CodeBuilder &operator=(CodeBuilder const &rhs);
 };
-
-std::ostream &operator<<(std::ostream &o, CodeBuilder const &i);
 
 #endif /* ***************************************************** CODEBUILDER_H */

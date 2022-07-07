@@ -163,6 +163,10 @@ bool IRCServer::processCommand(std::string base, t_client_ParsedCmd parsed_comma
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
+std::string IRCServer::getHost() const
+{
+	return HOST;
+}
 /*
 ** --------------------------------- PRIVATE METHODS --------------------------
 */
@@ -176,7 +180,7 @@ void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_client
 {
 	respQueue.push_back(std::make_pair(fd, msg));
 }
-std::string IRCServer::getHost() const
+std::string IRCServer::getFullClientID(Client *c) const
 {
-	return HOST;
+	return c->getNick() + "!" + c->getNick() + "@" + getHost();
 }
