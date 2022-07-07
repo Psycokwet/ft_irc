@@ -5,8 +5,9 @@
 **   Ckeck password users
 */
 
-bool IRCServer::execPASS(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
+	(void)base;
 	std::string response;
 	Client *client = parsed_command.first; // should not be null regarding hgow we got here
 	if (client->_passOK)

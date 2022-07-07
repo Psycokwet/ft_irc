@@ -14,8 +14,9 @@ Hanle Errors:
 // ! How to get/update User and Channel's info in here
 // ! How to get numeric replies. (includes/code.hpp)
 
-bool IRCServer::execNICK(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
+	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
 	// std::string response;

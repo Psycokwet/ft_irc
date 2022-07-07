@@ -5,8 +5,9 @@
 
 */
 
-bool IRCServer::execUSER(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
+	(void)base;
 	std::string response;
 
 	if ((((*(parsed_command.second))[MESSAGE]).size()) < 4)

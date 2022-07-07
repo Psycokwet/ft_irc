@@ -112,7 +112,7 @@ IRCServer::~IRCServer()
 
 // Called by the server. Process a command from a client, then queue responses
 // into responseQueue. Return true if client is disconnecting, otherwise false.
-bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
+bool IRCServer::processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	// User *one_user;
 	std::string cmd_name = ((*(parsed_command.second))[COMMAND]).front(); // if we got in here, we already check that there is something here
@@ -133,7 +133,7 @@ bool IRCServer::processCommand(t_client_ParsedCmd parsed_command, std::vector<t_
 				std::cout << "Command not valid at this point of client use, ignore.\n";
 				return true;
 			}
-			if (!(this->*(it->second.second))(parsed_command, respQueue))
+			if (!(this->*(it->second.second))(base, parsed_command, respQueue))
 			{
 				delete parsed_command.second; // if NULL then we never got inside process command in the first place
 
