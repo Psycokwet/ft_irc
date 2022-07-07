@@ -148,7 +148,7 @@ bool IRCServer::processCommand(std::string base, t_client_ParsedCmd parsed_comma
 	}
 	std::cout << "No command correspond to " << cmd_name << ", ignoring it.\n";
 	delete parsed_command.second; // if NULL then we never got inside process command in the first place
-	return false;
+	return true;
 }
 
 // Get the fd being killed by a server operator
