@@ -7,7 +7,9 @@
 Client::Client(int fd) : _fd(fd),
 						 _passOK(false),
 						 _registered(false),
-						 _nick("")
+						 _nick(""),
+						 _realName(""),
+						 _userOnHost("")
 {
 }
 
@@ -64,5 +66,11 @@ bool Client::is_registered()
 {
 	return _passOK && _registered;
 }
+/*
+** ------------------------- ACCESSORS ----------------------------------
+*/
 
 std::string Client::getNick() { return _nick; }
+void Client::setRealName(std::string realName) { _realName = realName; }
+std::string Client::getRealName() { return _realName; }
+std::string Client::getUserOnHost() { return _userOnHost; }

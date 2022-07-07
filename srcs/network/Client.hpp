@@ -16,7 +16,9 @@ public:
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
 	std::string getNick();
-
+	void setRealName(std::string realName);
+	std::string getRealName();
+	std::string getUserOnHost();
 	bool
 	always_true();
 	bool always_false();
@@ -30,6 +32,8 @@ private:
 	bool _passOK;	  // true if user provided required password by Server.
 	bool _registered; // true if user provided name and required password by Server.
 	std::string _nick;
+	std::string _realName;
+	std::string _userOnHost;
 	char _buffer[BUF_SIZE + 1];
 	std::string _commandTemp;
 };

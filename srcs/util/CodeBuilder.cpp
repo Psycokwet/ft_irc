@@ -6,12 +6,12 @@
 t_code_dictionary CodeBuilder::initCodeDictionnary()
 {
 	t_code_dictionary map;
-	map[RPL_CUSTOM] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_CUSTOM] = &CodeBuilder::toStringRPL_CUSTOM;
 	map[RPL_WELCOME] = &CodeBuilder::toStringRPL_WELCOME;
-	map[RPL_YOURHOST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_CREATED] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_MYINFO] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_BOUNCE] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_YOURHOST] = &CodeBuilder::toStringRPL_YOURHOST;
+	map[RPL_CREATED] = &CodeBuilder::toStringRPL_CREATED;
+	map[RPL_MYINFO] = &CodeBuilder::toStringRPL_MYINFO;
+	map[RPL_BOUNCE] = &CodeBuilder::toStringRPL_BOUNCE;
 	// 200
 	map[RPL_TRACELINK] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TRACECONNECTING] = &CodeBuilder::toStringPLACEHOLDER;
@@ -112,7 +112,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NOMOTD] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOADMININFO] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_FILEERROR] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NONICKNAMEGIVEN] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NONICKNAMEGIVEN] = &CodeBuilder::toStringERR_NONICKNAMEGIVEN;
 	map[ERR_ERRONEUSNICKNAME] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NICKNAMEINUSE] = &CodeBuilder::toStringERR_NICKNAMEINUSE;
 	map[ERR_NICKCOLLISION] = &CodeBuilder::toStringPLACEHOLDER;
@@ -125,7 +125,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_USERSDISABLED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOTREGISTERED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NEEDMOREPARAMS] = &CodeBuilder::toStringERR_NEEDMOREPARAMS;
-	map[ERR_ALREADYREGISTRED] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_ALREADYREGISTRED] = &CodeBuilder::toStringERR_ALREADYREGISTRED;
 	map[ERR_NOPERMFORHOST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_PASSWDMISMATCH] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_YOUREBANNEDCREEP] = &CodeBuilder::toStringPLACEHOLDER;
@@ -160,9 +160,20 @@ t_code_dictionary CodeBuilder::_codeDictionnary = CodeBuilder::initCodeDictionna
 
 std::string CodeBuilder::errorToString(int err, IRCServer *server, Client *client, std::string *s)
 {
+	std::string tmp = ":No registered error code found";
+	std::string string_code = "042";
 	if (_codeDictionnary.find(err) != _codeDictionnary.end())
-		return errorCodeToString(err) + " " + _codeDictionnary[err](s, server, client);
-	return "042 :No registered error code found";
+	{
+		tmp = _codeDictionnary[err](s, server, client);
+		string_code = errorCodeToString(err);
+	}
+
+	std::stringstream ss;
+	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, server->getHost() + " " + string_code + " " + client->getUserOnHost() + " ");
+	return ss.str();
+
+	// 	return server->getHost() + " " + errorCodeToString(err) + " " + client->getUserOnHost() + " " + _codeDictionnary[err](s, server, client);
+	// return server->getHost() + " 042 " + client->getUserOnHost() + ":No registered error code found";
 }
 std::string CodeBuilder::errorCodeToString(int err)
 {
@@ -175,10 +186,46 @@ std::string CodeBuilder::errorCodeToString(int err)
 ** --------------------------------- DICTIONARY ENTRIES ----------------------------------
 */
 
+std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, IRCServer *server, Client *client)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	return "Hmm, hello there ! Howdy !";
+}
+
 std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client)
 {
 	(void)s;
 	return "Welcome to the Internet Relay Network" + server->getFullClientID(client);
+}
+std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, IRCServer *server, Client *client)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	return "Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
+}
+std::string CodeBuilder::toStringRPL_CREATED(std::string *s, IRCServer *server, Client *client)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	return "This server was created " + server->getCreationDate();
+}
+std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, IRCServer *server, Client *client)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	return server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " " + server->getAvailableChannelModes();
+}
+std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, IRCServer *server, Client *client)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	return "Try server any you like, really lol, port look it up :p";
 }
 
 std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, IRCServer *server, Client *client)
@@ -187,11 +234,26 @@ std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, I
 	(void)client;
 	return (*command_name) + ":Not enough parameters";
 }
+std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, IRCServer *server, Client *client)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	return ":No nickname given";
+}
+
 std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, IRCServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
 	return (*nick) + ":Nickname is already in use";
+}
+std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, IRCServer *server, Client *client)
+{
+	(void)server;
+	(void)s;
+	(void)client;
+	return ":Unauthorized command (already registered)";
 }
 
 std::string CodeBuilder::toStringPLACEHOLDER(std::string *nick, IRCServer *server, Client *client)

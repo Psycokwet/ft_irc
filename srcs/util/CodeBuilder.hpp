@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include "../util/logger.hpp"
+
 class Client;
 class CodeBuilder;
 class IRCServer;
@@ -25,9 +27,17 @@ private:
 
 	static std::string errorCodeToString(int err);
 
+	static std::string toStringRPL_CUSTOM(std::string *s, IRCServer *server, Client *client);
 	static std::string toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringRPL_YOURHOST(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringRPL_CREATED(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringRPL_MYINFO(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringRPL_BOUNCE(std::string *s, IRCServer *server, Client *client);
 	static std::string toStringERR_NEEDMOREPARAMS(std::string *s, IRCServer *server, Client *client);
 	static std::string toStringERR_NICKNAMEINUSE(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringERR_NONICKNAMEGIVEN(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringERR_ALREADYREGISTRED(std::string *s, IRCServer *server, Client *client);
+
 	static std::string toStringPLACEHOLDER(std::string *nick, IRCServer *server, Client *client);
 
 	CodeBuilder();

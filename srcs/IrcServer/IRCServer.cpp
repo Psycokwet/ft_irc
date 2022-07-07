@@ -72,7 +72,7 @@ t_commands_dictionary IRCServer::_commandsDictionnary = IRCServer::initCommandsD
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-IRCServer::IRCServer(std::string const &password) : _serverPassword(password)
+IRCServer::IRCServer(std::string const &password) : _clients(), _serverPassword(password)
 {
 }
 
@@ -81,11 +81,11 @@ IRCServer::IRCServer(std::string const &password) : _serverPassword(password)
 */
 IRCServer::~IRCServer()
 {
-	// std::map<int, User *>::iterator itUser;
+	util_delete(_clients);
 	// std::map<std::string, Channel *>::iterator itChannel;
 
-	// // for (itUser = _users.begin(); itUser != _users.end(); ++itUser)
-	// // 	delete itUser->second;
+	// for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	// 	delete it->second;
 	// for (itChannel = _channels.begin(); itChannel != _channels.end(); ++itChannel)
 	// 	delete itChannel->second;
 }
@@ -167,6 +167,27 @@ std::string IRCServer::getHost() const
 {
 	return HOST;
 }
+std::string IRCServer::getServerName() const
+{
+	return SERVER_NAME;
+}
+std::string IRCServer::getServerVersion() const
+{
+	return SERVER_VERSION;
+}
+std::string IRCServer::getCreationDate() const
+{
+	return SERVER_CREATION_DATE;
+}
+std::string IRCServer::getAvailableUserModes() const
+{
+	return "jesaispas";
+}
+std::string IRCServer::getAvailableChannelModes() const
+{
+	return "jesaispas";
+}
+
 /*
 ** --------------------------------- PRIVATE METHODS --------------------------
 */
@@ -182,5 +203,12 @@ void IRCServer::pushToQueue(int fd, std::string const &msg, std::vector<t_client
 }
 std::string IRCServer::getFullClientID(Client *c) const
 {
-	return c->getNick() + "!" + c->getNick() + "@" + getHost();
+	return c->getNick() + "!" + c->getUserOnHost() + "@" + getHost();
+}
+bool IRCServer::isNickAvailable(std::string new_nick)
+{
+	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if (it->second->getNick() == new_nick)
+			return false;
+	return true;
 }

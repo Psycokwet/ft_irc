@@ -1,27 +1,48 @@
 #include "../IrcServer/IRCServer.hpp"
 /*
 ** ---------------------------------- USER ----------------------------------
-  check la taille param
-
+**
+**    The USER command is used at the beginning of connection to specify
+**    the username, hostname and realname of a new user.
+**
+**    The <mode> parameter should be a numeric, and can be used to
+**    automatically set user modes when registering with the server.  This
+**    parameter is a bitmask, with only 2 bits having any signification: if
+**    the bit 2 is set, the user mode 'w' will be set and if the bit 3 is
+**    set, the user mode 'i' will be set.  (See Section 3.1.5 "User
+**    Modes").
+**
+**    The <realname> may contain space characters.
+**
+**    Numeric Replies:
+**
+**            ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 */
 
 bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
+
 	(void)base;
-	std::string response;
+	(void)parsed_command;
+	(void)respQueue;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
 
-	if ((((*(parsed_command.second))[MESSAGE]).size()) < 4)
+	if (client->_userOnHost != "")
 	{
-		response = ":Not enough parameters"; // ERR_NEEDMOREPARAMS 461
-		pushToQueue(parsed_command.first->_fd, response, respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client), respQueue);
+		return true;
 	}
-	if (((*(parsed_command.second))[PARAMS]).empty())
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
+	if (!params.size() || !message.size())
 	{
-		response = ":Not enough parameters"; // ERR_NEEDMOREPARAMS 461
-		pushToQueue(parsed_command.first->_fd, response, respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		return true;
 	}
-	if (!response.empty())
-		pushToQueue(parsed_command.first->_fd, response, respQueue);
-
+	std::string realName = message.front();
+	std::string userName = message.front();
+	client->_userOnHost = userName;
+	client->_realName = realName;
+	// mode stuff to do see later
 	return true;
 }

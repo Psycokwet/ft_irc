@@ -4,6 +4,7 @@
 #include "../../includes/ft_irc.hpp"
 #include "../network/Client.hpp"
 #include "../util/CodeBuilder.hpp"
+#include "../util/deleteContainers.hpp"
 #include "../../includes/code.hpp"
 // #include "../Channel/Channel.hpp"
 // #include "../User/User.hpp"
@@ -26,8 +27,15 @@ class IRCServer
 public:
 	IRCServer(std::string const &password);
 	~IRCServer();
+	bool isNickAvailable(std::string new_nick);
 
 	std::string getHost() const;
+	std::string getServerName() const;
+	std::string getServerVersion() const;
+	std::string getCreationDate() const;
+	std::string getAvailableUserModes() const;
+	std::string getAvailableChannelModes() const;
+
 	std::string getFullClientID(Client *c) const;
 	// void removeDisconnectUser(int fd);
 	bool processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
@@ -37,7 +45,7 @@ public:
 	static t_commands_dictionary initCommandsDictionnary();
 
 private:
-	// std::map<int, User *> _users;				// Users list
+	std::map<int, Client *> _clients; // Users list
 	// std::map<std::string, Channel *> _channels; // Channels list
 	std::string const _serverPassword;
 	// int 								_fdToKill; // Fd of user killed by operater

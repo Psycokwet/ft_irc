@@ -3,17 +3,17 @@
 /*
 ** ---------------------------------- PASS ----------------------------------
 **   Ckeck password users
+**
+** Numeric Replies:
+**            ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 */
-
 bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
-	std::string response;
-	Client *client = parsed_command.first; // should not be null regarding hgow we got here
+	Client *client = parsed_command.first; // should not be null regarding how we got here
 	if (client->_passOK)
 	{
-		pushToQueue(client->_fd, ": You may not reregister", respQueue); // ERR_ALREADYREGISTERED
-		// already registered
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client), respQueue);
 		return false;
 	}
 
@@ -31,11 +31,11 @@ bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, s
 			return true;
 		}
 		else
-			pushToQueue(client->_fd, ": Password incorrect", respQueue);
+			pushToQueue(client->_fd, ": Password incorrect", respQueue); // not necessary regarding doc
 		break;
 
 	default:
-		pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue);
+		pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue); // not necessary regarding doc
 		// too much params
 		break;
 	}

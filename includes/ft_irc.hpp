@@ -33,6 +33,8 @@
 #define MAX(x, y) ((x > y) ? x : y)
 
 #define SERVER_NAME "ircServer"
+#define SERVER_VERSION "1.0.0"
+#define SERVER_CREATION_DATE "07/07/2022"
 
 typedef std::pair<int, std::string> t_clientCmd; // it: fd client, string: command
 
