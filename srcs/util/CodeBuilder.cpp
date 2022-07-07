@@ -169,7 +169,7 @@ std::string CodeBuilder::errorToString(int err, IRCServer *server, Client *clien
 	}
 
 	std::stringstream ss;
-	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, server->getHost() + " " + string_code + " " + client->getUserOnHost() + " ");
+	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " " + client->getUserOnHost() + " ");
 	return ss.str();
 
 	// 	return server->getHost() + " " + errorCodeToString(err) + " " + client->getUserOnHost() + " " + _codeDictionnary[err](s, server, client);
@@ -197,7 +197,7 @@ std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, IRCServer *server, C
 std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client)
 {
 	(void)s;
-	return "Welcome to the Internet Relay Network" + server->getFullClientID(client);
+	return "Welcome to the Internet Relay Network " + server->getFullClientID(client);
 }
 std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, IRCServer *server, Client *client)
 {

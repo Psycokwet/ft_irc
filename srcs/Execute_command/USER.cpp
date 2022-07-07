@@ -40,9 +40,14 @@ bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, s
 		return true;
 	}
 	std::string realName = message.front();
-	std::string userName = message.front();
+	std::string userName = params.front();
 	client->_userOnHost = userName;
 	client->_realName = realName;
 	// mode stuff to do see later
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WELCOME, this, client), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOURHOST, this, client), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CREATED, this, client), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_MYINFO, this, client), respQueue);
+
 	return true;
 }
