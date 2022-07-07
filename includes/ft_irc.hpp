@@ -32,7 +32,7 @@
 #define FD_MAX 50 // number of fd we want to handle at a time
 #define MAX(x, y) ((x > y) ? x : y)
 
-#define SERVER_NAME "ircServer"
+#define SERVER_NAME "ourirc"
 #define SERVER_VERSION "1.0.0"
 #define SERVER_CREATION_DATE "07/07/2022"
 
