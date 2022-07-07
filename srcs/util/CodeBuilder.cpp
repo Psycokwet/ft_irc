@@ -218,7 +218,7 @@ std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, IRCServer *server, C
 	(void)s;
 	(void)server;
 	(void)client;
-	return server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " " + server->getAvailableChannelModes();
+	return server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " :" + server->getAvailableChannelModes();
 }
 std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, IRCServer *server, Client *client)
 {

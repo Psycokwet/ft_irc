@@ -7,30 +7,45 @@
 t_commands_dictionary IRCServer::initCommandsDictionnary()
 {
 	t_commands_dictionary map;
+	// connection registration
+	map["PASS"] = std::make_pair(&Client::is_not_connected, &IRCServer::execPASS);
+	map["USER"] = std::make_pair(&Client::is_connected, &IRCServer::execUSER);
+	map["NICK"] = std::make_pair(&Client::is_connected, &IRCServer::execNICK);
+	map["OPER"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["MODE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["QUIT"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	// channel operation
+	map["JOIN"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PART"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	// MODE too
+	map["TOPIC"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["NAMES"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["LIST"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["INVITE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["KICK"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	//  sending message
+	map["PRIVMSG"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["NOTICE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	//  Server queries and commands
+	map["MOTD"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["TIME"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["VERSION"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
 	map["ADMIN"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	//  Miscellaneous messages
+	map["KILL"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PING"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	//  Optional features
 	map["AWAY"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
 	map["DIE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["INVITE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["JOIN"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["KICK"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["KILL"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["LIST"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["MODE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["MOTD"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["NAMES"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["NICK"] = std::make_pair(&Client::is_connected, &IRCServer::execNICK);
-	map["NOTICE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["OPER"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["PART"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["PASS"] = std::make_pair(&Client::is_not_connected, &IRCServer::execPASS);
-	map["PING"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["PRIVMSG"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["QUIT"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["TIME"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["TOPIC"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
-	map["USER"] = std::make_pair(&Client::is_connected, &IRCServer::execUSER);
-	map["VERSION"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
+	//  user based queries
 	map["WHO"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+
 	// ignored commands
 	map["CAP"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
 	map["CNOTICE"] = std::make_pair(&Client::always_true, &IRCServer::ignore_command);
@@ -181,13 +196,13 @@ std::string IRCServer::getCreationDate() const
 }
 std::string IRCServer::getAvailableUserModes() const
 {
-	return "jesaispas";
+	return "biklmnopstv";
 }
 std::string IRCServer::getAvailableChannelModes() const
 {
-	return "jesaispas";
+	return "ikot";
 }
-
+// biklmnopstv :ikot
 /*
 ** --------------------------------- PRIVATE METHODS --------------------------
 */
