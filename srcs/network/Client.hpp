@@ -5,9 +5,6 @@
 
 #include "../../includes/ft_irc.hpp"
 
-#define END_OF_COMMAND "\r\n"
-#define LEN_END_OF_COMMAND 2
-
 class Client
 {
 public:

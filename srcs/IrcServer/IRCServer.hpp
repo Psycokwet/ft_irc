@@ -2,6 +2,7 @@
 #define IRCServer_HPP
 
 #include "../../includes/ft_irc.hpp"
+#include "../../includes/code.hpp"
 #include "../Channel/Channel.hpp"
 #include "../User/User.hpp"
 
@@ -20,6 +21,7 @@ public:
 	void removeDisconnectUser(int fd);
 	bool processCommand(t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
 	int getVictim();
+	User *one_user;
 
 	static t_commands_dictionary _commandsDictionnary;
 	static t_commands_dictionary initCommandsDictionnary();
@@ -29,7 +31,7 @@ private:
 	std::map<std::string, Channel *> _channels; // Channels list
 	std::string const _serverPassword;
 	int _fdToKill; // Fd of user killed by operater
-	std::vector<std::string> _params;
+	std::string const _prefix;
 
 	// COMMANDS definitions
 	bool ignore_command(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);  // please add needed arg as specified in "command_method"
@@ -41,6 +43,8 @@ private:
 
 	void removeUserFromAllChannels(User *user);
 	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;
+	// void unknownCmd(t_client_ParsedCmd cmd, User *one_user, std::vector<t_clientCmd> &responseQueue) const;
+	// std::string getResponseFromCode(User *user, int code, std::list<std::string> params) const;
 };
 
 #endif
