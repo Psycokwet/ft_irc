@@ -20,6 +20,15 @@ Client::~Client()
 }
 
 /*
+** --------------------------------- OVERLOAD ---------------------------------
+*/
+
+bool Client::operator==(const Client &rhs) const
+{
+	return _fd == rhs._fd;
+}
+
+/*
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */
 
@@ -86,3 +95,4 @@ std::string Client::getNick() { return _nick; }
 void Client::setRealName(std::string realName) { _realName = realName; }
 std::string Client::getRealName() { return _realName; }
 std::string Client::getUserOnHost() { return _userOnHost; }
+int Client::getFd() { return _fd; }

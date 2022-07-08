@@ -21,6 +21,7 @@ class MasterServer
 {
 public:
 	friend class Client;
+	friend class Channel;
 	MasterServer(int port, std::string const &password);
 	MasterServer &operator=(const MasterServer &rhs);
 	~MasterServer();

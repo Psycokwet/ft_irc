@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/08 19:04:34 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/08 19:24:33 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -163,7 +163,8 @@ GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
-					Client
+					Client \
+					Channel
 SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 		
 COMMAND_PATH	=	Execute_command/

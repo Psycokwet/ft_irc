@@ -12,6 +12,7 @@ class Client
 {
 public:
 	friend class MasterServer;
+	friend class Channel;
 	~Client();
 	Client();
 	Client(int fd);
@@ -21,13 +22,15 @@ public:
 	void setRealName(std::string realName);
 	std::string getRealName();
 	std::string getUserOnHost();
-	bool
-	always_true();
+	int getFd();
+	bool always_true();
 	bool always_false();
 	bool is_not_connected();
 	bool is_connected();
 	bool is_registered();
 	void validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv);
+
+	bool operator==(const Client &rhs) const;
 
 private:
 	int _fd; // is the fd of client socket
