@@ -40,6 +40,8 @@ private:
 	static std::string toStringERR_NOSUCHNICK(std::string *s, MasterServer *server, Client *client);
 	static std::string toStringERR_NORECIPIENT(std::string *s, MasterServer *server, Client *client);
 	static std::string toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_TOPIC(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_NAMREPLY(std::string *s, MasterServer *server, Client *client);
 
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client);
 

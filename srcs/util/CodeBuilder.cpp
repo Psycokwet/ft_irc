@@ -64,7 +64,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_CHANNELMODEIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_UNIQOPIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_NOTOPIC] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_TOPIC] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_TOPIC] = &CodeBuilder::toStringRPL_TOPIC;
 	map[RPL_INVITING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_SUMMONING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_INVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
@@ -73,7 +73,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFEXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_VERSION] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOREPLY] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_NAMREPLY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFLINKS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFNAMES] = &CodeBuilder::toStringPLACEHOLDER;
@@ -230,6 +230,9 @@ std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, M
 {
 	(void)server;
 	(void)client;
+	std::string tmp = "";
+	if (!command_name)
+		command_name = &tmp;
 	return (*command_name) + ":Not enough parameters";
 }
 std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client)
@@ -244,6 +247,9 @@ std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, MasterServ
 {
 	(void)server;
 	(void)client;
+	std::string tmp = "";
+	if (!nick)
+		nick = &tmp;
 	return (*nick) + " :Nickname is already in use";
 }
 
@@ -259,12 +265,18 @@ std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterSer
 {
 	(void)server;
 	(void)client;
+	std::string tmp = "";
+	if (!destNick)
+		destNick = &tmp;
 	return *destNick + " :No such nick/channel";
 }
 std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
+	std::string tmp = "";
+	if (!command)
+		command = &tmp;
 	return ":No recipient given (" + *command + ")";
 }
 std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client)
@@ -273,6 +285,28 @@ std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *
 	(void)client;
 	(void)s;
 	return ":No text to send";
+}
+
+std::string CodeBuilder::toStringRPL_TOPIC(std::string *channelthentopic, MasterServer *server, Client *client)
+{
+
+	(void)server;
+	(void)client;
+	std::string tmp = " : ";
+	if (!channelthentopic)
+		channelthentopic = &tmp;
+	return *channelthentopic;
+	//<channel> : <topic>
+}
+
+std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *channels, MasterServer *server, Client *client)
+{
+	(void)server;
+	(void)client;
+	std::string tmp = "";
+	if (!channels)
+		channels = &tmp;
+	return "= " + *channels + "@" + client->getUserOnHost();
 }
 
 std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client)

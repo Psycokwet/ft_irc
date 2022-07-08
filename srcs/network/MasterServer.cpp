@@ -16,7 +16,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["QUIT"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 
 	// channel operation
-	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::execJOIN);
 	map["PART"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	// MODE too
 	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
