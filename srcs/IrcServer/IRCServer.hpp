@@ -12,7 +12,6 @@ class User;
 class Channel;
 class IRCServer;
 class Client;
-typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd;
 
 #define COMMAND_METHODS_PROTOTYPE bool (IRCServer::*)(t_client_ParsedCmd &, std::vector<t_clientCmd> &)
 typedef std::map<std::string, COMMAND_METHODS_PROTOTYPE> t_commands_dictionary;
