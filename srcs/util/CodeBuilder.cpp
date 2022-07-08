@@ -171,10 +171,8 @@ std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *cl
 	std::stringstream ss;
 	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " " + client->getNick() + " ");
 	return ss.str();
-
-	// 	return server->getHost() + " " + errorCodeToString(err) + " " + client->getUserOnHost() + " " + _codeDictionnary[err](s, server, client);
-	// return server->getHost() + " 042 " + client->getUserOnHost() + ":No registered error code found";
 }
+
 std::string CodeBuilder::errorCodeToString(int err)
 {
 	std::stringstream ss;
@@ -248,8 +246,7 @@ std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, MasterServ
 	(void)client;
 	return (*nick) + " :Nickname is already in use";
 }
-// :ourirc.42.paris.fr 433  user42 :Nickname is already in use\r\n
-// :ft-irc.42.fr 433 * user42 :Nickname is already in use\r\n
+
 std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServer *server, Client *client)
 {
 	(void)server;
