@@ -53,6 +53,6 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 	}
 	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
 
-	// more to do
+	// more to do for channels
 	return true;
 }
