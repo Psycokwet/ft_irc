@@ -20,6 +20,7 @@ typedef std::map<std::string, std::pair<CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE
 class MasterServer
 {
 public:
+	friend class Client;
 	MasterServer(int port, std::string const &password);
 	MasterServer &operator=(const MasterServer &rhs);
 	~MasterServer();

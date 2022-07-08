@@ -19,7 +19,7 @@ class CodeBuilder
 {
 
 public:
-	static std::string errorToString(int err, MasterServer *server = NULL, Client *client = NULL, std::string *s = NULL);
+	static std::string errorToString(int err, MasterServer *server, Client *client, std::string *s = NULL);
 
 private:
 	static t_code_dictionary _codeDictionnary;

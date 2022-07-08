@@ -7,7 +7,7 @@
 Client::Client(int fd) : _fd(fd),
 						 _passOK(false),
 						 _registered(false),
-						 _nick(""),
+						 _nick(UNDEFINED_NICK),
 						 _realName(""),
 						 _userOnHost("")
 {
@@ -66,6 +66,18 @@ bool Client::is_registered()
 {
 	return _passOK && _registered;
 }
+
+void Client::validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv)
+{
+	if (_nick == UNDEFINED_NICK || _userOnHost == "")
+		return;
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_WELCOME, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_YOURHOST, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_CREATED, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MYINFO, serv, this), respQueue);
+	_registered = true;
+}
+
 /*
 ** ------------------------- ACCESSORS ----------------------------------
 */

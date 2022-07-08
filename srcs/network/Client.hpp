@@ -1,10 +1,12 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+class MasterServer;
 #include "MasterServer.hpp"
 
 class Client;
 #include "../../includes/ft_irc.hpp"
+#define UNDEFINED_NICK "*"
 
 class Client
 {
@@ -25,6 +27,7 @@ public:
 	bool is_not_connected();
 	bool is_connected();
 	bool is_registered();
+	void validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv);
 
 private:
 	int _fd; // is the fd of client socket

@@ -9,7 +9,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	t_commands_dictionary map;
 	// connection registration
 	map["PASS"] = std::make_pair(&Client::is_not_connected, &MasterServer::execPASS);
-	map["USER"] = std::make_pair(&Client::is_registered, &MasterServer::execUSER);
+	map["USER"] = std::make_pair(&Client::is_connected, &MasterServer::execUSER);
 	map["NICK"] = std::make_pair(&Client::is_connected, &MasterServer::execNICK);
 	map["OPER"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["MODE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);

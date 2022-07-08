@@ -44,10 +44,7 @@ bool MasterServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command
 	client->_userOnHost = userName;
 	client->_realName = realName;
 	// mode stuff to do see later
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WELCOME, this, client, &base), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOURHOST, this, client, &base), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CREATED, this, client, &base), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_MYINFO, this, client, &base), respQueue);
+	client->validatedRegistration(respQueue, this);
 
 	return true;
 }

@@ -27,7 +27,7 @@ bool MasterServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command
 	std::string new_nick = params.front();
 	if (client->_nick == new_nick)
 	{
-		client->_registered = true;
+		client->validatedRegistration(respQueue, this);
 		return true;
 	}
 	if (this->findClientWithNick(new_nick))
@@ -37,6 +37,6 @@ bool MasterServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command
 	}
 	std::cout << new_nick << " NOT IN USE\n";
 	client->_nick = new_nick;
-	client->_registered = true;
+	client->validatedRegistration(respQueue, this);
 	return true;
 }

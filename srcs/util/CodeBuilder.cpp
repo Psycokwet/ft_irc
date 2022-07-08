@@ -169,7 +169,7 @@ std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *cl
 	}
 
 	std::stringstream ss;
-	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " * ");
+	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " " + client->getNick() + " ");
 	return ss.str();
 
 	// 	return server->getHost() + " " + errorCodeToString(err) + " " + client->getUserOnHost() + " " + _codeDictionnary[err](s, server, client);
