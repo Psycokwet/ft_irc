@@ -6,9 +6,11 @@
 #include <string>
 #include "Client.hpp"
 #include "MasterServer.hpp"
-#include "ClientMode.hpp"
+#include "../../includes/enumFactory.h"
 
-typedef std::map<int, std::pair<Client *, ClientMode *> > t_client_modes;
+#define _MOD_NO_FLAGS 0
+#define _MOD_FLAG_ADMIN 1
+typedef std::map<int, std::pair<Client *, int> > t_client_modes;
 
 class Channel
 {

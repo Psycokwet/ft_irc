@@ -14,9 +14,6 @@ Channel::Channel(std::string name) : _name(name)
 
 Channel::~Channel()
 {
-	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
-		delete it->second.second; // only delete modes, NOT CLIENTS, NEVER HERE
-	_clients.clear();
 }
 
 /*
@@ -42,9 +39,9 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
 	if (_clients.size())
-		_clients[client->getFd()] = std::make_pair(client, new ClientMode(_MOD_FLAG_ADMIN));
+		_clients[client->getFd()] = std::make_pair(client, _MOD_FLAG_ADMIN);
 	else
-		_clients[client->getFd()] = std::make_pair(client, new ClientMode());
+		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);
 	(void)respQueue;
 	(void)serv;
 }
