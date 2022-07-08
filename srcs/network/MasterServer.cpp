@@ -4,15 +4,95 @@
 ** ---------------------------------- STATIC ----------------------------------
 */
 
+t_commands_dictionary MasterServer::initCommandsDictionnary()
+{
+	t_commands_dictionary map;
+	// connection registration
+	map["PASS"] = std::make_pair(&Client::is_not_connected, &MasterServer::execPASS);
+	map["USER"] = std::make_pair(&Client::is_registered, &MasterServer::execUSER);
+	map["NICK"] = std::make_pair(&Client::is_connected, &MasterServer::execNICK);
+	map["OPER"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["MODE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["QUIT"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	// channel operation
+	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["PART"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	// MODE too
+	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["NAMES"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["LIST"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["INVITE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["KICK"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	//  sending message
+	map["PRIVMSG"] = std::make_pair(&Client::is_registered, &MasterServer::execPRIVMSG);
+	map["NOTICE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	//  Server queries and commands
+	map["MOTD"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["TIME"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["VERSION"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["ADMIN"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	//  Miscellaneous messages
+	map["KILL"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["PING"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	//  Optional features
+	map["AWAY"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["DIE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	//  user based queries
+	map["WHO"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+
+	// ignored commands
+	map["CAP"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["CNOTICE"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["CPRIVMSG"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["CONNECT"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["ENCAP"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["ERROR"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["HELP"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["INFO"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["ISON"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["KNOCK"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["LINKS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["LUSERS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["NAMESX"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["PONG"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["REHASH"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["RULES"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SERVER"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SERVICE"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SERVLIST"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SQUIT"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SETNAME"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SILENCE"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["STATS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["SUMMON"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["TRACE"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["UHNAMES"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["USERHOST"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["USERIP"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["USERS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["WALLOPS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["WATCH"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["WHOIS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	map["WHOWAS"] = std::make_pair(&Client::always_true, &MasterServer::ignore_command);
+	return map;
+}
+
+t_commands_dictionary MasterServer::_commandsDictionnary = MasterServer::initCommandsDictionnary();
+
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-MasterServer::MasterServer(int port, std::string const &password, IRCServer &irc) : _fdServer(-1),
-																					_maxFD(-1),
-																					_ircServer(irc),
-																					_port(port),
-																					_password(password)
+MasterServer::MasterServer(int port, std::string const &password) : _fdServer(-1),
+																	_maxFD(-1),
+																	_port(port),
+																	_password(password)
 {
 }
 
@@ -22,9 +102,7 @@ MasterServer::MasterServer(int port, std::string const &password, IRCServer &irc
 
 MasterServer::~MasterServer()
 {
-	std::map<int, Client *>::iterator it;
-	for (it = _clients.begin(); it != _clients.end(); ++it)
-		delete it->second;
+	util_delete(_clients);
 	close(_fdServer);
 }
 
@@ -132,6 +210,38 @@ void MasterServer::run() // ! do like main_loops
 /*
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */
+bool MasterServer::processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+	std::string cmd_name = ((*(parsed_command.second))[COMMAND]).front(); // if we got in here, we already check that there is something here
+	for (t_commands_dictionary::iterator it = MasterServer::_commandsDictionnary.begin(); it != MasterServer::_commandsDictionnary.end(); it++)
+	{
+		if (it->first == cmd_name)
+		{
+			if (!((parsed_command.first)->*(it->second.first))())
+			{
+				delete parsed_command.second; // if NULL then we never got inside process command in the first place
+
+				// manage error or end process case
+				std::cout << "Command not valid at this point of client use, ignore.\n";
+				return true;
+			}
+			if (!(this->*(it->second.second))(base, parsed_command, respQueue))
+			{
+				delete parsed_command.second; // if NULL then we never got inside process command in the first place
+
+				// manage error or end process case
+				std::cout << "Command returned false, must quit client processing.\n";
+				return false;
+			}
+			std::cout << "Command " << cmd_name << " done\n";
+			delete parsed_command.second; // if NULL then we never got inside process command in the first place
+			return true;
+		}
+	}
+	std::cout << "No command correspond to " << cmd_name << ", ignoring it.\n";
+	delete parsed_command.second; // if NULL then we never got inside process command in the first place
+	return true;
+}
 
 int MasterServer::setFDForReading()
 {
@@ -194,24 +304,24 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 			lazyParsedType *parsed_command;
 			bool ret = _clients[fd]->receiveCommand(received_command);
 
-			std::list<std::string> command_list(stringToListKeepTokenizer(received_command, CMD_SEP));
+			std::list<std::string> command_list(stringToListKeepTokenizer(received_command, END_OF_COMMAND));
 			for (std::list<std::string>::iterator it = command_list.begin(); it != command_list.end(); it++)
 			{
 				if (it->size() == 0)
 					continue;
 				if (ret == false)
 				{
-					// _ircServer.removeDisconnectUser(fd);
+					// _MasterServer.removeDisconnectUser(fd);
 					removeClient(fd);
 				}
 				else if (!(parsed_command = LazyRequestParser(*it)) //
 						 || !isLegalCmd(&parsed_command)			//
-						 || !_ircServer.processCommand(*it, std::make_pair(_clients[fd], parsed_command), resQueue))
+						 || !processCommand(*it, std::make_pair(_clients[fd], parsed_command), resQueue))
 				{
 					disconnectList.insert(fd);
 					break; // if a false, then stop treating client
 				}
-				// int killed_by_operater_fd = _ircServer.getVictim();
+				// int killed_by_operater_fd = _MasterServer.getVictim();
 				// if (killed_by_operater_fd != -1)
 				// 	disconnectList.insert(killed_by_operater_fd);
 			}
@@ -244,8 +354,48 @@ void MasterServer::removeClient(int fdClient)
 	}
 }
 
+void MasterServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
+{
+	respQueue.push_back(std::make_pair(fd, msg));
+}
+std::string MasterServer::getFullClientID(Client *c) const
+{
+	return c->getNick() + "!" + c->getUserOnHost() + "@" + getHost();
+}
+Client *MasterServer::findClientWithNick(std::string new_nick)
+{
+	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if (it->second->getNick() == new_nick)
+			return it->second;
+	return NULL;
+}
+
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
+std::string MasterServer::getHost() const
+{
+	return HOST;
+}
+std::string MasterServer::getServerName() const
+{
+	return SERVER_NAME;
+}
+std::string MasterServer::getServerVersion() const
+{
+	return SERVER_VERSION;
+}
+std::string MasterServer::getCreationDate() const
+{
+	return SERVER_CREATION_DATE;
+}
+std::string MasterServer::getAvailableUserModes() const
+{
+	return "biklmnopstv";
+}
+std::string MasterServer::getAvailableChannelModes() const
+{
+	return "ikot";
+}
 /* ************************************************************************* */

@@ -1,6 +1,6 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 
-bool IRCServer::example_command(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::example_command(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
 	(void)parsed_command;

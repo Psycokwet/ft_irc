@@ -1,4 +1,4 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 
 /*
 ** ---------------------------------- NICK ----------------------------------
@@ -11,13 +11,12 @@
 **           ERR_UNAVAILRESOURCE not sure if needed            ERR_RESTRICTED
 **/
 
-bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
-
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 
 	if (!params.size())
@@ -28,6 +27,7 @@ bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, s
 	std::string new_nick = params.front();
 	if (client->_nick == new_nick)
 	{
+		client->_registered = true;
 		return true;
 	}
 	if (this->findClientWithNick(new_nick))
@@ -37,5 +37,6 @@ bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, s
 	}
 	std::cout << new_nick << " NOT IN USE\n";
 	client->_nick = new_nick;
+	client->_registered = true;
 	return true;
 }

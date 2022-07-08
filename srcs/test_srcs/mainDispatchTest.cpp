@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../util/parse.hpp"
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 #include <ctype.h>
 #include <iostream>
 #include <sstream>
@@ -40,7 +40,7 @@ int main(int ac, char **av)
 		buff += tmp + "\n";
 	}
 
-	IRCServer *myIrc = new IRCServer("password");
+	MasterServer *myIrc = new MasterServer(4242, "password");
 	lazyParsedType *lad = LazyRequestParser(buff);
 	if (!lad)
 	{

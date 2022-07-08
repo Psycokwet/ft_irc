@@ -9,17 +9,17 @@
 
 class Client;
 class CodeBuilder;
-class IRCServer;
+class MasterServer;
+#include "../network/MasterServer.hpp"
 #include "../network/Client.hpp"
-#include "../IrcServer/IRCServer.hpp"
-#define TOSTRING std::string (*)(std::string *, IRCServer *, Client *)
+#define TOSTRING std::string (*)(std::string *, MasterServer *, Client *)
 typedef std::map<int, TOSTRING> t_code_dictionary;
 // static use, singleton
 class CodeBuilder
 {
 
 public:
-	static std::string errorToString(int err, IRCServer *server = NULL, Client *client = NULL, std::string *s = NULL);
+	static std::string errorToString(int err, MasterServer *server = NULL, Client *client = NULL, std::string *s = NULL);
 
 private:
 	static t_code_dictionary _codeDictionnary;
@@ -27,21 +27,21 @@ private:
 
 	static std::string errorCodeToString(int err);
 
-	static std::string toStringRPL_CUSTOM(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringRPL_YOURHOST(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringRPL_CREATED(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringRPL_MYINFO(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringRPL_BOUNCE(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NEEDMOREPARAMS(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NICKNAMEINUSE(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NONICKNAMEGIVEN(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_ALREADYREGISTRED(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NOSUCHNICK(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NORECIPIENT(std::string *s, IRCServer *server, Client *client);
-	static std::string toStringERR_NOTEXTTOSEND(std::string *s, IRCServer *server, Client *client);
+	static std::string toStringRPL_CUSTOM(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_WELCOME(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_YOURHOST(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_MYINFO(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringRPL_BOUNCE(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NEEDMOREPARAMS(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NICKNAMEINUSE(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_ALREADYREGISTRED(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NOSUCHNICK(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NORECIPIENT(std::string *s, MasterServer *server, Client *client);
+	static std::string toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client);
 
-	static std::string toStringPLACEHOLDER(std::string *nick, IRCServer *server, Client *client);
+	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client);
 
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);

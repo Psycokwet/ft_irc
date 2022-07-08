@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/07 19:09:01 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/08 12:03:08 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -165,11 +165,7 @@ NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
 					Client
 SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
-					
-SERVER_PATH		=	IrcServer/
-SERVER_FILES 	= 	IRCServer
-SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
-
+		
 COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	example_command \
 					NICK \

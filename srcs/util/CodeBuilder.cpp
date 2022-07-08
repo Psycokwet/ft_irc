@@ -158,7 +158,7 @@ t_code_dictionary CodeBuilder::_codeDictionnary = CodeBuilder::initCodeDictionna
 ** --------------------------------- STATIC METHODS ----------------------------------
 */
 
-std::string CodeBuilder::errorToString(int err, IRCServer *server, Client *client, std::string *s)
+std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *client, std::string *s)
 {
 	std::string tmp = ":No registered error code found";
 	std::string string_code = "042";
@@ -169,7 +169,7 @@ std::string CodeBuilder::errorToString(int err, IRCServer *server, Client *clien
 	}
 
 	std::stringstream ss;
-	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " " + client->getUserOnHost() + " ");
+	print_cont(ss, stringToList(tmp, '\n'), END_OF_COMMAND, ":" + server->getHost() + " " + string_code + " * ");
 	return ss.str();
 
 	// 	return server->getHost() + " " + errorCodeToString(err) + " " + client->getUserOnHost() + " " + _codeDictionnary[err](s, server, client);
@@ -186,55 +186,55 @@ std::string CodeBuilder::errorCodeToString(int err)
 ** --------------------------------- DICTIONARY ENTRIES ----------------------------------
 */
 
-std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
 	(void)server;
 	(void)client;
-	return "Hmm, hello there ! Howdy !";
+	return ":Hmm, hello there ! Howdy !";
 }
 
-std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
-	return "Welcome to the Internet Relay Network " + server->getFullClientID(client);
+	return ":Welcome to the Internet Relay Network " + server->getFullClientID(client);
 }
-std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
 	(void)server;
 	(void)client;
-	return "Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
+	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
 }
-std::string CodeBuilder::toStringRPL_CREATED(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
 	(void)server;
 	(void)client;
-	return "This server was created " + server->getCreationDate();
+	return ":This server was created " + server->getCreationDate();
 }
-std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
 	(void)server;
 	(void)client;
-	return server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " :" + server->getAvailableChannelModes();
+	return ":" + server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " :" + server->getAvailableChannelModes();
 }
-std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, MasterServer *server, Client *client)
 {
 	(void)s;
 	(void)server;
 	(void)client;
-	return "Try server any you like, really lol, port look it up :p";
+	return ":Try server any you like, really lol, port look it up :p";
 }
 
-std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
 	return (*command_name) + ":Not enough parameters";
 }
-std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
@@ -242,13 +242,15 @@ std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, IRCServer *
 	return ":No nickname given";
 }
 
-std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
-	return (*nick) + ":Nickname is already in use";
+	return (*nick) + " :Nickname is already in use";
 }
-std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, IRCServer *server, Client *client)
+// :ourirc.42.paris.fr 433  user42 :Nickname is already in use\r\n
+// :ft-irc.42.fr 433 * user42 :Nickname is already in use\r\n
+std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)s;
@@ -256,19 +258,19 @@ std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, IRCServer 
 	return ":Unauthorized command (already registered)";
 }
 
-std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
 	return *destNick + " :No such nick/channel";
 }
-std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
 	return ":No recipient given (" + *command + ")";
 }
-std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
@@ -276,12 +278,12 @@ std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, IRCServer *ser
 	return ":No text to send";
 }
 
-std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
 	(void)s;
-	return "I AM A PLACEHOLDER ";
+	return ":I AM A PLACEHOLDER ";
 }
 
 /* ************************************************************************** */

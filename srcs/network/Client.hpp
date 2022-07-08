@@ -9,7 +9,7 @@ class Client;
 class Client
 {
 public:
-	friend class IRCServer;
+	friend class MasterServer;
 	~Client();
 	Client();
 	Client(int fd);

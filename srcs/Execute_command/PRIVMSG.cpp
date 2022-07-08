@@ -1,4 +1,4 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 
 /*
 ** ---------------------------------- NICK ----------------------------------
@@ -26,7 +26,7 @@
 **            RPL_AWAY
 **/
 
-bool IRCServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
 	(void)parsed_command;
@@ -51,7 +51,7 @@ bool IRCServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
 		return true;
 	}
-	pushToQueue(destClient->_fd, base, respQueue);
+	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
 
 	// more to do
 	return true;

@@ -1,4 +1,4 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 /*
 ** ---------------------------------- USER ----------------------------------
 **
@@ -19,7 +19,7 @@
 **            ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 */
 
-bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 
 	(void)base;

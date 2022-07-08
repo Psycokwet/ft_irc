@@ -23,6 +23,9 @@
 #define MAX_TCP_PORT 65535
 #define TRUE 1
 
+#define CMD_SEP "\r\n"
+#define TOO_MANY_ARGS ": Too many params"
+#define HOST "ourirc.42.paris.fr"
 #define END_OF_COMMAND "\r\n"
 #define LEN_END_OF_COMMAND 2
 

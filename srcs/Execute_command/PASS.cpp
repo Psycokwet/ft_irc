@@ -1,4 +1,4 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 
 /*
 ** ---------------------------------- PASS ----------------------------------
@@ -7,7 +7,7 @@
 ** Numeric Replies:
 **            ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 */
-bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
@@ -25,7 +25,7 @@ bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, s
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
 		break;
 	case 1:
-		if (params.front() == _serverPassword)
+		if (params.front() == _password)
 		{
 			client->_passOK = true;
 			return true;
