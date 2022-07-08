@@ -2,14 +2,15 @@
 #define MASTERSERVER_HPP
 
 #include "../../includes/ft_irc.hpp"
+class CodeBuilder;
+class Client;
+class Channel;
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "../util/CodeBuilder.hpp"
 #include "../util/deleteContainers.hpp"
 #include "../util/containerTo.hpp"
 #include "../../includes/code.hpp"
-
-class CodeBuilder;
-class Client;
 
 typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd; // it: fd client, lazyParsedType: parsed command
 
@@ -32,6 +33,8 @@ public:
 	void run();
 
 	Client *findClientWithNick(std::string new_nick);
+	Channel *findChanneWithName(std::string name);
+	Channel *createChannel(std::string name);
 
 	std::string getHost() const;
 	std::string getServerName() const;
@@ -50,6 +53,7 @@ public:
 private:
 	int _fdServer; // Server's socket
 	std::map<int, Client *> _clients;
+	std::map<std::string, Channel *> _channels;
 	int _maxFD;		  // Current highest client FD
 	fd_set _fdReader; // Structure to select client FD for reading
 	int _port;

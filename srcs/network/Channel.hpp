@@ -2,10 +2,13 @@
 #define CHANNEL_HPP
 
 #include <iostream>
-#include <list>
+#include <map>
 #include <string>
 #include "Client.hpp"
 #include "MasterServer.hpp"
+#include "ClientMode.hpp"
+
+typedef std::map<int, std::pair<Client *, ClientMode *> > t_client_modes;
 
 class Channel
 {
@@ -20,8 +23,8 @@ private:
 	Channel(Channel const &src);
 	Channel &operator=(Channel const &rhs);
 
-	std::string _name;
-	std::list<Client *> _clients;
+	const std::string _name;
+	t_client_modes _clients;
 };
 
 std::ostream &operator<<(std::ostream &o, Channel const &i);

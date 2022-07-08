@@ -103,6 +103,7 @@ MasterServer::MasterServer(int port, std::string const &password) : _fdServer(-1
 MasterServer::~MasterServer()
 {
 	util_delete(_clients);
+	util_delete(_channels);
 	close(_fdServer);
 }
 
@@ -333,6 +334,10 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 	}
 }
 
+/*
+** --------------------------------- CLIENTS management ---------------------------------
+*/
+
 void MasterServer::acceptClient(int fdServer)
 {
 	sockaddr_in sin;
@@ -372,6 +377,21 @@ Client *MasterServer::findClientWithNick(std::string new_nick)
 		if (it->second->getNick() == new_nick)
 			return it->second;
 	return NULL;
+}
+
+/*
+** --------------------------------- CHANNEL management ---------------------------------
+*/
+Channel *MasterServer::findChanneWithName(std::string name)
+{
+	return _channels[name];
+}
+Channel *MasterServer::createChannel(std::string name)
+{
+	if (_channels[name])
+		return NULL;
+	_channels[name] = new Channel(name);
+	return _channels[name];
 }
 
 /*
