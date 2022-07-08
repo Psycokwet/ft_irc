@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/08 18:06:32 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/08 19:04:34 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -200,8 +200,10 @@ CPPFLAGS		+= $(DCOLORS)
 
 ifeq ($(shell uname), Linux)
 	CFLAGS	+= -DLINUX=true
+	CFLAGS	+= -D__LINUX__
 else
 	CFLAGS	+= -DLINUX=false
+	CFLAGS	+= -D__APPLE__
 endif
 
 

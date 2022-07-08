@@ -132,10 +132,14 @@ int MasterServer::build()
 		return EXIT_FAILURE;
 	}
 
-	/*************************************************************/
-	/* Allow socket descriptor to be reuseable                   */
-	/*************************************************************/
+/*************************************************************/
+/* Allow socket descriptor to be reuseable                   */
+/*************************************************************/
+#ifdef __APPLE__
+	if (setsockopt(_fdServer, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) == -1)
+#else
 	if (setsockopt(_fdServer, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *)&opt, sizeof(opt)) == -1)
+#endif
 	{
 		std::cerr << "setsockopt() failed" << std::endl;
 		return EXIT_FAILURE;
