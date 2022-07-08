@@ -13,7 +13,7 @@ bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, s
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	if (client->_passOK)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client, &base), respQueue);
 		return false;
 	}
 
@@ -22,7 +22,7 @@ bool IRCServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command, s
 	switch (params.size())
 	{
 	case 0:
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
 		break;
 	case 1:
 		if (params.front() == _serverPassword)

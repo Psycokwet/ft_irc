@@ -22,7 +22,7 @@ bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, s
 
 	if (!params.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NONICKNAMEGIVEN, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NONICKNAMEGIVEN, this, client, &base), respQueue);
 		return true;
 	}
 	std::string new_nick = params.front();
@@ -30,11 +30,12 @@ bool IRCServer::execNICK(std::string base, t_client_ParsedCmd &parsed_command, s
 	{
 		return true;
 	}
-	if (!this->isNickAvailable(new_nick))
+	if (this->findClientWithNick(new_nick))
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NICKNAMEINUSE, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NICKNAMEINUSE, this, client, &new_nick), respQueue);
 		return true;
 	}
+	std::cout << new_nick << " NOT IN USE\n";
 	client->_nick = new_nick;
 	return true;
 }

@@ -26,7 +26,7 @@ t_commands_dictionary IRCServer::initCommandsDictionnary()
 	map["KICK"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
 
 	//  sending message
-	map["PRIVMSG"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
+	map["PRIVMSG"] = std::make_pair(&Client::is_connected, &IRCServer::execPRIVMSG);
 	map["NOTICE"] = std::make_pair(&Client::is_connected, &IRCServer::example_command);
 
 	//  Server queries and commands
@@ -220,10 +220,17 @@ std::string IRCServer::getFullClientID(Client *c) const
 {
 	return c->getNick() + "!" + c->getUserOnHost() + "@" + getHost();
 }
-bool IRCServer::isNickAvailable(std::string new_nick)
+Client *IRCServer::findClientWithNick(std::string new_nick)
 {
+	std::cout << new_nick << " findClientWithNick" << _clients.size() << "\n";
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		std::cout << it->second->getNick() << " TEST\n";
 		if (it->second->getNick() == new_nick)
-			return false;
-	return true;
+		{
+			std::cout << new_nick << " FOUND\n";
+			return it->second;
+		}
+	}
+	return NULL;
 }

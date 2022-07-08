@@ -27,7 +27,7 @@ class IRCServer
 public:
 	IRCServer(std::string const &password);
 	~IRCServer();
-	bool isNickAvailable(std::string new_nick);
+	Client *findClientWithNick(std::string new_nick);
 
 	std::string getHost() const;
 	std::string getServerName() const;
@@ -58,6 +58,7 @@ private:
 	bool execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execNICK(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
 	// void removeUserFromAllChannels(User *user);
 	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;

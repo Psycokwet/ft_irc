@@ -94,7 +94,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFUSERS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_NOUSERS] = &CodeBuilder::toStringPLACEHOLDER;
 	// 400
-	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringERR_NOSUCHNICK;
 	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringPLACEHOLDER;
@@ -103,8 +103,8 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_TOOMANYTARGETS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOSUCHSERVICE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOORIGIN] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NORECIPIENT] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOTEXTTOSEND] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NORECIPIENT] = &CodeBuilder::toStringERR_NORECIPIENT;
+	map[ERR_NOTEXTTOSEND] = &CodeBuilder::toStringERR_NOTEXTTOSEND;
 	map[ERR_NOTOPLEVEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_WILDTOPLEVEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_BADMASK] = &CodeBuilder::toStringPLACEHOLDER;
@@ -256,11 +256,31 @@ std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, IRCServer 
 	return ":Unauthorized command (already registered)";
 }
 
-std::string CodeBuilder::toStringPLACEHOLDER(std::string *nick, IRCServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, IRCServer *server, Client *client)
 {
 	(void)server;
 	(void)client;
-	(void)nick;
+	return *destNick + " :No such nick/channel";
+}
+std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, IRCServer *server, Client *client)
+{
+	(void)server;
+	(void)client;
+	return ":No recipient given (" + *command + ")";
+}
+std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, IRCServer *server, Client *client)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	return ":No text to send";
+}
+
+std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, IRCServer *server, Client *client)
+{
+	(void)server;
+	(void)client;
+	(void)s;
 	return "I AM A PLACEHOLDER ";
 }
 

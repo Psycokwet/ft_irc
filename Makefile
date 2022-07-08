@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/07 11:30:27 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/07 19:09:01 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -174,6 +174,7 @@ COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	example_command \
 					NICK \
 					PASS \
+					PRIVMSG \
 					USER \
 					ignore_command
 

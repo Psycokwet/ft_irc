@@ -29,14 +29,14 @@ bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, s
 
 	if (client->_userOnHost != "")
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client, &base), respQueue);
 		return true;
 	}
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 	if (!params.size() || !message.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
 		return true;
 	}
 	std::string realName = message.front();
@@ -44,10 +44,10 @@ bool IRCServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, s
 	client->_userOnHost = userName;
 	client->_realName = realName;
 	// mode stuff to do see later
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WELCOME, this, client), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOURHOST, this, client), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CREATED, this, client), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_MYINFO, this, client), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WELCOME, this, client, &base), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOURHOST, this, client, &base), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CREATED, this, client, &base), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_MYINFO, this, client, &base), respQueue);
 
 	return true;
 }
