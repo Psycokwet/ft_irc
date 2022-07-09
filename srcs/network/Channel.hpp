@@ -7,9 +7,7 @@
 #include "Client.hpp"
 #include "MasterServer.hpp"
 #include "../../includes/enumFactory.h"
-
-#define _MOD_NO_FLAGS 0
-#define _MOD_FLAG_ADMIN 1
+// fd							client		flags
 typedef std::map<int, std::pair<Client *, int> > t_client_modes;
 
 class Channel
@@ -20,6 +18,10 @@ public:
 	std::string clientListToString();
 	std::string getName();
 	std::string getTopic();
+	std::string getModes();
+	t_client_modes &getClients();
+	std::string clientModesToString(int flags);
+
 	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base = "");
 	void quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);

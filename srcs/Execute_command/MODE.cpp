@@ -81,31 +81,45 @@
 **            RPL_UNIQOPIS
 **/
 
-bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
+	(void)client;
 
+	return true;
+}
+bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+	(void)base;
+	(void)parsed_command;
+	(void)respQueue;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+	(void)client;
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
-	if (!channels.size())
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
-		return true;
-	}
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		Channel *chan = findChanneWithName(*it);
 		if (!chan)
-			chan = createChannel(*it);
-		if (!chan)
 		{
-			std::cout << "Something wrong happened with channel, should not happen TAG#58\n";
+			// no chan
 			return true;
 		}
-		chan->join(respQueue, this, client, base);
+
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, NULL, chan), respQueue);
 		// join one after the other
 	}
+
 	return true;
+}
+bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
+	if (!channels.size())
+	{
+		return execMODE_CLIENT(base, parsed_command, respQueue);
+	}
+	return execMODE_CHANNEL(base, parsed_command, respQueue);
 }

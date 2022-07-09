@@ -69,6 +69,11 @@ void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	(void)respQueue;
 	(void)serv;
 }
+std::string Channel::clientModesToString(int flags)
+{
+	(void)flags;
+	return "H"; // need to implement for real
+}
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
@@ -82,4 +87,13 @@ std::string Channel::getTopic()
 {
 	return _topic;
 }
+std::string Channel::getModes()
+{
+	return "+t"; // need to implement for real
+}
+t_client_modes &Channel::getClients()
+{
+	return _clients;
+}
+
 /* ************************************************************************** */

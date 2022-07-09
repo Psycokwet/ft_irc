@@ -43,6 +43,9 @@ private:
 	static std::string toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_TOPIC(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_NAMREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_CHANNELMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_ENDOFWHO(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_WHOREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 

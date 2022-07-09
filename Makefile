@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/09 10:15:33 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/09 11:21:11 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -175,7 +175,8 @@ COMMAND_FILES 	= 	example_command \
 					NICK \
 					PASS \
 					PRIVMSG \
-					USER 
+					USER  \
+					WHO 
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

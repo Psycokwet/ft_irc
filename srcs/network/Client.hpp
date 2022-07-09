@@ -19,6 +19,7 @@ public:
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
 	std::string getNick();
+
 	void setRealName(std::string realName);
 	std::string getRealName();
 	std::string getUserOnHost();

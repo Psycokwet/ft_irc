@@ -54,14 +54,14 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_WHOISSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISOPERATOR] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOWASUSER] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ENDOFWHO] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_ENDOFWHO] = &CodeBuilder::toStringRPL_ENDOFWHO;
 	map[RPL_WHOISIDLE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFWHOIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_LISTSTART] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_LIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_LISTEND] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_CHANNELMODEIS] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_CHANNELMODEIS] = &CodeBuilder::toStringRPL_CHANNELMODEIS;
 	map[RPL_UNIQOPIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_NOTOPIC] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TOPIC] = &CodeBuilder::toStringRPL_TOPIC;
@@ -72,7 +72,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_EXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFEXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_VERSION] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_WHOREPLY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_WHOREPLY] = &CodeBuilder::toStringRPL_WHOREPLY;
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFLINKS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -331,6 +331,55 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 		tmp = channel->getName() + tmp + channel->clientListToString();
 	return "= " + tmp;
 	//= #pwat :user42_ @user42__
+}
+
+std::string CodeBuilder::toStringRPL_CHANNELMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+	std::string tmp = " :";
+	if (channel)
+		tmp = channel->getName() + tmp + channel->getModes();
+	return tmp;
+	//#pwat :+t
+}
+
+std::string CodeBuilder::toStringRPL_ENDOFWHO(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::string tmp = " :End of WHO list";
+	if (channel)
+		tmp = channel->getName() + tmp;
+	return tmp;
+	//"<name> :End of WHO list"
+}
+
+std::string CodeBuilder::toStringRPL_WHOREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::string acc = "";
+	std::string sep = "";
+
+	if (!channel)
+		return acc;
+	t_client_modes &clients = channel->getClients();
+	for (t_client_modes::const_iterator it = clients.begin(); it != clients.end(); it++)
+	{
+		acc += sep + channel->getName() + " :" + client->getUserOnHost() + " " + server->getFullClientID(client) + " " + server->getHost() + " " + it->second.first->getNick() + " " + channel->clientModesToString(it->second.second) + " :" + it->second.first->getRealName();
+		sep = "\n";
+	}
+	return acc;
+	// #pwat user42 user.ft-irc.42.fr ft-irc.42.fr user42__ H@ :0 realname
 }
 
 std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client, Channel *channel)
