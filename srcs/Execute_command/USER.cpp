@@ -1,4 +1,4 @@
-#include "../IrcServer/IRCServer.hpp"
+#include "../network/MasterServer.hpp"
 /*
 ** ---------------------------------- USER ----------------------------------
   Command: USER
@@ -35,29 +35,32 @@
 
 */
 
-bool IRCServer::execUSER(t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
-    std::string response;
-    // sUser *one_user;
 
-    if ((((*(parsed_command.second))[PARAMS]).size()) < 4)
-    {
-        response = ":Not enough parameters"; // ERR_NEEDMOREPARAMS 461
-        pushToQueue(parsed_command.first, response, respQueue);
-    }
-    if (((*(parsed_command.second))[PARAMS]).empty())
-    {
-        response = ":Not enough parameters"; // ERR_NEEDMOREPARAMS 461
-        pushToQueue(parsed_command.first, response, respQueue);
-    }
-    /*else
-    {
-        one_user->_uname;
-        one_user->_rname;
-    }*/
+    (void)base;
+    (void)parsed_command;
+    (void)respQueue;
+    Client *client = parsed_command.first; // should not be null regarding how we got here
 
-    if (!response.empty())
-        pushToQueue(parsed_command.first, response, respQueue);
+    if (client->_userOnHost != "")
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client, &base), respQueue);
+        return true;
+    }
+    lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+    lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
+    if (!params.size() || !message.size())
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
+        return true;
+    }
+    std::string realName = message.front();
+    std::string userName = params.front();
+    client->_userOnHost = userName;
+    client->_realName = realName;
+    // mode stuff to do see later
+    client->validatedRegistration(respQueue, this);
 
     return true;
 }

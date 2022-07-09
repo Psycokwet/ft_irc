@@ -3,7 +3,7 @@ import threading
 from time import sleep
 
 IN_ADDR = ('0.0.0.0', 3333) # 0.0 de no nhan ta ca connect
-OUT_ADDR = ('irc.2600.net', 6667) # 3333, 6667 la co dinh, irc.2600.net lay trong edit. "Doi thanh localhost khi dung server o local, khi khong dung network tren Hexchat"
+OUT_ADDR = ('0.0.0.0', 8080) # 3333, 6667 la co dinh, irc.2600.net lay trong edit. "Doi thanh localhost khi dung server o local, khi khong dung network tren Hexchat"
 BUFF_SIZE = 512
 DELIM = "\r\n"
 
