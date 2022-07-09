@@ -158,13 +158,18 @@ t_code_dictionary CodeBuilder::_codeDictionnary = CodeBuilder::initCodeDictionna
 ** --------------------------------- STATIC METHODS ----------------------------------
 */
 
-std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *client, std::string *s)
+std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *client, std::string s, Channel *channel)
+{
+	return CodeBuilder::errorToString(err, server, client, &s, channel);
+}
+
+std::string CodeBuilder::errorToString(int err, MasterServer *server, Client *client, std::string *s, Channel *channel)
 {
 	std::string tmp = ":No registered error code found";
 	std::string string_code = "042";
 	if (_codeDictionnary.find(err) != _codeDictionnary.end())
 	{
-		tmp = _codeDictionnary[err](s, server, client);
+		tmp = _codeDictionnary[err](s, server, client, channel);
 		string_code = errorCodeToString(err);
 	}
 
@@ -184,136 +189,157 @@ std::string CodeBuilder::errorCodeToString(int err)
 ** --------------------------------- DICTIONARY ENTRIES ----------------------------------
 */
 
-std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_CUSTOM(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
 	(void)server;
 	(void)client;
+	(void)channel;
 	return ":Hmm, hello there ! Howdy !";
 }
 
-std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_WELCOME(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
+	(void)channel;
+
 	return ":Welcome to the Internet Relay Network " + server->getFullClientID(client);
 }
-std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
 	(void)server;
 	(void)client;
+	(void)channel;
+
 	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
 }
-std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
 	(void)server;
 	(void)client;
+	(void)channel;
+
 	return ":This server was created " + server->getCreationDate();
 }
-std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_MYINFO(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
 	(void)server;
 	(void)client;
+	(void)channel;
+
 	return ":" + server->getServerName() + " " + server->getServerVersion() + " " + server->getAvailableUserModes() + " :" + server->getAvailableChannelModes();
 }
-std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_BOUNCE(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
 	(void)server;
 	(void)client;
+	(void)channel;
+
 	return ":Try server any you like, really lol, port look it up :p";
 }
 
-std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
-	std::string tmp = "";
-	if (!command_name)
-		command_name = &tmp;
+	(void)channel;
+
 	return (*command_name) + ":Not enough parameters";
 }
-std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)s;
+	(void)channel;
+
 	return ":No nickname given";
 }
 
-std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NICKNAMEINUSE(std::string *nick, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
-	std::string tmp = "";
-	if (!nick)
-		nick = &tmp;
+	(void)channel;
+
 	return (*nick) + " :Nickname is already in use";
 }
 
-std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)s;
 	(void)client;
+	(void)channel;
+
 	return ":Unauthorized command (already registered)";
 }
 
-std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
-	std::string tmp = "";
-	if (!destNick)
-		destNick = &tmp;
+	(void)channel;
+
 	return *destNick + " :No such nick/channel";
 }
-std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NORECIPIENT(std::string *command, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
-	std::string tmp = "";
-	if (!command)
-		command = &tmp;
+	(void)channel;
+
 	return ":No recipient given (" + *command + ")";
 }
-std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringERR_NOTEXTTOSEND(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)s;
+	(void)channel;
+
 	return ":No text to send";
 }
 
-std::string CodeBuilder::toStringRPL_TOPIC(std::string *channelthentopic, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_TOPIC(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 
 	(void)server;
 	(void)client;
+	(void)channel;
+	(void)s;
+
 	std::string tmp = " : ";
-	if (!channelthentopic)
-		channelthentopic = &tmp;
-	return *channelthentopic;
+	if (channel)
+		tmp = channel->getName() + tmp + channel->getTopic();
+	return tmp;
 	//<channel> : <topic>
 }
-
-std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *channels, MasterServer *server, Client *client)
-{
-	(void)server;
-	(void)client;
-	std::string tmp = "";
-	if (!channels)
-		channels = &tmp;
-	return "= " + *channels + "@" + client->getUserOnHost();
-}
-
-std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client)
+std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)s;
+	(void)channel;
+
+	std::string tmp = " : ";
+	if (channel)
+		tmp = channel->getName() + tmp + channel->clientListToString();
+	return "= " + tmp;
+	//= #pwat :user42_ @user42__
+}
+
+std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
 	return ":I AM A PLACEHOLDER ";
 }
 

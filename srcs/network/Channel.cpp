@@ -24,6 +24,21 @@ Channel::~Channel()
 ** --------------------------------- METHODS ----------------------------------
 */
 
+std::string Channel::clientListToString()
+{
+	std::string acc = "";
+	std::string sep = "";
+	int flags = _MOD_NO_FLAGS;
+	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		flags = (*it).second.second;
+		if (HAS_TYPE(flags, _MOD_FLAG_ADMIN))
+			acc += "@";
+		acc += sep + (*it).second.first->getNick();
+		sep = " ";
+	}
+	return acc;
+}
 void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
@@ -42,8 +57,8 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 		_clients[client->getFd()] = std::make_pair(client, _MOD_FLAG_ADMIN);
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);
-	(void)respQueue;
-	(void)serv;
+
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
 }
 void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
 {
@@ -58,4 +73,12 @@ void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
+std::string Channel::getName()
+{
+	return "#" + _name;
+}
+std::string Channel::getTopic()
+{
+	return _topic;
+}
 /* ************************************************************************** */

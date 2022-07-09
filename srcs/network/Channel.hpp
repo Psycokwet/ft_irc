@@ -17,6 +17,9 @@ class Channel
 public:
 	Channel(std::string name);
 	~Channel();
+	std::string clientListToString();
+	std::string getName();
+	std::string getTopic();
 	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
 	void quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
@@ -26,6 +29,7 @@ private:
 	Channel &operator=(Channel const &rhs);
 
 	const std::string _name;
+	const std::string _topic;
 	t_client_modes _clients;
 };
 
