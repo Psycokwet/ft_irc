@@ -49,7 +49,7 @@ void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServ
 	}
 }
 
-void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
+void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
@@ -58,6 +58,7 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);
 
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base, respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
 }
 void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)

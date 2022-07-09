@@ -21,7 +21,7 @@ public:
 	std::string getName();
 	std::string getTopic();
 	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
-	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
+	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base = "");
 	void quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
 
 private:
