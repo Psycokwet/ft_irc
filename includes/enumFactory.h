@@ -17,7 +17,7 @@
 #define HAS_TYPE(current, type) ((current & type) == type)
 
 // expansion macro for enum value definition
-#define ENUM_VALUE(name, assign) name assign, // ! expanded to "name assign," ?
+#define ENUM_VALUE(name, assign) name assign,
 
 // expansion macro for enum to string conversion
 #define ENUM_CASE(name, assign) \

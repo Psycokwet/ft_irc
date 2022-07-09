@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/28 11:26:08 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/09 11:21:11 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -152,30 +152,41 @@ GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_
 #
 
 
-USER_PATH	=	User/
-USER_FILES 	= 	User
-SRCS_FILES 		+=	$(addprefix $(USER_PATH), $(USER_FILES))
+# USER_PATH	=	User/
+# USER_FILES 	= 	User
+# SRCS_FILES 		+=	$(addprefix $(USER_PATH), $(USER_FILES))
 
-CHANNEL_PATH	=	Channel/
-CHANNEL_FILES 	= 	Channel
+# CHANNEL_PATH	=	Channel/
+# CHANNEL_FILES 	= 	Channel
 
-SRCS_FILES 		+=	$(addprefix $(CHANNEL_PATH), $(CHANNEL_FILES))
+# SRCS_FILES 		+=	$(addprefix $(CHANNEL_PATH), $(CHANNEL_FILES))
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
-					Client
+					Client \
+					Channel
 SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
-					
-SERVER_PATH		=	IrcServer/
-SERVER_FILES 	= 	IRCServer
-SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
+		
+COMMAND_PATH	=	Execute_command/
+COMMAND_FILES 	= 	example_command \
+					ignore_command \
+					JOIN \
+					MODE \
+					NICK \
+					PASS \
+					PRIVMSG \
+					USER  \
+					WHO 
+
+SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
 UTIL_PATH		=	util/
 UTIL_FILES 		=	parse \
 					numbers \
 					compareContainers \
 					containerTo \
-					logger
+					logger \
+					CodeBuilder
 SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 
 #
@@ -189,6 +200,15 @@ CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 RM				= rm -f
 CPPFLAGS		+= $(DCOLORS)
 # CPPFLAGS		+= -DGRAMMAR_FILE='"./grammar/grammar.gram"'
+
+ifeq ($(shell uname), Linux)
+	CFLAGS	+= -DLINUX=true
+	CFLAGS	+= -D__LINUX__
+else
+	CFLAGS	+= -DLINUX=false
+	CFLAGS	+= -D__APPLE__
+endif
+
 
 LDFLAGS			= -I$(INC_DIR)
 TESTERS_FLAGS	= -DDEBUG=true
