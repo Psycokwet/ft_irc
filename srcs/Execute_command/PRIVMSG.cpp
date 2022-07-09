@@ -1,7 +1,7 @@
 #include "../network/MasterServer.hpp"
 
 /*
-** ---------------------------------- NICK ----------------------------------
+** ---------------------------------- PRIVMSG ----------------------------------
 ** Parameters: <msgtarget> <text to be sent>
 **
 **    PRIVMSG is used to send private messages between users, as well as to

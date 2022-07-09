@@ -75,6 +75,7 @@ private:
 	bool execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execJOIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 };
 
 #endif /*...................MasterServer...............*/

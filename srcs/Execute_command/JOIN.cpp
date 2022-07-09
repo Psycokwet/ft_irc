@@ -1,6 +1,6 @@
 #include "../network/MasterServer.hpp"
 /*
-** ---------------------------------- USER ----------------------------------
+** ---------------------------------- JOIN ----------------------------------
 **
 **    The JOIN command is used by a user to request to start listening to
 **    the specific channel.  Servers MUST be able to parse arguments in the
