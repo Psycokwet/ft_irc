@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/09 22:59:29 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/10 23:42:52 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -176,7 +176,8 @@ COMMAND_FILES 	= 	example_command \
 					PASS \
 					PRIVMSG \
 					USER  \
-					WHO 
+					WHO \
+					OPER
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
