@@ -85,7 +85,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFINFO] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_MOTDSTART] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFMOTD] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_YOUREOPER] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_YOUREOPER] = &CodeBuilder::toStringRPL_YOUREOPER;
 	map[RPL_REHASHING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_YOURESERVICE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TIME] = &CodeBuilder::toStringPLACEHOLDER;
@@ -333,6 +333,15 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 	//= #pwat :user42_ @user42__
 }
 
+std::string CodeBuilder::toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	return ":You are now an IRC operator";
+}
 std::string CodeBuilder::toStringRPL_CHANNELMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;

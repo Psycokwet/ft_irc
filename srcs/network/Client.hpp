@@ -38,6 +38,7 @@ private:
 	// std::set<Channel *> _joinedList; // List of channels user has joined
 	bool _passOK;	  // true if user provided required password by Server.
 	bool _registered; // true if user provided name and required password by Server.
+	bool _oper;
 	std::string _nick;
 	std::string _realName;
 	std::string _userOnHost;

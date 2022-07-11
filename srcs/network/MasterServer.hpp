@@ -38,7 +38,7 @@ typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd; // it: fd clie
 
 #define COMMAND_METHODS_PROTOTYPE bool (MasterServer::*)(std::string base, t_client_ParsedCmd &, std::vector<t_clientCmd> &)
 #define CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE bool (Client::*)()
-typedef std::map<std::string, std::pair<CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE, COMMAND_METHODS_PROTOTYPE>> t_commands_dictionary;
+typedef std::map<std::string, std::pair<CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE, COMMAND_METHODS_PROTOTYPE> > t_commands_dictionary;
 typedef std::map<char, int> t_char_client_mode_dictionary;
 
 class MasterServer

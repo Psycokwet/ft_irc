@@ -1,7 +1,7 @@
 #include "../network/MasterServer.hpp"
 
 /*
-** ---------------------------------- JOIN ----------------------------------
+** ---------------------------------- OPER ----------------------------------
 **
 **    Command: OPER
    Parameters: <name> <password>
@@ -33,10 +33,21 @@ bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command
     lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
     lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 
-    if (!params.size())
+    if (params.size() < 2)
     {
         pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
         return true;
     }
+    else
+    {
+        client->_oper = true;
+        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOUREOPER, this, client, &base), respQueue);
+        return true;
+    }
+    /*if (params.front() != OPER_USERNAME || message.front() != OPER_PASSWORD)
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_PASSWDMISMATCH, this, client, &base), respQueue);
+        return true;
+    }*/
     return true;
 }
