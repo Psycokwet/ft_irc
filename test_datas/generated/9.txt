@@ -1,1 +1,1 @@
-WHO #new_channel
+JOIN #hackbbs

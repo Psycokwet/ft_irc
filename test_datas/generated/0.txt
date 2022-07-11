@@ -1,1 +1,1 @@
-PING 1657489741146
+PRIVMSG #chan :hello

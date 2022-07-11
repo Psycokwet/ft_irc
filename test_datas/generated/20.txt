@@ -1,1 +1,1 @@
-PING :irc.funet.fi
+NICK thi-nguy

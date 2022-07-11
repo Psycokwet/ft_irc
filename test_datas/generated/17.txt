@@ -1,1 +1,1 @@
-NICK thi-nguy
+NAMES #new_channel,#other_channel

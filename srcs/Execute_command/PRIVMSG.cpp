@@ -64,7 +64,9 @@
 **	                                    ; Message to all users who come from
 **	                                    a host which has a name matching
 **	                                    *.edu.
-**	 
+**
+**
+**		Note: Send to one user, one channel, multiple channels at once	 
 **/
 
 bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
@@ -74,26 +76,41 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-	if (!params.size())
+	lazyParsedSubType channel(((*(parsed_command.second))[CHANNELS]));
+	if (!params.size() && !channel.size())
 	{
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NORECIPIENT, this, client, &base), respQueue);
 		return true;
 	}
 	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
-	if (!params.size())
+	if (!message.size())
 	{
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTEXTTOSEND, this, client, &base), respQueue);
 		return true;
 	}
-	std::string destNick = params.front();
-	Client *destClient = this->findClientWithNick(destNick);
-	if (!destClient)
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
-		return true;
-	}
-	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
+	// Do this as in excecMODE
+	// if (channel.size())
+	// {
+	// 	std::string destChannelName = channel.front();
+	// 	Channel *destChannel = this->findChanneWithName(destChannelName);
+	// 	if (!destChannel)
+	// 	{
+	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CANNOTSENDTOCHAN, this, client, &destChannel), respQueue);
+	// 		return true;
+	// 	}
+	// 	pushToQueue(client->_fd, ": response for Channel privmsg", respQueue);
 
-	// more to do for channels
-	return true;
+	// }
+	// else if (params.size())
+	// {
+	// 	std::string destNick = params.front();
+	// 	Client *destClient = this->findClientWithNick(destNick);
+	// 	if (!destClient)
+	// 	{
+	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
+	// 		return true;
+	// 	}
+	// 	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
+	// }
+	// return true;
 }

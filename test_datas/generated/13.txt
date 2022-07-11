@@ -1,1 +1,1 @@
-NAMES #new_channel
+PART #new_channel :I quit
