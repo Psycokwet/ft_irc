@@ -98,3 +98,6 @@ Parsing result: From `KICK #new_channel thi-nguy :Speaking_English\r\n` to `std:
 
 Test with nc :
 cat test_datas/generated/0.txt | nc localhost 3333
+
+Test with scenario :
+bash ./srcs/test_srcs/startOneScenario.bash ./test_datas/generated/scenarios/connection.sce

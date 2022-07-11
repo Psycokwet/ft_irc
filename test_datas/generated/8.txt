@@ -1,1 +1,0 @@
-PART #new_channel :I quit
