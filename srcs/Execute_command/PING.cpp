@@ -31,6 +31,8 @@
 **  
 **     PING :irc.funet.fi              ; Ping message sent by server
 **                                     "irc.funet.fi"
+**	Notes:
+**	Hexchat send PING automatically to our server. Client can not send PING through Hexchat.
 **/
 
 bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
