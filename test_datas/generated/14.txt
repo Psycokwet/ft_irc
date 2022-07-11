@@ -1,1 +1,0 @@
-MODE #new_channel meo +i
