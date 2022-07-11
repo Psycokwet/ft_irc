@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/09 11:21:11 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/11 11:02:24 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -355,7 +355,7 @@ generateParsingTestFiles :
 	@rm -rf $(TEST_DATAS_GENERATED)
 	@mkdir -pv $(TEST_DATAS_GENERATED)
 	@echo "Attempting generation"
-	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS) 
+	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS)  -DDEBUG=false
 	@./a.out $(TEST_DATAS_GENERATED)
 	@echo "Cleaning intermediate tools..."
 	@$(RM) ./a.out
