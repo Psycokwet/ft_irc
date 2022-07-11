@@ -1,1 +1,1 @@
-USER thi-nguy 0 * :realname
+NICK thi-nguy

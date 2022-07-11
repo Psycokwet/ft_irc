@@ -1,1 +1,1 @@
-PRIVMSG thi-nguy :hello
+PART #new_channel :I quit

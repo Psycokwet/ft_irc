@@ -1,1 +1,1 @@
-NICK thi-nguy
+MODE #new_channel meo +i

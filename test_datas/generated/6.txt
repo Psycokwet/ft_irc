@@ -1,1 +1,1 @@
-PRIVMSG #new_channel :bla bla
+JOIN #hackbbs

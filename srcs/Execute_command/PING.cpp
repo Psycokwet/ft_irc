@@ -23,16 +23,25 @@
 
 **  Examples:
 **  
-**     PING tolsun.oulu.fi             ; Command to send a PING message to
-**                                     server
+**     PING tolsun.oulu.fi             ; server sending a PING message to
+**										another server to indicate it is still
+**										alive.
 **  
-**     PING WiZ tolsun.oulu.fi         ; Command from WiZ to send a PING
+**     PING WiZ tolsun.oulu.fi         ; Command from nick WiZ to send a PING
 **                                     message to server "tolsun.oulu.fi"
 **  
 **     PING :irc.funet.fi              ; Ping message sent by server
 **                                     "irc.funet.fi"
+
+Examples:
+
+   PING tolsun.oulu.fi             ; server sending a PING message to
+                                   another server to indicate it is still
+                                   alive.
+
+   PING WiZ                        ; PING message being sent to nick WiZ
 **	Notes:
-**	Hexchat send PING automatically to our server. Client can not send PING through Hexchat.
+**	Hexchat send PING automatically to our server. OR Client can type: /ping or /PING on Hexchat.
 **/
 
 bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
@@ -42,7 +51,25 @@ bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-	
+	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 
-	// return true;
+	if (!message.size() && !params.size())
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOORIGIN, this, client, &base), respQueue);
+		return true;
+	}
+	switch (params.size())
+	{
+		case 0:
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
+			break;
+		case 1:
+			pushToQueue(client->_fd, ":" + getHost() + " PONG " + getHost() + " :" + params.front() + "\r\n", respQueue);
+			break;
+		default:
+			pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue); // not necessary regarding doc
+			// too much params
+			break;
+	}
+	return true;
 }

@@ -1,1 +1,1 @@
-MODE #new_channel meo +i
+NAMES #new_channel,#other_channel

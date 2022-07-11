@@ -1,1 +1,1 @@
-PART #new_channel :I quit
+PRIVMSG #new_channel :bla bla

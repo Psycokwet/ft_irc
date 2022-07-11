@@ -176,7 +176,8 @@ COMMAND_FILES 	= 	example_command \
 					PASS \
 					PRIVMSG \
 					USER  \
-					WHO 
+					WHO \
+					PING
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

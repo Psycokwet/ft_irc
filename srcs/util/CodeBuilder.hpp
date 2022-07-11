@@ -46,6 +46,8 @@ private:
 	static std::string toStringRPL_CHANNELMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_ENDOFWHO(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_WHOREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringERR_NOORIGIN(std::string *nick, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringERR_NOSUCHSERVER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 
