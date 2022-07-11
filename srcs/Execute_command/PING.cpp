@@ -20,8 +20,8 @@
 **   Numeric Replies:
 **
 **           ERR_NOORIGIN                  ERR_NOSUCHSERVER
-
-**  Examples:
+**
+**   Examples:
 **  
 **     PING tolsun.oulu.fi             ; server sending a PING message to
 **										another server to indicate it is still
@@ -32,16 +32,9 @@
 **  
 **     PING :irc.funet.fi              ; Ping message sent by server
 **                                     "irc.funet.fi"
-
-Examples:
-
-   PING tolsun.oulu.fi             ; server sending a PING message to
-                                   another server to indicate it is still
-                                   alive.
-
-   PING WiZ                        ; PING message being sent to nick WiZ
-**	Notes:
-**	Hexchat send PING automatically to our server. OR Client can type: /ping or /PING on Hexchat.
+**
+**	 Notes:
+**	 Hexchat sends PING automatically to our server. OR Client can type: /ping or /PING on Hexchat.
 **/
 
 bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
