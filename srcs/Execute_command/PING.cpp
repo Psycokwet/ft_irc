@@ -51,13 +51,15 @@ bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOORIGIN, this, client, &base), respQueue);
 		return true;
 	}
+	std::stringstream	ss;
 	switch (params.size())
 	{
 		case 0:
 			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
 			break;
 		case 1:
-			pushToQueue(client->_fd, ":" + getHost() + " PONG " + getHost() + " :" + params.front() + "\r\n", respQueue);
+			ss << ":" << HOST << " PONG " << HOST << " :" << params.front() << END_OF_COMMAND;
+			pushToQueue(client->_fd, ss.str(), respQueue);
 			break;
 		default:
 			pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue); // not necessary regarding doc
