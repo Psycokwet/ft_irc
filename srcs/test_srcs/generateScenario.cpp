@@ -19,11 +19,12 @@ int main(int ac, char **av)
 	std::string tmp_line = "";
 	std::stringstream ss;
 	std::string folder_name = av[2];
-	int i = 0;
 	std::string base_filename = scenario_filename.substr(scenario_filename.find_last_of("/\\") + 1);
+	std::string content = "";
 	while (std::getline(ifs, tmp_line))
 	{
-		gen_file_logger(folder_name + base_filename + "/" + SSTR(i++) + ".txt", tmp_line + "\r\n");
+		content += tmp_line + "\r\n";
 	}
+	gen_file_logger(folder_name + base_filename + "/" + "fullscenario.txt", content);
 	return 0;
 }
