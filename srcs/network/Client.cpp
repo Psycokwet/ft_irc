@@ -1,6 +1,74 @@
 #include "Client.hpp"
 
 /*
+** ---------------------------------- STATIC ----------------------------------
+*/
+
+DEFINE_ENUM(e_mode_client, E_MODE_CLIENT_ENUM)
+
+/* _MOD_FLAG_ADMIN		 					  none - user is flagged as away;
+** _MOD_FLAG_AWAY		 					  a - user is flagged as away;
+** _MOD_FLAG_INVISIBLE		 				  i - marks a users as invisible;
+** _MOD_FLAG_WALLOPS						  w - user receives wallops;
+** _MOD_FLAG_RESTRICTED		 				  r - restricted user connection;
+** _MOD_FLAG_OPERATOR		 				  o - operator flag;
+** _MOD_FLAG_LOCAL_OPERATOR		 			  O - local operator flag;
+** _MOD_FLAG_SERVER_NOTICES_RECEIVR		 	  s - marks a user for receipt of server notices.
+*/
+
+t_char_client_mode_dictionary Client::initCharClientModeDictionnary()
+{
+	t_char_client_mode_dictionary map;
+	map['a'] = _MOD_FLAG_AWAY;
+	map['i'] = _MOD_FLAG_INVISIBLE;
+	map['w'] = _MOD_FLAG_WALLOPS;
+	map['r'] = _MOD_FLAG_RESTRICTED;
+	map['o'] = _MOD_FLAG_OPERATOR;
+	map['O'] = _MOD_FLAG_LOCAL_OPERATOR;
+	map['s'] = _MOD_FLAG_SERVER_NOTICES_RECEIVR;
+	return map;
+};
+t_char_client_mode_dictionary Client::charClientModeDictionnary = Client::initCharClientModeDictionnary();
+
+e_mode_client Client::stringToMode(std::string s)
+{
+	unsigned int tmp = _MOD_NO_FLAGS;
+	size_t max = s.size();
+	for (size_t i = 0; i < max; i++)
+	{
+		if (charClientModeDictionnary.find(s[i]) == charClientModeDictionnary.end())
+			throw unknownModeException();
+		// if (HAS_TYPE(tmp, charClientModeDictionnary[s[i]]))
+		// 	throw new doubleSetModeException(); //not a problem in the rfc
+		tmp = tmp | charClientModeDictionnary[s[i]];
+	}
+	return static_cast<e_mode_client>(tmp);
+}
+void modeToStringInt(e_mode_client type, void *raw)
+{
+	std::string *s = static_cast<std::string *>(raw);
+
+	for (t_char_client_mode_dictionary::iterator it = Client::charClientModeDictionnary.begin(); it != Client::charClientModeDictionnary.end(); it++)
+	{
+		if (it->second == type)
+		{
+			*s = *s + it->first;
+			return;
+		}
+	}
+}
+std::string Client::modeToString(e_mode_client modes)
+{
+	std::string buff = "";
+	iteratee_mode_clientEnum(modes, static_cast<void *>(&buff), &modeToStringInt);
+	return buff;
+}
+std::string Client::modeToString() const
+{
+	return modeToString(_modes);
+}
+
+/*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
@@ -9,7 +77,8 @@ Client::Client(int fd) : _fd(fd),
 						 _registered(false),
 						 _nick(UNDEFINED_NICK),
 						 _realName(""),
-						 _userOnHost("")
+						 _userOnHost(""),
+						 _modes(_MOD_NO_FLAGS)
 {
 }
 
@@ -91,8 +160,30 @@ void Client::validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterSe
 ** ------------------------- ACCESSORS ----------------------------------
 */
 
-std::string Client::getNick() { return _nick; }
+std::string Client::getNick() const { return _nick; }
 void Client::setRealName(std::string realName) { _realName = realName; }
-std::string Client::getRealName() { return _realName; }
-std::string Client::getUserOnHost() { return _userOnHost; }
+std::string Client::getRealName() const { return _realName; }
+std::string Client::getUserOnHost() const { return _userOnHost; }
 int Client::getFd() { return _fd; }
+e_mode_client Client::getMode() const { return _modes; }
+void Client::setMode(e_mode_client mode) { _modes = mode; }
+bool Client::addMode(e_mode_client mode)
+{
+	unsigned int tmp = _modes;
+	unsigned int new_modes = _modes;
+	new_modes = _modes | mode;
+	_modes = static_cast<e_mode_client>(new_modes);
+	if (tmp != _modes)
+		return true;
+	return false;
+}
+bool Client::minusMode(e_mode_client mode)
+{
+	unsigned int tmp = _modes;
+	unsigned int new_modes = _modes;
+	new_modes = _modes - (_modes & mode);
+	_modes = static_cast<e_mode_client>(new_modes);
+	if (tmp != _modes)
+		return true;
+	return false;
+}

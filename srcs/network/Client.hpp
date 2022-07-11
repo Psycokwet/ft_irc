@@ -7,6 +7,30 @@ class MasterServer;
 class Client;
 #include "../../includes/ft_irc.hpp"
 #define UNDEFINED_NICK "*"
+#include "../../includes/enumFactory.h"
+#define E_MODE_CLIENT_ENUM(XX)                \
+	XX(_MOD_NO_FLAGS, = (1u << 0))            \
+	XX(_MOD_FLAG_ADMIN, = (1u << 1))          \
+	XX(_MOD_FLAG_AWAY, = (1u << 2))           \
+	XX(_MOD_FLAG_INVISIBLE, = (1u << 3))      \
+	XX(_MOD_FLAG_WALLOPS, = (1u << 4))        \
+	XX(_MOD_FLAG_RESTRICTED, = (1u << 5))     \
+	XX(_MOD_FLAG_OPERATOR, = (1u << 6))       \
+	XX(_MOD_FLAG_LOCAL_OPERATOR, = (1u << 7)) \
+	XX(_MOD_FLAG_SERVER_NOTICES_RECEIVR, = (1u << 8))
+
+/* _MOD_FLAG_ADMIN		 					  none - user is flagged as away;
+** _MOD_FLAG_AWAY		 					  a - user is flagged as away;
+** _MOD_FLAG_INVISIBLE		 				  i - marks a users as invisible;
+** _MOD_FLAG_WALLOPS						  w - user receives wallops;
+** _MOD_FLAG_RESTRICTED		 				  r - restricted user connection;
+** _MOD_FLAG_OPERATOR		 				  o - operator flag;
+** _MOD_FLAG_LOCAL_OPERATOR		 			  O - local operator flag;
+** _MOD_FLAG_SERVER_NOTICES_RECEIVR		 	  s - marks a user for receipt of server notices.
+*/
+
+DECLARE_ENUM(e_mode_client, E_MODE_CLIENT_ENUM)
+typedef std::map<char, e_mode_client> t_char_client_mode_dictionary;
 
 class Client
 {
@@ -18,11 +42,16 @@ public:
 	Client(int fd);
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
-	std::string getNick();
+	std::string modeToString() const;
 
 	void setRealName(std::string realName);
-	std::string getRealName();
-	std::string getUserOnHost();
+	std::string getNick() const;
+	std::string getRealName() const;
+	std::string getUserOnHost() const;
+	e_mode_client getMode() const;
+	bool addMode(e_mode_client mode);
+	bool minusMode(e_mode_client mode);
+	void setMode(e_mode_client mode);
 	int getFd();
 	bool always_true();
 	bool always_false();
@@ -32,6 +61,31 @@ public:
 	void validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv);
 
 	bool operator==(const Client &rhs) const;
+	// static
+	static std::string modeToString(e_mode_client modes);
+	static e_mode_client stringToMode(std::string s);
+	static t_char_client_mode_dictionary charClientModeDictionnary;
+	static t_char_client_mode_dictionary initCharClientModeDictionnary();
+
+	class unknownModeException : public std::exception
+	{
+	public:
+		unknownModeException(void) {}
+		virtual const char *what() const throw()
+		{
+			return "unknownModeException";
+		}
+	};
+
+	class doubleSetModeException : public std::exception
+	{
+	public:
+		doubleSetModeException(void) {}
+		virtual const char *what() const throw()
+		{
+			return "doubleSetModeException";
+		}
+	};
 
 private:
 	int _fd; // is the fd of client socket
@@ -41,6 +95,7 @@ private:
 	std::string _nick;
 	std::string _realName;
 	std::string _userOnHost;
+	e_mode_client _modes;
 	char _buffer[BUF_SIZE + 1];
 	std::string _commandTemp;
 };

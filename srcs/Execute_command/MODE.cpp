@@ -52,8 +52,8 @@
 **
 **    Numeric Replies:
 **
-** 		   ERR_NEEDMOREPARAMS              ERR_USERSDONTMATCH
-** 		   ERR_UMODEUNKNOWNFLAG            RPL_UMODEIS
+** 		   ERR_NEEDMOREPARAMS   ok           ERR_USERSDONTMATCH ok
+** 		   ERR_UMODEUNKNOWNFLAG  ok          RPL_UMODEIS ok
 **
 **/
 /*
@@ -88,6 +88,51 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	if (params.size() < 2)
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		return true;
+	}
+	std::string nick = params.front();
+	params.pop_front();
+	std::string target_modes = params.front();
+	params.pop_front();
+	if (nick != client->getNick())
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERSDONTMATCH, this, client), respQueue);
+		return true;
+	}
+
+	bool add = true;
+	if (target_modes.at(0) == '-' || target_modes.at(0) == '+')
+	{
+		if (target_modes.at(0) == '-')
+			add = false;
+		target_modes = target_modes.substr(1);
+	}
+	e_mode_client modes;
+	try
+	{
+		modes = Client::stringToMode(target_modes);
+	}
+	catch (const Client::unknownModeException &e)
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_UMODEUNKNOWNFLAG, this, client), respQueue);
+		return true;
+	}
+	// catch (const Client::doubleSetModeException &e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
+	bool success = false;
+	if (add)
+		success = client->addMode(modes);
+	else
+		success = client->minusMode(modes);
+
+	if (success)
+		pushToQueue(client->_fd, ":" + getFullClientID(client) + " MODE " + client->getNick() + " :" + (add ? "+" : "-") + Client::modeToString(modes) + END_OF_COMMAND, respQueue);
 
 	return true;
 }
