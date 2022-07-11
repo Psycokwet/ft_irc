@@ -1,1 +1,0 @@
-PRIVMSG thi-nguy :hello

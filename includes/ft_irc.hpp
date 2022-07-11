@@ -17,9 +17,9 @@
 #include <netinet/in.h> // sockaddr_in
 
 #include "../srcs/util/parse.hpp" //parsing
-// OPER COMMAND 
-#define OPER_USERNAME	"admin"
-#define OPER_PASSWORD	"ourirc"
+// OPER COMMAND
+#define OPER_USERNAME "admin"
+#define OPER_PASSWORD "ourirc"
 
 #include "code.hpp" //code command
 #define DEFAULT_NAME "*"

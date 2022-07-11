@@ -14,6 +14,8 @@ int main(int ac, char **av)
 	}
 	std::string folder_name = av[1];
 	int i = 0;
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PASS test\r\n");
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NICK :ccbob\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "QUIT :Leaving\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "JOIN #services\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "MODE #hackbbs\r\n");

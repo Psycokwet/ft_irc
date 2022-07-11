@@ -214,6 +214,7 @@ std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *serv
 
 	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
 }
+
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;

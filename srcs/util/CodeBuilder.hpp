@@ -47,7 +47,6 @@ private:
 	static std::string toStringRPL_ENDOFWHO(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_WHOREPLY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel);
-
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 
 	CodeBuilder();

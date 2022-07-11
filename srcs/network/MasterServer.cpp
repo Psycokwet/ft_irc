@@ -38,7 +38,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["NICK"] = std::make_pair(&Client::is_connected, &MasterServer::execNICK);
 	map["OPER"] = std::make_pair(&Client::is_registered, &MasterServer::execOPER);
 	map["MODE"] = std::make_pair(&Client::is_registered, &MasterServer::execMODE);
-	map["QUIT"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["QUIT"] = std::make_pair(&Client::is_registered, &MasterServer::execQUIT);
 
 	// channel operation
 	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::execJOIN);
