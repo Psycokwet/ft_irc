@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/11 16:25:45 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/11 19:36:04 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -192,7 +192,8 @@ COMMAND_FILES 	= 	example_command \
 					USER  \
 					WHO \
 					OPER \
-					QUIT
+					QUIT \
+					PING
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
