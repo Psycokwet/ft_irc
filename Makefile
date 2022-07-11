@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/11 11:02:24 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/11 14:30:14 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -124,6 +124,7 @@ TESTPARSERRULE			= testParserRule
 TESTPARSER				= testParser
 TESTDISPATCHRULE		= testDispatchRule
 TESTDISPATCH			= testDispatch
+LAUNCHSCENARIO			= launchScenario
 
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
@@ -133,11 +134,13 @@ ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 
 ALL_EXECS_NAMES =		$(NAME)\
 						$(TESTPARSER)\
-						$(TESTDISPATCH)
+						$(TESTDISPATCH)\
+						$(LAUNCHSCENARIO)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
 #
+#bunch request test
 
 GENERATE_EXAMPLES_REQUESTS_FILES = 	writeRequestsExamples
 
@@ -147,6 +150,17 @@ GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
 GENERATE_EXAMPLES_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_EXAMPLES_REQUESTS_SRCS_RAW))
 
 GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_REQUESTS_SRCS_EXT))
+
+#scenario
+
+GENERATE_SCENARIO_REQUESTS_FILES = 	generateScenario
+
+GENERATE_SCENARIO_REQUESTS_SRCS_RAW += $(addprefix $(TEST_SRCS), $(GENERATE_SCENARIO_REQUESTS_FILES))
+GENERATE_SCENARIO_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
+
+GENERATE_SCENARIO_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_SCENARIO_REQUESTS_SRCS_RAW))
+
+GENERATE_SCENARIO_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_SCENARIO_REQUESTS_SRCS_EXT))
 #
 # -------------------------------- SRCS definitions --------------------------------
 #
@@ -195,12 +209,14 @@ SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 #
 
 CXX				= c++
-CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address -MD
-CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
+CPPFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+CPPFLAGS 		:= $(CPPFLAGS) -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
-CPPFLAGS		+= $(DCOLORS)
+CPPFLAGS		:= $(CPPFLAGS) $(DCOLORS)
 # CPPFLAGS		+= -DGRAMMAR_FILE='"./grammar/grammar.gram"'
+CPPFLAGS_NO_DEPS		:= $(CPPFLAGS)
+CPPFLAGS		:= $(CPPFLAGS) -MD
 
 ifeq ($(shell uname), Linux)
 	CFLAGS	+= -DLINUX=true
@@ -294,6 +310,18 @@ define launch_test_from_array_args
 endef
 
 
+define launch_exe_from_array_args
+	COUNT=0;\
+	for ARG in $(2) ; do \
+		COUNT=$$(( 1 + $$COUNT ));\
+		LAST=$$ARG;\
+		[ "$(words $(2))" -eq $$COUNT ] && break ;\
+		./$(1) ;\
+	done ;\
+	./$(1) $$LAST $(3)
+endef
+
+
 #
 # -------------------------------- Rules implementations --------------------------------
 #
@@ -356,10 +384,28 @@ generateParsingTestFiles :
 	@rm -rf $(TEST_DATAS_GENERATED)
 	@mkdir -pv $(TEST_DATAS_GENERATED)
 	@echo "Attempting generation"
-	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS)  -DDEBUG=false
+	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS_NO_DEPS)  -DDEBUG=false
 	@./a.out $(TEST_DATAS_GENERATED)
 	@echo "Cleaning intermediate tools..."
 	@$(RM) ./a.out
+
+SCNARIOS_FOLDER=$(TEST_DATAS)scenarios/
+SCNARIOS_GENERATED_FOLDER=$(TEST_DATAS_GENERATED)scenarios/
+SCNARIOS_FOLDERNAME:= $(addprefix $(SCNARIOS_GENERATED_FOLDER), $(shell basename -a $(shell ls $(SCNARIOS_FOLDER))))
+SCNARIOS_FILENAMES:= $(addprefix $(SCNARIOS_FOLDER), $(shell ls $(SCNARIOS_FOLDER)))
+generateScenarioFolder :
+	@echo "Deleting previous generation..."
+	@rm -rf $(SCNARIOS_GENERATED_FOLDER)
+	@mkdir -pv $(SCNARIOS_GENERATED_FOLDER)
+	@echo "Generating scenarios folder..."
+	@mkdir -pv $(SCNARIOS_FOLDERNAME)
+
+generateScenarioTestFiles :generateScenarioFolder
+	@echo "Attempting generation"
+	@$(CXX)  $(GENERATE_SCENARIO_REQUESTS_SRCS)  $(CPPFLAGS_NO_DEPS)  -DDEBUG=false -o $(LAUNCHSCENARIO)
+
+startScenarioTestFiles : generateScenarioTestFiles
+	@$(call launch_exe_from_array_args,$(LAUNCHSCENARIO),$(SCNARIOS_FILENAMES), $(SCNARIOS_GENERATED_FOLDER))
 
 #
 ## -------------------------------- OTHERS --------------------------------
