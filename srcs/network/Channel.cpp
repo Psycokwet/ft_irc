@@ -60,6 +60,7 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 
 	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base, respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
+	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base, client);
 }
 void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
 {
