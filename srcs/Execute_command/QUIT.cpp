@@ -9,7 +9,7 @@ Command: QUIT
 
    Numeric Replies:
 
-           None.
+		   None.
 
    Example:
 
@@ -17,24 +17,16 @@ Command: QUIT
 
  :idamouttou!idamouttou@localhost QUIT :Quit: Leaving\r\n
 :syrk!kalt@millennium.stealth.net QUIT :Gone to have lunch ; User
-                                   syrk has quit IRC to have lunch.
+								   syrk has quit IRC to have lunch.
 */
 
 bool MasterServer::execQUIT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
-        (void)base;
-        (void)parsed_command;
-        (void)respQueue;
-        Client *client = parsed_command.first;
-        std::set;
-
-        lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
-
-        if (message.size())
-        {
-                pushToQueue(client->_fd, ":" + client->getUserOnHost() + "!" + client->getUserOnHost() + "@" + MasterServer::getServerName() + ".net " + base, respQueue);
-                return false;
-        }
-        {
-        }
+	(void)base;
+	(void)parsed_command;
+	(void)respQueue;
+	Client *client = parsed_command.first;
+	std::string notification = ":" + getFullClientID(client) + " " + base;
+	sendToWholeServer(respQueue, notification, client);
+	return false;
 }

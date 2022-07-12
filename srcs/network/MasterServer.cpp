@@ -338,6 +338,16 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 ** --------------------------------- CLIENTS management ---------------------------------
 */
 
+void MasterServer::sendToWholeServer(std::vector<t_clientCmd> &respQueue, std::string message, Client *exclude)
+{
+	for (std::map<int, Client *>::const_iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		if (exclude && *exclude == *(it->second))
+			continue;
+		pushToQueue(it->second->getFd(), message, respQueue);
+	}
+}
+
 void MasterServer::acceptClient(int fdServer)
 {
 	sockaddr_in sin;
@@ -358,6 +368,8 @@ void MasterServer::removeClient(int fdClient)
 {
 	if (_clients.find(fdClient) != _clients.end())
 	{
+		for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+			it->second->quit(_clients[fdClient]);
 		delete _clients[fdClient];
 		_clients.erase(fdClient);
 	}
