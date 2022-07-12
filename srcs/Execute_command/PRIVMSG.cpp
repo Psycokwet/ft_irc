@@ -130,6 +130,6 @@ bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &pars
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
 		return true;
 	}
-	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
+	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
 	return true;
 }

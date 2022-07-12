@@ -249,7 +249,7 @@ std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, M
 	(void)client;
 	(void)channel;
 
-	return (*command_name) + ":Not enough parameters";
+	return (*command_name) + " :Not enough parameters";
 }
 std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -454,7 +454,7 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *
 	(void)client;
 	(void)channel;
 	(void)s;
-	
+
 	std::string ret = "";
 	ret += server->getServerName() + ":No such server";
 	return ret;
