@@ -469,7 +469,7 @@ std::string CodeBuilder::toStringRPL_TIME(std::string *s, MasterServer *server, 
 	std::string time(ctime(&now));
 	time.erase(time.size() - 1, 1);
 
-	return server->getHost() + ":" + time;
+	return server->getHost() + " :" + time;
 }
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
