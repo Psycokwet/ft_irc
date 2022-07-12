@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <cstdlib>		// atoi
+#include <cstdlib>      // atoi
 #include <sys/select.h> // select FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
 #include <map>
 #include <vector>
@@ -19,6 +19,7 @@
 #include "../srcs/util/parse.hpp" //parsing
 
 #include "code.hpp" //code command
+#define DEFAULT_NAME "*"
 
 #define MAX_TCP_PORT 65535
 #define TRUE 1
@@ -27,6 +28,8 @@
 #define HOST "ourirc.42.paris.fr"
 #define END_OF_COMMAND "\r\n"
 #define LEN_END_OF_COMMAND 2
+
+#define DEFAULT_NAME "*"
 
 #define MAX_CLIENTS 25
 #define MAX_CLIENT_QUEUE 3

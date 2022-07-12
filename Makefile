@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
+#    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/11 14:30:14 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/12 16:04:46 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -191,6 +191,7 @@ COMMAND_FILES 	= 	example_command \
 					PRIVMSG \
 					USER  \
 					WHO \
+					QUIT \
 					PING
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))

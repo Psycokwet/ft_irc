@@ -88,6 +88,7 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTEXTTOSEND, this, client, &base), respQueue);
 		return true;
 	}
+
 	// Do this as in excecMODE
 	// if (channel.size())
 	// {
@@ -112,6 +113,5 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 	// 	}
 	// 	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
 	// }
-	// return true;
 	return true;
 }
