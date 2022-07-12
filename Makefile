@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
+#    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/12 15:32:36 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/12 16:04:46 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -191,7 +191,6 @@ COMMAND_FILES 	= 	example_command \
 					PRIVMSG \
 					USER  \
 					WHO \
-					OPER \
 					QUIT \
 					PING
 
@@ -211,7 +210,7 @@ SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 #
 
 CXX				= c++
-CPPFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g # -fsanitize=address
+CPPFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 CPPFLAGS 		:= $(CPPFLAGS) -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
