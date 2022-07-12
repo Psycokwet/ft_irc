@@ -38,12 +38,3 @@ bool MasterServer::execQUIT(std::string base, t_client_ParsedCmd &parsed_command
         {
         }
 }
-
-/*
-User *user(cmd._user);
-        string msg = cmd._params.empty()? "Client exited": ("Quit: " + cmd._params[0]);
-        // Inform everyone user is leaving
-        appendUserNotif(user,(string[]){"QUIT", ":" + msg, ""},getCommonUsers(user), responseQueue);
-        string resp(getErrorResponse(user, msg));
-        pushToQueue(user->_fd, resp, responseQueue);
-        ClientDisconnect(user->_fd);*/

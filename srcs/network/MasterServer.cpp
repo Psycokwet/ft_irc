@@ -4,31 +4,6 @@
 ** ---------------------------------- STATIC ----------------------------------
 */
 
-DEFINE_ENUM(e_mode_client, E_MODE_CLIENT_ENUM)
-
-/* _MOD_FLAG_ADMIN		 					  a - user is flagged as away;
-** _MOD_FLAG_AWAY		 					  i - marks a users as invisible;
-** _MOD_FLAG_INVISIBLE						  w - user receives wallops;
-** _MOD_FLAG_RESTRICTED		 				  r - restricted user connection;
-** _MOD_FLAG_OPERATOR		 				  o - operator flag;
-** _MOD_FLAG_LOCAL_OPERATOR		 			  O - local operator flag;
-** _MOD_FLAG_SERVER_NOTICES_RECEIVR		 	  s - marks a user for receipt of server notices.
-*/
-
-t_char_client_mode_dictionary MasterServer::initCharClientModeDictionnary()
-{
-	t_char_client_mode_dictionary map;
-	map['a'] = _MOD_FLAG_ADMIN;
-	map['i'] = _MOD_FLAG_AWAY;
-	map['w'] = _MOD_FLAG_INVISIBLE;
-	map['r'] = _MOD_FLAG_RESTRICTED;
-	map['o'] = _MOD_FLAG_OPERATOR;
-	map['O'] = _MOD_FLAG_LOCAL_OPERATOR;
-	map['s'] = _MOD_FLAG_SERVER_NOTICES_RECEIVR;
-	return map;
-};
-t_char_client_mode_dictionary MasterServer::_charClientModeDictionnary = MasterServer::initCharClientModeDictionnary();
-
 t_commands_dictionary MasterServer::initCommandsDictionnary()
 {
 	t_commands_dictionary map;
