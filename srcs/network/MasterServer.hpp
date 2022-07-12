@@ -80,6 +80,7 @@ private:
 	bool execJOIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execQUIT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execVERSION(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execTIME(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
 	bool execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);

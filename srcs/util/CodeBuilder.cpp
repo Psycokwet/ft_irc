@@ -88,7 +88,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_YOUREOPER] = &CodeBuilder::toStringRPL_YOUREOPER;
 	map[RPL_REHASHING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_YOURESERVICE] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_TIME] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_TIME] = &CodeBuilder::toStringRPL_TIME;
 	map[RPL_USERSSTART] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_USERS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFUSERS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -457,6 +457,19 @@ std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *serv
 	(void)s;
 
 	return ":No origin specified";
+}
+std::string CodeBuilder::toStringRPL_TIME(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	time_t now(time(NULL));
+	std::string time(ctime(&now));
+	time.erase(time.size() - 1, 1);
+
+	return server->getHost() + ":" + time;
 }
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
