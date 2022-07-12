@@ -27,7 +27,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_STATSLINKINFO] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_STATSCOMMANDS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFSTATS] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_UMODEIS] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_UMODEIS] = &CodeBuilder::toStringRPL_UMODEIS;
 	map[RPL_SERVLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_SERVLISTEND] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_STATSUPTIME] = &CodeBuilder::toStringPLACEHOLDER;
@@ -85,7 +85,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFINFO] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_MOTDSTART] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFMOTD] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_YOUREOPER] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_YOUREOPER] = &CodeBuilder::toStringRPL_YOUREOPER;
 	map[RPL_REHASHING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_YOURESERVICE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TIME] = &CodeBuilder::toStringPLACEHOLDER;
@@ -127,7 +127,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NEEDMOREPARAMS] = &CodeBuilder::toStringERR_NEEDMOREPARAMS;
 	map[ERR_ALREADYREGISTRED] = &CodeBuilder::toStringERR_ALREADYREGISTRED;
 	map[ERR_NOPERMFORHOST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_PASSWDMISMATCH] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_PASSWDMISMATCH] = &CodeBuilder::toStringERR_PASSWDMISMATCH;
 	map[ERR_YOUREBANNEDCREEP] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_YOUWILLBEBANNED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_KEYSET] = &CodeBuilder::toStringPLACEHOLDER;
@@ -146,8 +146,8 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_UNIQOPPRIVSNEEDED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOOPERHOST] = &CodeBuilder::toStringPLACEHOLDER;
 	// 500
-	map[ERR_UMODEUNKNOWNFLAG] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_USERSDONTMATCH] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_UMODEUNKNOWNFLAG] = &CodeBuilder::toStringERR_UMODEUNKNOWNFLAG;
+	map[ERR_USERSDONTMATCH] = &CodeBuilder::toStringERR_USERSDONTMATCH;
 
 	return map;
 }
@@ -214,6 +214,7 @@ std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *serv
 
 	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
 }
+
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)s;
@@ -278,6 +279,15 @@ std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServ
 
 	return ":Unauthorized command (already registered)";
 }
+std::string CodeBuilder::toStringERR_PASSWDMISMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)s;
+	(void)client;
+	(void)channel;
+
+	return ": Password incorrect";
+}
 
 std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client, Channel *channel)
 {
@@ -333,6 +343,15 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 	//= #pwat :user42_ @user42__
 }
 
+std::string CodeBuilder::toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	return ":You are now an IRC operator";
+}
 std::string CodeBuilder::toStringRPL_CHANNELMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
@@ -382,6 +401,34 @@ std::string CodeBuilder::toStringRPL_WHOREPLY(std::string *s, MasterServer *serv
 	// #pwat user42 user.ft-irc.42.fr ft-irc.42.fr user42__ H@ :0 realname
 }
 
+std::string CodeBuilder::toStringERR_UMODEUNKNOWNFLAG(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+	return ":Unknown MODE flag";
+}
+
+std::string CodeBuilder::toStringERR_USERSDONTMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+	return ":Cannot change mode for other users";
+}
+
+// somehow, should not be used even if mentionned in doc
+std::string CodeBuilder::toStringRPL_UMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+	return server->getFullClientID(client) + " MODE " + client->getNick() + " :" + *s + client->modeToString();
+}
+
 std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
@@ -401,7 +448,6 @@ std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *serv
 
 	return ":No origin specified";
 }
-
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
