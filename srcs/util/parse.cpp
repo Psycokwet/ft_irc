@@ -81,3 +81,10 @@ lazyParsedType *LazyRequestParser(std::string input)
 	}
 	return parsedDatas;
 }
+
+std::string removeTokenAtEnd(std::string &input, std::string token)
+{
+	if (input.rfind(token) != input.size() - 2)
+		return input;
+	return input.substr(0, input.size() - 2);
+}
