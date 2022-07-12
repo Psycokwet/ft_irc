@@ -1,6 +1,5 @@
-PASS abc
-NICK meo3
-USER big_cat 0 * :realname\r\n
-JOIN #new
-PRIVMSG meomeo :hello from cat\r\n
-PRIVMSG #chan :hello\r\n
+CAP LS 302
+PASS test
+NICK user42
+USER user42 0 * :realname
+JOIN
