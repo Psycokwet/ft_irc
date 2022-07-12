@@ -249,7 +249,7 @@ std::string CodeBuilder::toStringERR_NEEDMOREPARAMS(std::string *command_name, M
 	(void)client;
 	(void)channel;
 
-	return (*command_name) + ":Not enough parameters";
+	return (*command_name) + " :Not enough parameters";
 }
 std::string CodeBuilder::toStringERR_NONICKNAMEGIVEN(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -446,7 +446,7 @@ std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *serv
 	(void)channel;
 	(void)s;
 
-	return ":No origin given ";
+	return ":No origin specified";
 }
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -455,6 +455,9 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *
 	(void)channel;
 	(void)s;
 
-	return ":No server given ";
+	std::string ret = "";
+	ret += server->getServerName() + ":No such server";
+	return ret;
 }
+
 /* ************************************************************************** */

@@ -91,7 +91,7 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (params.size() < 2)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
 		return true;
 	}
 	std::string nick = params.front();
