@@ -53,7 +53,7 @@
 **    Numeric Replies:
 **
 ** 		   ERR_NEEDMOREPARAMS   ok           ERR_USERSDONTMATCH ok
-** 		   ERR_UMODEUNKNOWNFLAG  ok          RPL_UMODEIS ok
+** 		   ERR_UMODEUNKNOWNFLAG  ok          RPL_UMODEIS somehow should not use it
 **
 **/
 /*
