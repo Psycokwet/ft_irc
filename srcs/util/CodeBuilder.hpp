@@ -51,12 +51,12 @@ private:
 	static std::string toStringERR_NOSUCHSERVER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_PASSWDMISMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_UMODEIS(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_VERSION(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	// 500
 	static std::string toStringERR_UMODEUNKNOWNFLAG(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_USERSDONTMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
-	
 
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);

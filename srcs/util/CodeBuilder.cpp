@@ -71,7 +71,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFINVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_EXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFEXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_VERSION] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_VERSION] = &CodeBuilder::toStringRPL_VERSION;
 	map[RPL_WHOREPLY] = &CodeBuilder::toStringRPL_WHOREPLY;
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -213,6 +213,16 @@ std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *serv
 	(void)channel;
 
 	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
+}
+
+std::string CodeBuilder::toStringRPL_VERSION(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	(void)channel;
+
+	return server->getServerVersion() + ". " + server->getServerName() + " :";
 }
 
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)

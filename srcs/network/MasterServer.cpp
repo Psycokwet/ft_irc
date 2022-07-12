@@ -32,7 +32,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	//  Server queries and commands
 	map["MOTD"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["TIME"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
-	map["VERSION"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["VERSION"] = std::make_pair(&Client::is_not_connected, &MasterServer::execVERSION);
 	map["ADMIN"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 
 	//  Miscellaneous messages
