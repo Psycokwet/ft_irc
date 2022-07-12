@@ -58,9 +58,9 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);
 
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base, respQueue);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base, client);
+	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 }
 void Channel::quit(Client *client)
 {

@@ -31,11 +31,11 @@ bool MasterServer::execPASS(std::string base, t_client_ParsedCmd &parsed_command
 			return true;
 		}
 		else
-			pushToQueue(client->_fd, ": Password incorrect", respQueue); // not necessary regarding doc
+			pushToQueue(client->_fd, std::string(": Password incorrect") + END_OF_COMMAND, respQueue); // not necessary regarding doc
 		break;
 
 	default:
-		pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue); // not necessary regarding doc
+		pushToQueue(client->_fd, std::string(TOO_MANY_ARGS) + END_OF_COMMAND, respQueue); // not necessary regarding doc
 		// too much params
 		break;
 	}

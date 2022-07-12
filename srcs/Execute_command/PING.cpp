@@ -22,14 +22,14 @@
 **           ERR_NOORIGIN                  ERR_NOSUCHSERVER
 **
 **   Examples:
-**  
+**
 **     PING tolsun.oulu.fi             ; server sending a PING message to
 **										another server to indicate it is still
 **										alive.
-**  
+**
 **     PING WiZ tolsun.oulu.fi         ; Command from nick WiZ to send a PING
 **                                     message to server "tolsun.oulu.fi"
-**  
+**
 **     PING :irc.funet.fi              ; Ping message sent by server
 **                                     "irc.funet.fi"
 **
@@ -51,20 +51,20 @@ bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOORIGIN, this, client, &base), respQueue);
 		return true;
 	}
-	std::stringstream	ss;
+	std::stringstream ss;
 	switch (params.size())
 	{
-		case 0:
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
-			break;
-		case 1:
-			ss << ":" << HOST << " PONG " << HOST << " :" << params.front() << END_OF_COMMAND;
-			pushToQueue(client->_fd, ss.str(), respQueue);
-			break;
-		default:
-			pushToQueue(client->_fd, TOO_MANY_ARGS, respQueue); // not necessary regarding doc
-			// too much params
-			break;
+	case 0:
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
+		break;
+	case 1:
+		ss << ":" << HOST << " PONG " << HOST << " :" << params.front() << END_OF_COMMAND;
+		pushToQueue(client->_fd, ss.str(), respQueue);
+		break;
+	default:
+		pushToQueue(client->_fd, std::string(TOO_MANY_ARGS) + END_OF_COMMAND, respQueue); // not necessary regarding doc
+		// too much params
+		break;
 	}
 	return true;
 }

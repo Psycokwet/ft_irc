@@ -312,6 +312,7 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 			std::list<std::string> command_list(stringToListKeepTokenizer(received_command, END_OF_COMMAND));
 			for (std::list<std::string>::iterator it = command_list.begin(); it != command_list.end(); it++)
 			{
+				std::string base = removeTokenAtEnd(*it, END_OF_COMMAND);
 				if (it->size() == 0)
 					continue;
 				if (ret == false)
@@ -321,7 +322,7 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 				}
 				else if (!(parsed_command = LazyRequestParser(*it)) //
 						 || !isLegalCmd(&parsed_command)			//
-						 || !processCommand(*it, std::make_pair(_clients[fd], parsed_command), resQueue))
+						 || !processCommand(base, std::make_pair(_clients[fd], parsed_command), resQueue))
 				{
 					disconnectList.insert(fd);
 					break; // if a false, then stop treating client

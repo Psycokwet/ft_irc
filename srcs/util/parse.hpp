@@ -29,4 +29,5 @@ typedef std::list<std::string> lazyParsedSubType;
 typedef std::map<std::string, lazyParsedSubType> lazyParsedType;
 lazyParsedType *LazyRequestParser(std::string input);
 std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container);
+std::string removeTokenAtEnd(std::string &input, std::string token);
 #endif
