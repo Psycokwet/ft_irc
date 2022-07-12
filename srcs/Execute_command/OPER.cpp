@@ -29,6 +29,8 @@ bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command
     (void)parsed_command;
     (void)respQueue;
     Client *client = parsed_command.first;
+    std::string oper_nick = "admin";
+    std::string oper_pass = "ourirc";
 
     lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
     lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
@@ -38,16 +40,16 @@ bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command
         pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
         return true;
     }
+    if (params.front() != oper_nick || message.front() != oper_pass)
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_PASSWDMISMATCH, this, client, &base), respQueue);
+        return true;
+    }
     else
     {
         client->_oper = true;
         pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOUREOPER, this, client, &base), respQueue);
         return true;
     }
-    /*if (params.front() != OPER_USERNAME || message.front() != OPER_PASSWORD)
-    {
-        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_PASSWDMISMATCH, this, client, &base), respQueue);
-        return true;
-    }*/
     return true;
 }

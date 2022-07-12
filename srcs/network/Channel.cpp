@@ -66,6 +66,8 @@ void Channel::quit(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	if (_clients.find(client->getFd()) == _clients.end())
 		return;
 	_clients.erase(client->getFd());
+	char message[100];
+	sprintf(message, "%s has left channel.", client->_userOnHost.c_str());
 	(void)respQueue;
 	(void)serv;
 }

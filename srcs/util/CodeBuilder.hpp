@@ -49,8 +49,9 @@ private:
 	static std::string toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOORIGIN(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOSUCHSERVER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
-
+	static std::string toStringERR_PASSWDMISMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_VERSION(std::string *nick, MasterServer *server, Client *client, Channel *channel);
 
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);

@@ -71,7 +71,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFINVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_EXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFEXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_VERSION] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_VERSION] = &CodeBuilder::toStringRPL_VERSION;
 	map[RPL_WHOREPLY] = &CodeBuilder::toStringRPL_WHOREPLY;
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -127,7 +127,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NEEDMOREPARAMS] = &CodeBuilder::toStringERR_NEEDMOREPARAMS;
 	map[ERR_ALREADYREGISTRED] = &CodeBuilder::toStringERR_ALREADYREGISTRED;
 	map[ERR_NOPERMFORHOST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_PASSWDMISMATCH] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_PASSWDMISMATCH] = &CodeBuilder::toStringERR_PASSWDMISMATCH;
 	map[ERR_YOUREBANNEDCREEP] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_YOUWILLBEBANNED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_KEYSET] = &CodeBuilder::toStringPLACEHOLDER;
@@ -279,6 +279,15 @@ std::string CodeBuilder::toStringERR_ALREADYREGISTRED(std::string *s, MasterServ
 
 	return ":Unauthorized command (already registered)";
 }
+std::string CodeBuilder::toStringERR_PASSWDMISMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)s;
+	(void)client;
+	(void)channel;
+
+	return ": Password incorrect";
+}
 
 std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client, Channel *channel)
 {
@@ -410,6 +419,15 @@ std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *serv
 	(void)s;
 
 	return ":No origin given ";
+}
+std::string CodeBuilder::toStringRPL_VERSION(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return server->getServerName() + ". " + server->getServerVersion() + " :";
 }
 
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
