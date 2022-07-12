@@ -65,6 +65,7 @@ private:
 	void removeClient(int fdClient);
 
 	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;
+	void sendToWholeServer(std::vector<t_clientCmd> &respQueue, std::string message, Client *exclude);
 
 	// COMMANDS definitions
 	bool ignore_command(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);	 // please add needed arg as specified in "command_method"
@@ -75,13 +76,14 @@ private:
 	bool execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execJOIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execQUIT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
 	bool execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 
 	bool execWHO(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	
+
 	bool execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 };
 
