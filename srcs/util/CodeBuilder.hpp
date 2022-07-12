@@ -56,7 +56,7 @@ private:
 	static std::string toStringERR_USERSDONTMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
 	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
-	static std::string toStringRPL_VERSION(std::string *nick, MasterServer *server, Client *client, Channel *channel);
+	
 
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);

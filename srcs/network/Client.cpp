@@ -90,7 +90,6 @@ std::string Client::modeToString() const
 Client::Client(int fd) : _fd(fd),
 						 _passOK(false),
 						 _registered(false),
-						 _oper(false),
 						 _nick(UNDEFINED_NICK),
 						 _realName(""),
 						 _userOnHost(""),
