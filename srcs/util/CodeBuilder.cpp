@@ -97,7 +97,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringERR_NOSUCHNICK;
 	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringERR_NOSUCHSERVER;
 	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringERR_CANNOTSENDTOCHANNEL;
 	map[ERR_TOOMANYCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_WASNOSUCHNICK] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_TOOMANYTARGETS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -410,5 +410,16 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *
 	(void)s;
 
 	return ":No server given ";
+}
+
+std::string CodeBuilder::toStringERR_CANNOTSENDTOCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+	std::string ret = "";
+	ret += ":Cannot send to Channel/ No such channel named " + channel->getName();
+	return ret ;
 }
 /* ************************************************************************** */
