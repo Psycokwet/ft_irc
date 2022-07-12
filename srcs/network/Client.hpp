@@ -30,7 +30,8 @@ class Client;
 */
 
 DECLARE_ENUM(e_mode_client, E_MODE_CLIENT_ENUM)
-typedef std::map<char, e_mode_client> t_char_client_mode_dictionary;
+//				id		value			is settable by user
+typedef std::map<char, std::pair<e_mode_client, bool> > t_char_client_mode_dictionary;
 
 class Client
 {
@@ -64,6 +65,7 @@ public:
 	// static
 	static std::string modeToString(e_mode_client modes);
 	static e_mode_client stringToMode(std::string s);
+	static e_mode_client stringToClientSettableMode(std::string s);
 	static t_char_client_mode_dictionary charClientModeDictionnary;
 	static t_char_client_mode_dictionary initCharClientModeDictionnary();
 

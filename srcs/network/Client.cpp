@@ -19,13 +19,13 @@ DEFINE_ENUM(e_mode_client, E_MODE_CLIENT_ENUM)
 t_char_client_mode_dictionary Client::initCharClientModeDictionnary()
 {
 	t_char_client_mode_dictionary map;
-	map['a'] = _MOD_FLAG_AWAY;
-	map['i'] = _MOD_FLAG_INVISIBLE;
-	map['w'] = _MOD_FLAG_WALLOPS;
-	map['r'] = _MOD_FLAG_RESTRICTED;
-	map['o'] = _MOD_FLAG_OPERATOR;
-	map['O'] = _MOD_FLAG_LOCAL_OPERATOR;
-	map['s'] = _MOD_FLAG_SERVER_NOTICES_RECEIVR;
+	map['a'] = std::make_pair(_MOD_FLAG_AWAY, false);
+	map['i'] = std::make_pair(_MOD_FLAG_INVISIBLE, true);
+	map['w'] = std::make_pair(_MOD_FLAG_WALLOPS, false);
+	map['r'] = std::make_pair(_MOD_FLAG_RESTRICTED, false);
+	map['o'] = std::make_pair(_MOD_FLAG_OPERATOR, false);
+	map['O'] = std::make_pair(_MOD_FLAG_LOCAL_OPERATOR, false);
+	map['s'] = std::make_pair(_MOD_FLAG_SERVER_NOTICES_RECEIVR, false);
 	return map;
 };
 t_char_client_mode_dictionary Client::charClientModeDictionnary = Client::initCharClientModeDictionnary();
@@ -40,7 +40,22 @@ e_mode_client Client::stringToMode(std::string s)
 			throw unknownModeException();
 		// if (HAS_TYPE(tmp, charClientModeDictionnary[s[i]]))
 		// 	throw new doubleSetModeException(); //not a problem in the rfc
-		tmp = tmp | charClientModeDictionnary[s[i]];
+		tmp = tmp | charClientModeDictionnary[s[i]].first;
+	}
+	return static_cast<e_mode_client>(tmp);
+}
+e_mode_client Client::stringToClientSettableMode(std::string s)
+{
+	unsigned int tmp = _MOD_NO_FLAGS;
+	size_t max = s.size();
+	for (size_t i = 0; i < max; i++)
+	{
+		if (charClientModeDictionnary.find(s[i]) == charClientModeDictionnary.end())
+			throw unknownModeException();
+		// if (HAS_TYPE(tmp, charClientModeDictionnary[s[i]]))
+		// 	throw new doubleSetModeException(); //not a problem in the rfc
+		if (charClientModeDictionnary[s[i]].second)
+			tmp = tmp | charClientModeDictionnary[s[i]].first;
 	}
 	return static_cast<e_mode_client>(tmp);
 }
@@ -50,7 +65,7 @@ void modeToStringInt(e_mode_client type, void *raw)
 
 	for (t_char_client_mode_dictionary::iterator it = Client::charClientModeDictionnary.begin(); it != Client::charClientModeDictionnary.end(); it++)
 	{
-		if (it->second == type)
+		if (it->second.first == type)
 		{
 			*s = *s + it->first;
 			return;

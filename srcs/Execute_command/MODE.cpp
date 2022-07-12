@@ -114,7 +114,7 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 	e_mode_client modes;
 	try
 	{
-		modes = Client::stringToMode(target_modes);
+		modes = Client::stringToClientSettableMode(target_modes);
 	}
 	catch (const Client::unknownModeException &e)
 	{
