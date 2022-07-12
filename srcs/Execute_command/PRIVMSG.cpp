@@ -70,39 +70,14 @@
 **				Cannot send to multiple channels.
 */
 
-bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+static void removeEndOfString(std::string * str)
 {
-	
-	(void)base;
-	
-	Client *client = parsed_command.first; // should not be null regarding how we got here
-	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
-	std::string destChannelName = channels.front();
-	Channel *destChannel = this->findChanneWithName(destChannelName);
-	if (!destChannel)
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &base), respQueue);
-		return true;
-	}
-	std::string mesgToChannel = "";
-	mesgToChannel += ":" + getFullClientID(client) + " " + base;
-	destChannel->sendToWholeChannel(respQueue, this, mesgToChannel, client);
-	return true;
-}
-
-bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
-{
-	Client *client = parsed_command.first; // should not be null regarding how we got here
-	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-	std::string destNick = params.front();
-	Client *destClient = this->findClientWithNick(destNick);
-	if (!destClient)
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
-		return true;
-	}
-	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
-	return true;
+	std::size_t found_n = str->find_last_of('\n');
+	if (found_n != std::string::npos)
+		str->erase(found_n);
+	std::size_t found_r = str->find_last_of('\r');
+	if (found_r != std::string::npos)
+		str->erase(found_r);
 }
 
 bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
@@ -117,6 +92,7 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (!params.size() && !channels.size())
 	{
+		removeEndOfString(&base);
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NORECIPIENT, this, client, &base), respQueue);
 		return true;
 	}
@@ -133,4 +109,40 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 		return execPRIVMSG_CLIENT(base, parsed_command, respQueue);
 	}
 	return execPRIVMSG_CHANNEL(base, parsed_command, respQueue);
+}
+
+bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+	(void)base;
+	
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
+	std::string destChannelName = channels.front();
+	Channel *destChannel = this->findChanneWithName(destChannelName);
+	if (!destChannel)
+	{
+		removeEndOfString(&destChannelName);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName), respQueue);
+		return true;
+	}
+	std::string mesgToChannel = "";
+	mesgToChannel += ":" + getFullClientID(client) + " " + base;
+	destChannel->sendToWholeChannel(respQueue, this, mesgToChannel, client);
+	return true;
+}
+
+bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	std::string destNick = params.front();
+	Client *destClient = this->findClientWithNick(destNick);
+	if (!destClient)
+	{
+		removeEndOfString(&destNick);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
+		return true;
+	}
+	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base, respQueue);
+	return true;
 }
