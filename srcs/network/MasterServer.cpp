@@ -37,7 +37,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 
 	//  Miscellaneous messages
 	map["KILL"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
-	map["PING"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["PING"] = std::make_pair(&Client::is_registered, &MasterServer::execPING);
 
 	//  Optional features
 	map["AWAY"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);

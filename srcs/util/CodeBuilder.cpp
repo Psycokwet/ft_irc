@@ -95,14 +95,14 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_NOUSERS] = &CodeBuilder::toStringPLACEHOLDER;
 	// 400
 	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringERR_NOSUCHNICK;
-	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringERR_NOSUCHSERVER;
 	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_TOOMANYCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_WASNOSUCHNICK] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_TOOMANYTARGETS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOSUCHSERVICE] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOORIGIN] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOORIGIN] = &CodeBuilder::toStringERR_NOORIGIN;
 	map[ERR_NORECIPIENT] = &CodeBuilder::toStringERR_NORECIPIENT;
 	map[ERR_NOTEXTTOSEND] = &CodeBuilder::toStringERR_NOTEXTTOSEND;
 	map[ERR_NOTOPLEVEL] = &CodeBuilder::toStringPLACEHOLDER;
@@ -420,4 +420,23 @@ std::string CodeBuilder::toStringPLACEHOLDER(std::string *s, MasterServer *serve
 	return ":I AM A PLACEHOLDER ";
 }
 
+std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":No origin given ";
+}
+
+std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":No server given ";
+}
 /* ************************************************************************** */
