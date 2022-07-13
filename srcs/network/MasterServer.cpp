@@ -27,7 +27,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 
 	//  sending message
 	map["PRIVMSG"] = std::make_pair(&Client::is_registered, &MasterServer::execPRIVMSG);
-	map["NOTICE"] = std::make_pair(&Client::is_registered, &MasterServer::ignore_command);
+	map["NOTICE"] = std::make_pair(&Client::is_registered, &MasterServer::execPRIVMSG);
 
 	//  Server queries and commands
 	map["MOTD"] = std::make_pair(&Client::is_registered, &MasterServer::execMOTD);
