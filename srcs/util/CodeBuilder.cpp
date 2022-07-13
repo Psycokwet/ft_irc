@@ -466,14 +466,15 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 {
 	(void)server;
 	(void)client;
-	// (void)s;
+	(void)s;
 	(void)channel;
 
-	std::string tmp = " :End of NAMES list.";
+	std::string str = " :End of NAMES list.";
+	std::string tmp = "";
 	if (channel)
-		tmp = channel->getName() + tmp;
+		tmp = channel->getName() + str;
 	else if (!channel && s)
-		tmp = *s + tmp;
+		tmp = (*s) + str;
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
