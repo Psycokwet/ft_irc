@@ -71,7 +71,7 @@
 **
 **    Numeric Replies:
 **
-**            ERR_NEEDMOREPARAMS              ERR_KEYSET
+**            ERR_NEEDMOREPARAMS ok             ERR_KEYSET
 **            ERR_NOCHANMODES                 ERR_CHANOPRIVSNEEDED
 **            ERR_USERNOTINCHANNEL            ERR_UNKNOWNMODE
 **            RPL_CHANNELMODEIS
@@ -143,6 +143,12 @@ bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed
 	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	if (!params.size())
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+		return true;
+	}
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
 	{
