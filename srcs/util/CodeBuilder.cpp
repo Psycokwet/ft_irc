@@ -543,16 +543,13 @@ std::string CodeBuilder::toStringERR_NOMOTD(std::string *s, MasterServer *server
 
 	return ":MOTD File is missing";
 }
-std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)channel;
-	(void)s;
 
-	std::string ret = "";
-	ret += server->getServerName() + " :No such server";
-	return ret;
+	return *server_name + " :No such server";
 }
 
 /* ************************************************************************** */

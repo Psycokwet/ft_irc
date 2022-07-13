@@ -13,25 +13,27 @@
 
    Numeric Replies:
 
-           ERR_NOSUCHSERVER                RPL_VERSION
+		   ERR_NOSUCHSERVER                RPL_VERSION
 
    Examples:
 
    VERSION tolsun.oulu.fi          ; Command to check the version of
-                                   server "tolsun.oulu.fi".
+								   server "tolsun.oulu.fi".
 
 **/
 bool MasterServer::execVERSION(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
-        (void)base;
-        (void)parsed_command;
-        (void)respQueue;
-        Client *client = parsed_command.first; // should not be null regarding how we got here
+	(void)base;
+	(void)parsed_command;
+	(void)respQueue;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
 
-        lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-        if (params.front() == client->_nick)
-                pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_VERSION, this, client, &base), respQueue);
-        else
-                pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
-        return true;
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	// if (params.front() == getHost())
+	// pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_VERSION, this, client, &base), respQueue);
+	pushToQueue(client->_fd, ":" + getFullClientID(client) + " NOTICE " + client->getUserOnHost() + ": " + getServerName() + " :" + getServerVersion() + END_OF_COMMAND, respQueue);
+	// else
+	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
+	return true;
 }
+//  ":" + getFullClientID(client) + " " + base + END_OF_COMMAND

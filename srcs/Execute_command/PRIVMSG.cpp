@@ -116,9 +116,7 @@ bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &par
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName), respQueue);
 		return true;
 	}
-	std::string mesgToChannel = "";
-	mesgToChannel += ":" + getFullClientID(client) + " " + base;
-	destChannel->sendToWholeChannel(respQueue, this, mesgToChannel, client);
+	destChannel->sendToWholeChannel(respQueue, this, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 	return true;
 }
 
