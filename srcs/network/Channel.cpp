@@ -32,8 +32,8 @@ std::string Channel::clientListToString(bool with_invisible)
 	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		flags = (*it).second.second;
-		if (with_invisible == false && HAS_TYPE(flags, _MOD_FLAG_INVISIBLE))
-			continue ;
+		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
+			continue;
 		if (HAS_TYPE(flags, _MOD_FLAG_ADMIN))
 			acc += "@";
 		acc += sep + (*it).second.first->getNick();
