@@ -74,36 +74,40 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
+	lazyParsedSubType command(((*(parsed_command.second))[COMMAND]));
 
+	bool silentError = command.front() == "NOTICE";
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (!params.size() && !channels.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NORECIPIENT, this, client, &base), respQueue);
+		if (!silentError)
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NORECIPIENT, this, client, &base), respQueue);
 		return true;
 	}
 
 	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 	if (!message.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTEXTTOSEND, this, client, &base), respQueue);
+		if (!silentError)
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTEXTTOSEND, this, client, &base), respQueue);
 		return true;
 	}
 	if (message.size() && message.front() == "VERSION")
 	{
-		return execVERSION(base, parsed_command, respQueue);
+		return execVERSION(base, parsed_command, respQueue); // No error possible, no need on silentError
 	}
 
 	if (!channels.size())
 	{
-		return execPRIVMSG_CLIENT(base, parsed_command, respQueue);
+		return execPRIVMSG_CLIENT(base, parsed_command, respQueue, silentError);
 	}
-	return execPRIVMSG_CHANNEL(base, parsed_command, respQueue);
+	return execPRIVMSG_CHANNEL(base, parsed_command, respQueue, silentError);
 }
 
-bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue, bool silentError)
 {
 	(void)base;
 
@@ -113,14 +117,16 @@ bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &par
 	Channel *destChannel = this->findChanneWithName(destChannelName);
 	if (!destChannel)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName), respQueue);
+		if (!silentError)
+
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName), respQueue);
 		return true;
 	}
 	destChannel->sendToWholeChannel(respQueue, this, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 	return true;
 }
 
-bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue, bool silentError)
 {
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
@@ -128,7 +134,8 @@ bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &pars
 	Client *destClient = this->findClientWithNick(destNick);
 	if (!destClient)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
+		if (!silentError)
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destNick), respQueue);
 		return true;
 	}
 	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
