@@ -28,7 +28,10 @@ bool MasterServer::execVERSION(std::string base, t_client_ParsedCmd &parsed_comm
         (void)respQueue;
         Client *client = parsed_command.first; // should not be null regarding how we got here
 
-        client->getNick();
-        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_VERSION, this, client, &base), respQueue);
+        lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+        if (params.front() == client->_nick)
+                pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_VERSION, this, client, &base), respQueue);
+        else
+                pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
         return true;
 }

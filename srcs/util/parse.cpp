@@ -1,4 +1,6 @@
 #include "parse.hpp"
+
+bool isNonPrint(char c) { return !isprint(c); }
 void ltrim(std::string &s)
 {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(isblank))));
@@ -43,8 +45,10 @@ lazyParsedType *LazyRequestParser(std::string input)
 	int message_index = input.find(':');
 	if (message_index != -1)
 	{
+		std::string tmp = input.substr(message_index + 1);
+		tmp.erase(std::remove_if(tmp.begin(), tmp.end(), isNonPrint), tmp.end());
 		(*parsedDatas)[MESSAGE] = lazyParsedSubType();
-		(*parsedDatas)[MESSAGE].push_back(input.substr(message_index + 1));
+		(*parsedDatas)[MESSAGE].push_back(tmp);
 		input = input.substr(0, message_index);
 	}
 

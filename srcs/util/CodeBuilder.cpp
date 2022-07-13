@@ -222,7 +222,7 @@ std::string CodeBuilder::toStringRPL_VERSION(std::string *s, MasterServer *serve
 	(void)client;
 	(void)channel;
 
-	return server->getServerVersion() + ". " + server->getServerName() + " :";
+	return "NOTICE: " + server->getServerName() + " :" + server->getServerVersion();
 }
 
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -551,7 +551,7 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *
 	(void)s;
 
 	std::string ret = "";
-	ret += server->getServerName() + ":No such server";
+	ret += server->getServerName() + " :No such server";
 	return ret;
 }
 
