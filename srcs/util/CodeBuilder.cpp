@@ -341,7 +341,7 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 		tmp = channel->getName() + tmp + channel->clientListToString(false);
 	return "= " + tmp;
 	//	= #pwat :user42_ @user42__
-	//	"@" is used for secret channels, "*" for private channels, 
+	//	"@" is used for secret channels, "*" for private channels,
 	//	and "=" for others (public channels).
 }
 
@@ -473,8 +473,8 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	std::string tmp = "";
 	if (channel)
 		tmp = channel->getName() + str;
-	else if (!channel && s)
-		tmp = (*s) + str;
+	// else if (!channel && s)
+	// 	tmp = (*s) + str;
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
