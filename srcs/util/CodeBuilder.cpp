@@ -522,8 +522,13 @@ std::string CodeBuilder::toStringRPL_MOTD(std::string *s, MasterServer *server, 
 	(void)client;
 	(void)channel;
 	(void)s;
+	std::string tmp = "  /\\_/\\  (";
+	std::string tmp2 = " ( ^.^ ) _)";
+	std::string tmp3 = "  \\   / (";
+	std::string tmp4 = " ( | | )";
+	std::string tmp5 = "(__d b__)";
 
-	return ": ";
+	return tmp + "\n"+ tmp2 + "\n" + tmp3 + "\n" + tmp4 + "\n"+ tmp5;
 }
 std::string CodeBuilder::toStringRPL_ENDOFMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
