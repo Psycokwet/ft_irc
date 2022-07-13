@@ -1,1 +1,1 @@
-MODE #new_channel meo +i
+WHO #new_channel

@@ -192,7 +192,8 @@ COMMAND_FILES 	= 	example_command \
 					USER  \
 					WHO \
 					QUIT \
-					PING
+					PING \
+					NAMES
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

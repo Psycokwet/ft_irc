@@ -24,7 +24,7 @@ Channel::~Channel()
 ** --------------------------------- METHODS ----------------------------------
 */
 
-std::string Channel::clientListToString()
+std::string Channel::clientListToString(bool with_invisible)
 {
 	std::string acc = "";
 	std::string sep = "";
@@ -32,6 +32,8 @@ std::string Channel::clientListToString()
 	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		flags = (*it).second.second;
+		if (with_invisible == false && HAS_TYPE(flags, _MOD_FLAG_INVISIBLE))
+			continue ;
 		if (HAS_TYPE(flags, _MOD_FLAG_ADMIN))
 			acc += "@";
 		acc += sep + (*it).second.first->getNick();
@@ -53,7 +55,7 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
-	if (_clients.size())
+	if (!_clients.size())
 		_clients[client->getFd()] = std::make_pair(client, _MOD_FLAG_ADMIN);
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);

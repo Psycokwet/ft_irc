@@ -1,1 +1,1 @@
-PASS test
+NAMES #kajserj #chan

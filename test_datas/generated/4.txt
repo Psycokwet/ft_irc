@@ -1,1 +1,1 @@
-NICK :ccbob
+NAMES ljkr

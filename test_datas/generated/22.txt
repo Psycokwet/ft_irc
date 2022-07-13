@@ -1,1 +1,1 @@
-PING LAG1657476314910
+PRIVMSG thi-nguy :hello

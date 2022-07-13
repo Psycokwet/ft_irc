@@ -24,8 +24,63 @@
 **          ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
 **          RPL_NAMREPLY                    RPL_ENDOFNAMES
 **          
+**  353    RPL_NAMREPLY
+**    ( "=" / "*" / "@" ) <channel> :[ "@" / "+" ] <nick> *( " " [ "@" / "+" ] <nick> )
+**
+**    - "@" is used for secret channels, "*" for private channels, 
+**          and "=" for others (public channels).
+**
+**  366    RPL_ENDOFNAMES
+**    "<channel> :End of NAMES list"
+**
+**    - To reply to a NAMES message, a reply pair consisting
+**          of RPL_NAMREPLY and RPL_ENDOFNAMES is sent by the
+**          server back to the client.  If there is no channel
+**          found as in the query, then only RPL_ENDOFNAMES is
+**          returned.  The exception to this is when a NAMES
+**          message is sent with no parameters and all visible
+**          channels and contents are sent back in a series of
+**          RPL_NAMEREPLY messages with a RPL_ENDOFNAMES to mark
+**          the end.
+**        
 **  Examples:
 **  NAMES #twilight_zone,#42        ; Command to list visible users on
 **                                  #twilight_zone and #42
 **  NAMES                           ; Command to list all visible
+
+
+**  Notes: Here we handle: no Chanel, no channel + no params, always get the first channel
+**  user not in #chan, request /name #chan
 */  
+
+
+bool MasterServer::execNAMES(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+{
+    (void)base;
+	(void)parsed_command;
+	(void)respQueue;
+    Client *client = parsed_command.first; // should not be null regarding how we got here
+
+    lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
+    lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+
+    if (!channels.size() && !params.size())
+    {
+        for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+        {
+            Channel *chan = it->second;
+            pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WHOREPLY, this, client, &base, chan), respQueue);
+            pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFWHO, this, client, &base, chan), respQueue);
+        }
+    }
+    Channel *chan = findChanneWithName(channels.front());
+    if (!chan)
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &params.front(), chan), respQueue);
+        return true;
+    }
+    // List all users of that channel.
+    pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NAMREPLY, this, client, &base, chan), respQueue);
+    pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &base, chan), respQueue);
+    return true;
+}
