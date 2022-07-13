@@ -1,1 +1,1 @@
-MODE #hackbbs
+PRIVMSG meomeo hello from cat

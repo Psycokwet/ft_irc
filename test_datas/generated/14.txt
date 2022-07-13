@@ -1,1 +1,1 @@
-MODE #new_channel meo +i
+JOIN #new_channel

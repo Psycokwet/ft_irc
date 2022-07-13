@@ -37,3 +37,7 @@ logs/*
 *.out
 *.app
 
+
+testDispatch
+
+launchScenario

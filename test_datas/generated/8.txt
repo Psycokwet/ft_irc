@@ -1,1 +1,1 @@
-PART #new_channel :I quit
+WHO #hackbbs

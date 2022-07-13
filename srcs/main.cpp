@@ -28,12 +28,10 @@ int main(int ac, char **av)
 	if (!checkArguments(ac, av, port, password))
 		exit(1);
 
-	IRCServer *myIrc = new IRCServer(password);
-	MasterServer *myServer = new MasterServer(port, password, *myIrc);
+	MasterServer *myServer = new MasterServer(port, password);
 
 	if (myServer->build() == EXIT_FAILURE)
 	{
-		delete myIrc;
 		delete myServer;
 		return (1);
 	}

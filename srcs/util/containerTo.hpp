@@ -14,5 +14,6 @@
 std::list<std::string> stringToList(std::string base, char tokenizer);
 std::list<std::string> stringToList(std::string base, char tokenizer, std::string filterOut);
 std::list<std::string> stringToList(std::string base, std::string tokenizer);
+std::list<std::string> stringToListKeepTokenizer(std::string base, std::string tokenizer);
 
 #endif

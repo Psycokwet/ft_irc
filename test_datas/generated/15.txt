@@ -1,1 +1,1 @@
-PASS abc
+PRIVMSG thi-nguy :hello

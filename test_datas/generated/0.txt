@@ -1,1 +1,1 @@
-QUIT :Leaving
+PRIVMSG #chan :hello

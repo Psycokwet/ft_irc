@@ -1,1 +1,1 @@
-USER thi-nguy 0 * :realname
+NAMES #new_channel,#other_channel

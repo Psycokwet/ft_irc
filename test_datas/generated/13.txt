@@ -1,1 +1,1 @@
-KICK #new_channel thi-nguy :Speaking_English
+PART #new_channel :I quit

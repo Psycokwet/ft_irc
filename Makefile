@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/28 13:49:23 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/13 23:09:13 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -129,6 +129,9 @@ CLEAN_LOGS				= cleanLogs
 COMPILE 				= compile
 TESTPARSERRULE			= testParserRule
 TESTPARSER				= testParser
+TESTDISPATCHRULE		= testDispatchRule
+TESTDISPATCH			= testDispatch
+LAUNCHSCENARIO			= launchScenario
 
 
 ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
@@ -137,11 +140,14 @@ ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(COMPILE) 
 
 ALL_EXECS_NAMES =		$(NAME)\
-						$(TESTPARSER)
+						$(TESTPARSER)\
+						$(TESTDISPATCH)\
+						$(LAUNCHSCENARIO)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
 #
+#bunch request test
 
 GENERATE_EXAMPLES_REQUESTS_FILES = 	writeRequestsExamples
 
@@ -151,35 +157,63 @@ GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
 GENERATE_EXAMPLES_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_EXAMPLES_REQUESTS_SRCS_RAW))
 
 GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_REQUESTS_SRCS_EXT))
+
+#scenario
+
+GENERATE_SCENARIO_REQUESTS_FILES = 	generateScenario
+
+GENERATE_SCENARIO_REQUESTS_SRCS_RAW += $(addprefix $(TEST_SRCS), $(GENERATE_SCENARIO_REQUESTS_FILES))
+GENERATE_SCENARIO_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
+
+GENERATE_SCENARIO_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_SCENARIO_REQUESTS_SRCS_RAW))
+
+GENERATE_SCENARIO_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_SCENARIO_REQUESTS_SRCS_EXT))
 #
 # -------------------------------- SRCS definitions --------------------------------
 #
 
 
-USER_PATH	=	User/
-USER_FILES 	= 	User
-SRCS_FILES 		+=	$(addprefix $(USER_PATH), $(USER_FILES))
+# USER_PATH	=	User/
+# USER_FILES 	= 	User
+# SRCS_FILES 		+=	$(addprefix $(USER_PATH), $(USER_FILES))
 
-CHANNEL_PATH	=	Channel/
-CHANNEL_FILES 	= 	Channel
+# CHANNEL_PATH	=	Channel/
+# CHANNEL_FILES 	= 	Channel
 
-SRCS_FILES 		+=	$(addprefix $(CHANNEL_PATH), $(CHANNEL_FILES))
+# SRCS_FILES 		+=	$(addprefix $(CHANNEL_PATH), $(CHANNEL_FILES))
 
 NETWORK_PATH	=	network/
 NETWORK_FILES 	= 	MasterServer \
-					Client
+					Client \
+					Channel
 SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
-					
-SERVER_PATH		=	IrcServer/
-SERVER_FILES 	= 	IRCServer
-SRCS_FILES 		+=	$(addprefix $(SERVER_PATH), $(SERVER_FILES))
+		
+COMMAND_PATH	=	Execute_command/
+COMMAND_FILES 	= 	example_command \
+					ignore_command \
+					JOIN \
+					MODE \
+					NICK \
+					PASS \
+					PRIVMSG \
+					USER  \
+					WHO \
+					QUIT \
+					PING \
+					TIME \
+					ADMIN \
+					MOTD \
+					VERSION
+
+SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 
 UTIL_PATH		=	util/
 UTIL_FILES 		=	parse \
 					numbers \
 					compareContainers \
 					containerTo \
-					logger
+					logger \
+					CodeBuilder
 SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 
 #
@@ -187,12 +221,23 @@ SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 #
 
 CXX				= c++
-CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address -MD
-CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
+CPPFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g # -fsanitize=address
+CPPFLAGS 		:= $(CPPFLAGS) -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
-CPPFLAGS		+= $(DCOLORS)
+CPPFLAGS		:= $(CPPFLAGS) $(DCOLORS)
 # CPPFLAGS		+= -DGRAMMAR_FILE='"./grammar/grammar.gram"'
+CPPFLAGS_NO_DEPS		:= $(CPPFLAGS)
+CPPFLAGS		:= $(CPPFLAGS) -MD
+
+ifeq ($(shell uname), Linux)
+	CFLAGS	+= -DLINUX=true
+	CFLAGS	+= -D__LINUX__
+else
+	CFLAGS	+= -DLINUX=false
+	CFLAGS	+= -D__APPLE__
+endif
+
 
 LDFLAGS			= -I$(INC_DIR)
 TESTERS_FLAGS	= -DDEBUG=true
@@ -207,6 +252,11 @@ else
 	ifeq ($(TESTS), $(TESTPARSERRULE))
 		NAME_TESTER=$(TESTPARSER)
 		SRCS_FILES += $(TEST_SRCS)mainParserTest
+	else
+		ifeq ($(TESTS), $(TESTDISPATCHRULE))
+			NAME_TESTER=$(TESTDISPATCH)
+			SRCS_FILES += $(TEST_SRCS)mainDispatchTest
+		endif
 	endif
 endif
 
@@ -272,6 +322,18 @@ define launch_test_from_array_args
 endef
 
 
+define launch_exe_from_array_args
+	COUNT=0;\
+	for ARG in $(2) ; do \
+		COUNT=$$(( 1 + $$COUNT ));\
+		LAST=$$ARG;\
+		[ "$(words $(2))" -eq $$COUNT ] && break ;\
+		./$(1) ;\
+	done ;\
+	./$(1) $$LAST $(3)
+endef
+
+
 #
 # -------------------------------- Rules implementations --------------------------------
 #
@@ -320,6 +382,10 @@ $(CLEAN_UNWANTED_PATHS)	:
 REQUESTS_FOLDER=test_datas/generated/
 CLIENTS_REQUESTS:= $(addprefix $(REQUESTS_FOLDER), $(shell ls $(REQUESTS_FOLDER)))
 
+$(TESTDISPATCHRULE):
+	$(call launch_only_legal_tests,$(TESTDISPATCHRULE),$(TESTDISPATCH),\
+		$(call launch_test_from_array_args,$(CLIENTS_REQUESTS)) ;\)
+
 $(TESTPARSERRULE):
 	$(call launch_only_legal_tests,$(TESTPARSERRULE),$(TESTPARSER),\
 		$(call launch_test_from_array_args,$(CLIENTS_REQUESTS)) ;\)
@@ -330,10 +396,28 @@ generateParsingTestFiles :
 	@rm -rf $(TEST_DATAS_GENERATED)
 	@mkdir -pv $(TEST_DATAS_GENERATED)
 	@echo "Attempting generation"
-	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS) 
+	@$(CXX)  $(GENERATE_EXAMPLES_REQUESTS_SRCS)  $(CPPFLAGS_NO_DEPS)  -DDEBUG=false
 	@./a.out $(TEST_DATAS_GENERATED)
 	@echo "Cleaning intermediate tools..."
 	@$(RM) ./a.out
+
+SCNARIOS_FOLDER=$(TEST_DATAS)scenarios/
+SCNARIOS_GENERATED_FOLDER=$(TEST_DATAS_GENERATED)scenarios/
+SCNARIOS_FOLDERNAME:= $(addprefix $(SCNARIOS_GENERATED_FOLDER), $(shell basename -a $(shell ls $(SCNARIOS_FOLDER))))
+SCNARIOS_FILENAMES:= $(addprefix $(SCNARIOS_FOLDER), $(shell ls $(SCNARIOS_FOLDER)))
+generateScenarioFolder :
+	@echo "Deleting previous generation..."
+	@rm -rf $(SCNARIOS_GENERATED_FOLDER)
+	@mkdir -pv $(SCNARIOS_GENERATED_FOLDER)
+	@echo "Generating scenarios folder..."
+	@mkdir -pv $(SCNARIOS_FOLDERNAME)
+
+generateScenarioTestFiles :generateScenarioFolder
+	@echo "Attempting generation"
+	@$(CXX)  $(GENERATE_SCENARIO_REQUESTS_SRCS)  $(CPPFLAGS_NO_DEPS)  -DDEBUG=false -o $(LAUNCHSCENARIO)
+
+startScenarioTestFiles : generateScenarioTestFiles
+	@$(call launch_exe_from_array_args,$(LAUNCHSCENARIO),$(SCNARIOS_FILENAMES), $(SCNARIOS_GENERATED_FOLDER))
 
 #
 ## -------------------------------- OTHERS --------------------------------
