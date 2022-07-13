@@ -37,10 +37,10 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_LUSERUNKNOWN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_LUSERCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_LUSERME] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ADMINME] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ADMINLOC1] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ADMINLOC2] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ADMINEMAIL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_ADMINME] = &CodeBuilder::toStringRPL_ADMINME;
+	map[RPL_ADMINLOC1] = &CodeBuilder::toStringRPL_ADMINLOC1;
+	map[RPL_ADMINLOC2] = &CodeBuilder::toStringRPL_ADMINLOC2;
+	map[RPL_ADMINEMAIL] = &CodeBuilder::toStringRPL_ADMINEMAIL;
 	map[RPL_TRACELOG] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TRACEEND] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TRYAGAIN] = &CodeBuilder::toStringPLACEHOLDER;
@@ -71,7 +71,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFINVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_EXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFEXCEPTLIST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_VERSION] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_VERSION] = &CodeBuilder::toStringRPL_VERSION;
 	map[RPL_WHOREPLY] = &CodeBuilder::toStringRPL_WHOREPLY;
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -81,14 +81,14 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_ENDOFBANLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFWHOWAS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_INFO] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_MOTD] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_MOTD] = &CodeBuilder::toStringRPL_MOTD;
 	map[RPL_ENDOFINFO] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_MOTDSTART] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ENDOFMOTD] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_MOTDSTART] = &CodeBuilder::toStringRPL_MOTDSTART;
+	map[RPL_ENDOFMOTD] = &CodeBuilder::toStringRPL_ENDOFMOTD;
 	map[RPL_YOUREOPER] = &CodeBuilder::toStringRPL_YOUREOPER;
 	map[RPL_REHASHING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_YOURESERVICE] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_TIME] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_TIME] = &CodeBuilder::toStringRPL_TIME;
 	map[RPL_USERSSTART] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_USERS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFUSERS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -109,7 +109,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_WILDTOPLEVEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_BADMASK] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNKNOWNCOMMAND] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOMOTD] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOMOTD] = &CodeBuilder::toStringERR_NOMOTD;
 	map[ERR_NOADMININFO] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_FILEERROR] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NONICKNAMEGIVEN] = &CodeBuilder::toStringERR_NONICKNAMEGIVEN;
@@ -213,6 +213,16 @@ std::string CodeBuilder::toStringRPL_YOURHOST(std::string *s, MasterServer *serv
 	(void)channel;
 
 	return ":Your host is " + server->getServerName() + ", running version " + server->getServerVersion();
+}
+
+std::string CodeBuilder::toStringRPL_VERSION(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)s;
+	(void)server;
+	(void)client;
+	(void)channel;
+
+	return server->getServerVersion() + ". " + server->getServerName() + " :";
 }
 
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -447,6 +457,91 @@ std::string CodeBuilder::toStringERR_NOORIGIN(std::string *s, MasterServer *serv
 	(void)s;
 
 	return ":No origin specified";
+}
+std::string CodeBuilder::toStringRPL_TIME(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	time_t now(time(NULL));
+	std::string time(ctime(&now));
+	time.erase(time.size() - 1, 1);
+
+	return server->getHost() + " :" + time;
+}
+std::string CodeBuilder::toStringRPL_ADMINME(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return server->getHost() + " :Administrative info";
+}
+std::string CodeBuilder::toStringRPL_ADMINLOC1(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return "Name: mida,thi-nguy,so";
+}
+std::string CodeBuilder::toStringRPL_ADMINLOC2(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return "Location: Paris FR";
+}
+std::string CodeBuilder::toStringRPL_ADMINEMAIL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return "Email: ourirc.42.paris.fr";
+}
+std::string CodeBuilder::toStringRPL_MOTDSTART(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return "ourirc Message of the day -";
+}
+std::string CodeBuilder::toStringRPL_MOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ": ";
+}
+std::string CodeBuilder::toStringRPL_ENDOFMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return " ---------------- End of MOTD -------------------";
+}
+std::string CodeBuilder::toStringERR_NOMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":MOTD File is missing";
 }
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
