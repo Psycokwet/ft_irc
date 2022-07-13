@@ -20,6 +20,7 @@
 
 #include "code.hpp" //code command
 #define DEFAULT_NAME "*"
+#define MOTD_FILE "motd"
 
 #define MAX_TCP_PORT 65535
 #define TRUE 1
