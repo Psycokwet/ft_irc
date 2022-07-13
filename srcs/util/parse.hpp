@@ -16,6 +16,7 @@ void rtrim(std::string &s);
 void trim(std::string &s);
 int isReallyBlank(int c);
 bool isNonPrint(char c);
+std::string cleanString(std::string s);
 
 #define CHANNELS "channels"
 #define MESSAGE "message"

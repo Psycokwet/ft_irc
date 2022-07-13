@@ -36,4 +36,3 @@ bool MasterServer::execVERSION(std::string base, t_client_ParsedCmd &parsed_comm
 	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
 	return true;
 }
-//  ":" + getFullClientID(client) + " " + base + END_OF_COMMAND

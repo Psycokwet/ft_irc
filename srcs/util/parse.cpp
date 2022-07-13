@@ -34,21 +34,25 @@ std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container)
 	return o;
 }
 
+std::string cleanString(std::string s)
+{
+	s.erase(std::remove_if(s.begin(), s.end(), isNonPrint), s.end());
+	return s;
+}
+
 lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
 	if (input.rfind("\r\n") != input.size() - 2)
 		return NULL;
-	input = input.substr(0, input.size() - 2);
+	input = cleanString(input.substr(0, input.size() - 2));
 	lazyParsedType *parsedDatas = new lazyParsedType();
 
 	int message_index = input.find(':');
 	if (message_index != -1)
 	{
-		std::string tmp = input.substr(message_index + 1);
-		tmp.erase(std::remove_if(tmp.begin(), tmp.end(), isNonPrint), tmp.end());
 		(*parsedDatas)[MESSAGE] = lazyParsedSubType();
-		(*parsedDatas)[MESSAGE].push_back(tmp);
+		(*parsedDatas)[MESSAGE].push_back(input.substr(message_index + 1));
 		input = input.substr(0, message_index);
 	}
 
