@@ -168,6 +168,11 @@ void Client::validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterSe
 	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_YOURHOST, serv, this), respQueue);
 	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_CREATED, serv, this), respQueue);
 	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MYINFO, serv, this), respQueue);
+
+	// MOTD
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTDSTART, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTD, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_ENDOFMOTD, serv, this), respQueue);
 	_registered = true;
 }
 
