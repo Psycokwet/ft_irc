@@ -43,7 +43,7 @@ std::string cleanString(std::string s)
 lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
-	if (input.rfind("\r\n") != input.size() - 2)
+	if (input.rfind(END_OF_COMMAND) != input.size() - 2)
 		return NULL;
 	input = cleanString(input.substr(0, input.size() - 2));
 	lazyParsedType *parsedDatas = new lazyParsedType();
