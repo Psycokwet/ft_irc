@@ -27,12 +27,12 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 
 	//  sending message
 	map["PRIVMSG"] = std::make_pair(&Client::is_registered, &MasterServer::execPRIVMSG);
-	map["NOTICE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["NOTICE"] = std::make_pair(&Client::is_registered, &MasterServer::ignore_command);
 
 	//  Server queries and commands
 	map["MOTD"] = std::make_pair(&Client::is_registered, &MasterServer::execMOTD);
 	map["TIME"] = std::make_pair(&Client::is_registered, &MasterServer::execTIME);
-	map["VERSION"] = std::make_pair(&Client::is_not_connected, &MasterServer::execVERSION);
+	// map["VERSION"] = std::make_pair(&Client::is_not_connected, &MasterServer::execVERSION);
 	map["ADMIN"] = std::make_pair(&Client::is_registered, &MasterServer::execADMIN);
 
 	//  Miscellaneous messages

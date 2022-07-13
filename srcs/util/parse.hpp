@@ -15,6 +15,8 @@ void ltrim(std::string &s);
 void rtrim(std::string &s);
 void trim(std::string &s);
 int isReallyBlank(int c);
+bool isNonPrint(char c);
+std::string cleanString(std::string s);
 
 #define CHANNELS "channels"
 #define MESSAGE "message"
@@ -30,4 +32,5 @@ typedef std::map<std::string, lazyParsedSubType> lazyParsedType;
 lazyParsedType *LazyRequestParser(std::string input);
 std::ostream &print_lazyrequest(std::ostream &o, lazyParsedType &container);
 std::string removeTokenAtEnd(std::string &input, std::string token);
+
 #endif

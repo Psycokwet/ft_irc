@@ -222,7 +222,7 @@ std::string CodeBuilder::toStringRPL_VERSION(std::string *s, MasterServer *serve
 	(void)client;
 	(void)channel;
 
-	return server->getServerVersion() + ". " + server->getServerName() + " :";
+	return "NOTICE: " + server->getServerName() + " :" + server->getServerVersion();
 }
 
 std::string CodeBuilder::toStringRPL_CREATED(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -543,16 +543,13 @@ std::string CodeBuilder::toStringERR_NOMOTD(std::string *s, MasterServer *server
 
 	return ":MOTD File is missing";
 }
-std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *s, MasterServer *server, Client *client, Channel *channel)
+std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)channel;
-	(void)s;
 
-	std::string ret = "";
-	ret += server->getServerName() + ":No such server";
-	return ret;
+	return *server_name + " :No such server";
 }
 
 /* ************************************************************************** */
