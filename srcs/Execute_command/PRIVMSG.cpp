@@ -69,7 +69,6 @@
 **		Note: Here we implement: Send msg from one user to other user, to same channel, to another channel (by commandn line).
 **				Cannot send to multiple channels.
 */
-
 bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)base;
@@ -92,6 +91,10 @@ bool MasterServer::execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_comm
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTEXTTOSEND, this, client, &base), respQueue);
 		return true;
 	}
+	if (message.size() && message.front() == "VERSION")
+	{
+		return execVERSION(base, parsed_command, respQueue);
+	}
 
 	if (!channels.size())
 	{
@@ -113,9 +116,7 @@ bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &par
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName), respQueue);
 		return true;
 	}
-	std::string mesgToChannel = "";
-	mesgToChannel += ":" + getFullClientID(client) + " " + base;
-	destChannel->sendToWholeChannel(respQueue, this, mesgToChannel, client);
+	destChannel->sendToWholeChannel(respQueue, this, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 	return true;
 }
 
