@@ -1,1 +1,1 @@
-JOIN #new_channel
+MODE #hackbbs

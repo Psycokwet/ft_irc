@@ -1,1 +1,1 @@
-WHO #new_channel
+QUIT :Leaving

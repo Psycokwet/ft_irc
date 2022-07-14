@@ -1,1 +1,1 @@
-WHO #hackbbs
+PRIVMSG meomeo :hello from cat

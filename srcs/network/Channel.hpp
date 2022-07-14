@@ -60,7 +60,7 @@ class Channel
 public:
 	Channel(std::string name = "");
 	~Channel();
-	std::string clientListToString();
+	std::string clientListToString(bool with_invisible);
 	std::string getName();
 	std::string getTopic();
 	std::string getModes();

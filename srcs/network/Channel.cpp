@@ -93,7 +93,7 @@ Channel::~Channel()
 ** --------------------------------- METHODS ----------------------------------
 */
 
-std::string Channel::clientListToString()
+std::string Channel::clientListToString(bool with_invisible)
 {
 	std::string acc = "";
 	std::string sep = "";
@@ -101,6 +101,8 @@ std::string Channel::clientListToString()
 	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		flags = (*it).second.second;
+		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
+			continue;
 		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR))
 			acc += "@";
 		acc += sep + (*it).second.first->getNick();
@@ -109,30 +111,6 @@ std::string Channel::clientListToString()
 	return acc;
 }
 
-// >>>> WHO #pwit\r\n
-
-//   << :HOST 352 user42_ #pwit user42 user.HOST HOST user42 H :0 realname\r\n
-//      :HOST 352 user42_ #pwit user42 user.HOST HOST user42_ H@ :0 realname\r\n
-//      :HOST 315 user42_ #pwit :End of WHO list\r\n
-
-// >>>> WHO #pwit\r\n
-
-//   << :HOST 352 user42 #pwit user42 user.HOST HOST user42 H :0 realname\r\n
-//      :HOST 352 user42 #pwit user42 user.HOST HOST user42_ H@ :0 realname\r\n
-//      :HOST 315 user42 #pwit :End of WHO list\r\n
-
-// >>>> WHO #pwit\r\n
-
-//   << :HOST 352 user42_ #pwit user42 user.HOST HOST user42_ H :0 realname\r\n
-//      :HOST 352 user42_ #pwit user42 user.HOST HOST user42 H@ :0 realname\r\n
-//      :HOST 315 user42_ #pwit :End of WHO list\r\n
-
-// >>>> WHO #pwit\r\n
-
-//   << :HOST 352 user42 #pwit user42 user.HOST HOST user42_ H :0 realname\r\n
-//      :HOST 352 user42 #pwit user42 user.HOST HOST user42 H@ :0 realname\r\n
-//      :HOST 315 user42 #pwit :End of WHO list\r\n
-// "<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ]:<hopcount> <real name>"
 void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)

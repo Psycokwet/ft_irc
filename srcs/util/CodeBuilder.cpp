@@ -346,11 +346,13 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 	(void)s;
 	(void)channel;
 
-	std::string tmp = " : ";
+	std::string tmp = " :";
 	if (channel)
-		tmp = channel->getName() + tmp + channel->clientListToString();
+		tmp = channel->getName() + tmp + channel->clientListToString(false);
 	return "= " + tmp;
-	//= #pwat :user42_ @user42__
+	//	= #pwat :user42_ @user42__
+	//	"@" is used for secret channels, "*" for private channels,
+	//	and "=" for others (public channels).
 }
 
 std::string CodeBuilder::toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -568,9 +570,10 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	std::string tmp = "";
 	if (channel)
 		tmp = channel->getName() + str;
-	// else if (!channel && s)
-	// 	tmp = (*s) + str;
+	else if (!channel && s) // bit weird but ok
+		tmp = (*s) + str;
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
+
 /* ************************************************************************** */

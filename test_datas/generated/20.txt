@@ -1,1 +1,1 @@
-NICK thi-nguy
+PART #new_channel :I quit

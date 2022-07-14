@@ -1,1 +1,1 @@
-NOTICE thi-nguy :PING 1657491395742
+KICK #new_channel thi-nguy :Speaking_English
