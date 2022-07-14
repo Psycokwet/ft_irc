@@ -1,1 +1,1 @@
-QUIT :Leaving
+NAMES kajserj #chan

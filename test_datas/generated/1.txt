@@ -1,1 +1,1 @@
-PRIVMSG meomeo :hello from cat
+NAMES #chan #chanchan
