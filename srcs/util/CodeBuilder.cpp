@@ -296,7 +296,7 @@ std::string CodeBuilder::toStringERR_PASSWDMISMATCH(std::string *s, MasterServer
 	(void)client;
 	(void)channel;
 
-	return ": Password incorrect";
+	return ":Password incorrect";
 }
 
 std::string CodeBuilder::toStringERR_NOSUCHNICK(std::string *destNick, MasterServer *server, Client *client, Channel *channel)

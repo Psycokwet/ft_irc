@@ -104,7 +104,7 @@ std::string Channel::clientListToString(bool with_invisible)
 		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
 			continue;
 		acc += sep;
-		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR))
+		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_OPERATOR))
 			acc += "@";
 		acc += (*it).second.first->getNick();
 		sep = " ";
