@@ -83,7 +83,7 @@ bool MasterServer::execNAMES(std::string base, t_client_ParsedCmd &parsed_comman
 
 	if (!current_chan)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &channels.front(), current_chan), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &channels.front()), respQueue);
 		return true;
 	}
 

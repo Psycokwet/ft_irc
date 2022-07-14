@@ -41,6 +41,7 @@ std::string Channel::clientListToString(bool with_invisible)
 	}
 	return acc;
 }
+
 void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)

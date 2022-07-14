@@ -473,8 +473,8 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	std::string tmp = "";
 	if (channel)
 		tmp = channel->getName() + str;
-	// else if (!channel && s)
-	// 	tmp = (*s) + str;
+	else if (!channel && s)
+		tmp = (*s) + str;
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
