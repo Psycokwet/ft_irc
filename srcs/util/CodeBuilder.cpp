@@ -406,7 +406,7 @@ std::string CodeBuilder::toStringRPL_WHOREPLY(std::string *s, MasterServer *serv
 	t_client_modes &clients = channel->getClients();
 	for (t_client_modes::const_iterator it = clients.begin(); it != clients.end(); it++)
 	{
-		acc += sep + channel->getName() + " :" + client->getUserOnHost() + " " + server->getFullClientID(client) + " " + server->getHost() + " " + it->second.first->getNick() + " " + channel->clientModesToString(it->second.second) + " :" + it->second.first->getRealName();
+		acc += sep + channel->getName() + " :" + client->getUserOnHost() + " " + server->getFullClientID(client) + " " + server->getHost() + " " + it->second.first->getNick() + " " + channel->clientModesToString(it->second.first) + " :" + it->second.first->getRealName();
 		sep = "\n";
 	}
 	return acc;
