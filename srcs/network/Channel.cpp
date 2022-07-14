@@ -68,6 +68,15 @@ void Channel::quit(Client *client)
 		return;
 	_clients.erase(client->getFd());
 }
+void Channel::quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
+{
+	if (_clients.find(client->getFd()) == _clients.end())
+		return;
+	_clients.erase(client->getFd());
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
+	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+
+}
 std::string Channel::clientModesToString(int flags)
 {
 	(void)flags;
