@@ -72,9 +72,6 @@ public:
 	void quit(Client *client);
 	void quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base);
 
-	
-
-
 	static e_mode_channel stringToMode(std::string s);
 	static std::string modeToString(e_mode_channel modes);
 	std::string modeToString() const;

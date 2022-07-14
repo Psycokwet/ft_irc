@@ -134,7 +134,6 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this), respQueue);
 	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
-
 void Channel::quit(Client *client)
 {
 	if (_clients.find(client->getFd()) == _clients.end())

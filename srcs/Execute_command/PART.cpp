@@ -57,15 +57,14 @@ bool MasterServer::execPART(std::string base, t_client_ParsedCmd &parsed_command
             pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client), respQueue);
             continue;
         }
-        else if (chan)
+        if (chan)
         {
             chan->quit_part(respQueue, this, client, base);
             continue;
         }
-        // if ()
-        // pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client), respQueue);
         return true;
     }
-
+     //   pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTONCHANNEL, this, client), respQueue);
+    
     return (true);
 }
