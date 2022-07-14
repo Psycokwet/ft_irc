@@ -104,7 +104,7 @@ std::string Channel::clientListToString(bool with_invisible)
 		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
 			continue;
 		acc += sep;
-		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR))
+		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_OPERATOR))
 			acc += "@";
 		acc += (*it).second.first->getNick();
 		sep = " ";
@@ -140,9 +140,11 @@ void Channel::quit(Client *client)
 		return;
 	_clients.erase(client->getFd());
 }
-std::string Channel::clientModesToString(int flags)
+std::string Channel::clientModesToString(Client *c)
 {
-	return std::string("H") + (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR) ? "@" : ""); // need to implement for real
+	if (_clients.find(c->getFd()) == _clients.end())
+		return "";
+	return std::string("H") + ((HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR)) ? "@" : ""); // need to implement for real
 }
 
 /*
