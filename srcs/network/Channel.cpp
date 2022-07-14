@@ -103,14 +103,14 @@ std::string Channel::clientListToString(bool with_invisible)
 		flags = (*it).second.second;
 		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
 			continue;
+		acc += sep;
 		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR))
 			acc += "@";
-		acc += sep + (*it).second.first->getNick();
+		acc += (*it).second.first->getNick();
 		sep = " ";
 	}
 	return acc;
 }
-
 void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
@@ -121,7 +121,7 @@ void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServ
 	}
 }
 
-void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
+void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
@@ -129,10 +129,10 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_FLAG_OPERATOR);
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_NO_FLAGS);
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this), respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
 void Channel::quit(Client *client)
 {
