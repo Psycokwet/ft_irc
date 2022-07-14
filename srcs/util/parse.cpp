@@ -40,6 +40,12 @@ std::string cleanString(std::string s)
 	return s;
 }
 
+std::string cleanBlanks(std::string s)
+{
+	s.erase(std::remove_if(s.begin(), s.end(), isReallyBlank), s.end());
+	return s;
+}
+
 lazyParsedType *LazyRequestParser(std::string input)
 {
 	std::string tmp_block;
@@ -60,7 +66,7 @@ lazyParsedType *LazyRequestParser(std::string input)
 	if (cut.size() >= 1)
 	{
 		(*parsedDatas)[COMMAND] = lazyParsedSubType();
-		(*parsedDatas)[COMMAND].push_back(cut.front());
+		(*parsedDatas)[COMMAND].push_back(cleanBlanks(cut.front()));
 		cut.pop_front();
 	}
 	else
@@ -70,22 +76,30 @@ lazyParsedType *LazyRequestParser(std::string input)
 	}
 	for (lazyParsedSubType::iterator it = cut.begin(); it != cut.end(); it++)
 	{
-		if (it->at(0) == '#')
-		{
-			if (parsedDatas->find(CHANNELS) != parsedDatas->end())
-			{
-				delete parsedDatas;
-				return NULL;
-			}
-			lazyParsedSubType sub = stringToList((*it).substr(1), ",#");
-			(*parsedDatas)[CHANNELS] = lazyParsedSubType(sub);
-			cut.erase(it++);
+		if (!it->size() || it->at(0) != '#')
 			continue;
+		if (parsedDatas->find(CHANNELS) != parsedDatas->end())
+		{
+			delete parsedDatas;
+			return NULL;
 		}
+		lazyParsedSubType sub = stringToList(cleanBlanks((*it).substr(1)), ",#");
+		(*parsedDatas)[CHANNELS] = lazyParsedSubType(sub);
+		cut.erase(it);
+		break;
 	}
 	if (cut.size() >= 1)
 	{
-		(*parsedDatas)[PARAMS] = lazyParsedSubType(cut);
+		lazyParsedSubType tmp_lazy = lazyParsedSubType();
+		for (lazyParsedSubType::iterator it = cut.begin(); it != cut.end(); it++)
+		{
+			std::string tmp_s = cleanBlanks(*it);
+			if (!tmp_s.size())
+				continue;
+			tmp_lazy.push_back(tmp_s);
+		}
+		if (tmp_lazy.size())
+			(*parsedDatas)[PARAMS] = lazyParsedSubType(tmp_lazy);
 	}
 	return parsedDatas;
 }

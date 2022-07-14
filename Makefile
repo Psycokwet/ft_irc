@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/14 15:00:45 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/14 22:54:42 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -182,22 +182,29 @@ NETWORK_FILES 	= 	MasterServer \
 SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 		
 COMMAND_PATH	=	Execute_command/
-COMMAND_FILES 	= 	example_command \
+COMMAND_FILES 	= 	ADMIN \
+					example_command \
 					ignore_command \
 					JOIN \
 					MODE \
+					MOTD \
+					NAMES \
 					NICK \
 					PASS \
-					PRIVMSG \
-					USER  \
-					WHO \
-					QUIT \
 					PING \
+					PRIVMSG \
+					QUIT \
 					TIME \
+<<<<<<< HEAD
 					ADMIN \
 					MOTD \
 					VERSION \
 					PART
+=======
+					USER \
+					VERSION  \
+					WHO
+>>>>>>> origin
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

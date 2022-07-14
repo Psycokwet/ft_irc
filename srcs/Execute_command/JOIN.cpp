@@ -57,7 +57,7 @@ bool MasterServer::execJOIN(std::string base, t_client_ParsedCmd &parsed_command
 			std::cout << "Something wrong happened with channel, should not happen TAG#58\n";
 			return true;
 		}
-		chan->join(respQueue, this, client, base);
+		chan->join(respQueue, this, client);
 		// join one after the other
 	}
 	return true;

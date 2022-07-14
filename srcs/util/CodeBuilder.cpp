@@ -76,7 +76,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFLINKS] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ENDOFNAMES] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_ENDOFNAMES] = &CodeBuilder::toStringRPL_ENDOFNAMES;
 	map[RPL_BANLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFBANLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFWHOWAS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -346,11 +346,13 @@ std::string CodeBuilder::toStringRPL_NAMREPLY(std::string *s, MasterServer *serv
 	(void)s;
 	(void)channel;
 
-	std::string tmp = " : ";
+	std::string tmp = " :";
 	if (channel)
-		tmp = channel->getName() + tmp + channel->clientListToString();
+		tmp = channel->getName() + tmp + channel->clientListToString(false);
 	return "= " + tmp;
-	//= #pwat :user42_ @user42__
+	//	= #pwat :user42_ @user42__
+	//	"@" is used for secret channels, "*" for private channels,
+	//	and "=" for others (public channels).
 }
 
 std::string CodeBuilder::toStringRPL_YOUREOPER(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -573,6 +575,23 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, Mast
 	(void)channel;
 
 	return *server_name + " :No such server";
+}
+
+std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::string str = " :End of NAMES list.";
+	std::string tmp = "";
+	if (channel)
+		tmp = channel->getName() + str;
+	else if (!channel && s) // bit weird but ok
+		tmp = (*s) + str;
+	return tmp;
+	//"<channel> :End of NAMES list"
 }
 
 /* ************************************************************************** */
