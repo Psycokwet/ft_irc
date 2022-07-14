@@ -76,7 +76,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_NAMREPLY] = &CodeBuilder::toStringRPL_NAMREPLY;
 	map[RPL_LINKS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFLINKS] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_ENDOFNAMES] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_ENDOFNAMES] = &CodeBuilder::toStringRPL_ENDOFNAMES;
 	map[RPL_BANLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFBANLIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFWHOWAS] = &CodeBuilder::toStringPLACEHOLDER;
@@ -528,7 +528,7 @@ std::string CodeBuilder::toStringRPL_MOTD(std::string *s, MasterServer *server, 
 	std::string tmp4 = " ( | | )";
 	std::string tmp5 = "(__d b__)";
 
-	return tmp + "\n"+ tmp2 + "\n" + tmp3 + "\n" + tmp4 + "\n"+ tmp5;
+	return tmp + "\n" + tmp2 + "\n" + tmp3 + "\n" + tmp4 + "\n" + tmp5;
 }
 std::string CodeBuilder::toStringRPL_ENDOFMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -557,4 +557,20 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, Mast
 	return *server_name + " :No such server";
 }
 
+std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::string str = " :End of NAMES list.";
+	std::string tmp = "";
+	if (channel)
+		tmp = channel->getName() + str;
+	// else if (!channel && s)
+	// 	tmp = (*s) + str;
+	return tmp;
+	//"<channel> :End of NAMES list"
+}
 /* ************************************************************************** */

@@ -144,11 +144,11 @@ bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-	if (!params.size())
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
-		return true;
-	}
+	// if (!params.size())
+	// {
+	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
+	// 	return true;
+	// }
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
 	{
@@ -159,6 +159,8 @@ bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed
 			return true;
 		}
 
+		// pushToQueue(client->_fd, ":ft-irc.42.fr 352 user42 #pwit user42 user.ft-irc.42.fr ft-irc.42.fr user42 H@ :0 realname\r\n", respQueue);
+		// pushToQueue(client->_fd, ":ft-irc.42.fr 352 user42 #pwit user42 user.ft-irc.42.fr ft-irc.42.fr user42_ H :0 realname\r\n", respQueue);
 		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, NULL, chan), respQueue);
 		// join one after the other
 	}
@@ -169,8 +171,6 @@ bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command
 {
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	if (!channels.size())
-	{
 		return execMODE_CLIENT(base, parsed_command, respQueue);
-	}
 	return execMODE_CHANNEL(base, parsed_command, respQueue);
 }

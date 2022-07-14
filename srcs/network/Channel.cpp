@@ -101,13 +101,38 @@ std::string Channel::clientListToString()
 	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		flags = (*it).second.second;
-		if (HAS_TYPE(flags, _MOD_FLAG_ADMIN))
+		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR))
 			acc += "@";
 		acc += sep + (*it).second.first->getNick();
 		sep = " ";
 	}
 	return acc;
 }
+
+// >>>> WHO #pwit\r\n
+
+//   << :HOST 352 user42_ #pwit user42 user.HOST HOST user42 H :0 realname\r\n
+//      :HOST 352 user42_ #pwit user42 user.HOST HOST user42_ H@ :0 realname\r\n
+//      :HOST 315 user42_ #pwit :End of WHO list\r\n
+
+// >>>> WHO #pwit\r\n
+
+//   << :HOST 352 user42 #pwit user42 user.HOST HOST user42 H :0 realname\r\n
+//      :HOST 352 user42 #pwit user42 user.HOST HOST user42_ H@ :0 realname\r\n
+//      :HOST 315 user42 #pwit :End of WHO list\r\n
+
+// >>>> WHO #pwit\r\n
+
+//   << :HOST 352 user42_ #pwit user42 user.HOST HOST user42_ H :0 realname\r\n
+//      :HOST 352 user42_ #pwit user42 user.HOST HOST user42 H@ :0 realname\r\n
+//      :HOST 315 user42_ #pwit :End of WHO list\r\n
+
+// >>>> WHO #pwit\r\n
+
+//   << :HOST 352 user42 #pwit user42 user.HOST HOST user42_ H :0 realname\r\n
+//      :HOST 352 user42 #pwit user42 user.HOST HOST user42 H@ :0 realname\r\n
+//      :HOST 315 user42 #pwit :End of WHO list\r\n
+// "<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ]:<hopcount> <real name>"
 void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
@@ -122,13 +147,13 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
-	if (_clients.size())
-		_clients[client->getFd()] = std::make_pair(client, _MOD_FLAG_ADMIN);
+	if (!_clients.size())
+		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_FLAG_OPERATOR);
 	else
-		_clients[client->getFd()] = std::make_pair(client, _MOD_NO_FLAGS);
-
+		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_NO_FLAGS);
 	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this), respQueue);
 	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 }
 void Channel::quit(Client *client)
@@ -139,8 +164,7 @@ void Channel::quit(Client *client)
 }
 std::string Channel::clientModesToString(int flags)
 {
-	(void)flags;
-	return "H"; // need to implement for real
+	return std::string("H") + (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR) ? "@" : ""); // need to implement for real
 }
 
 /*
@@ -157,7 +181,7 @@ std::string Channel::getTopic()
 }
 std::string Channel::getModes()
 {
-	return "+t"; // need to implement for real
+	return "+t"; // modeToString(_modes); // need to implement for real
 }
 t_client_modes &Channel::getClients()
 {
