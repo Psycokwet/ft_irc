@@ -93,6 +93,7 @@ private:
 
 	bool execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
 };
 
 #endif /*...................MasterServer...............*/

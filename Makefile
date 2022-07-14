@@ -6,9 +6,12 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/14 23:41:04 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/14 23:43:36 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+include .env
+export
 
 #
 # -------------------------------- Paths --------------------------------
@@ -190,6 +193,7 @@ COMMAND_FILES 	= 	ADMIN \
 					MOTD \
 					NAMES \
 					NICK \
+					OPER \
 					PASS \
 					PING \
 					PRIVMSG \
@@ -219,6 +223,7 @@ SRCS_FILES 		+=	$(addprefix $(UTIL_PATH), $(UTIL_FILES))
 CXX				= c++
 CPPFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g # -fsanitize=address
 CPPFLAGS 		:= $(CPPFLAGS) -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
+CPPFLAGS		:= $(CPPFLAGS)  -DOPER_PWD='$(OPER_PWD)' -DOPER_USER='$(OPER_USER)'
 
 RM				= rm -f
 CPPFLAGS		:= $(CPPFLAGS) $(DCOLORS)

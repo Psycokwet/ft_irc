@@ -65,7 +65,7 @@ public:
 	std::string getTopic();
 	std::string getModes();
 	t_client_modes &getClients();
-	std::string clientModesToString(int flags);
+	std::string clientModesToString(Client *c);
 
 	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
