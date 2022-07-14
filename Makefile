@@ -6,7 +6,7 @@
 #    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/13 13:04:28 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/14 15:00:45 by idamouttou       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -196,7 +196,8 @@ COMMAND_FILES 	= 	example_command \
 					TIME \
 					ADMIN \
 					MOTD \
-					VERSION
+					VERSION \
+					PART
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

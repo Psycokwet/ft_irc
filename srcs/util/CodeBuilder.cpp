@@ -96,7 +96,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	// 400
 	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringERR_NOSUCHNICK;
 	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringERR_NOSUCHSERVER;
-	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringERR_NOSUCHCHANNEL;
 	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_TOOMANYCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_WASNOSUCHNICK] = &CodeBuilder::toStringPLACEHOLDER;
@@ -118,7 +118,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NICKCOLLISION] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNAVAILRESOURCE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringERR_NOTONCHANNEL;
 	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOLOGIN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_SUMMONDISABLED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -528,7 +528,7 @@ std::string CodeBuilder::toStringRPL_MOTD(std::string *s, MasterServer *server, 
 	std::string tmp4 = " ( | | )";
 	std::string tmp5 = "(__d b__)";
 
-	return tmp + "\n"+ tmp2 + "\n" + tmp3 + "\n" + tmp4 + "\n"+ tmp5;
+	return tmp + "\n" + tmp2 + "\n" + tmp3 + "\n" + tmp4 + "\n" + tmp5;
 }
 std::string CodeBuilder::toStringRPL_ENDOFMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -547,6 +547,24 @@ std::string CodeBuilder::toStringERR_NOMOTD(std::string *s, MasterServer *server
 	(void)s;
 
 	return ":MOTD File is missing";
+}
+std::string CodeBuilder::toStringERR_NOSUCHCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return " :No such channel";
+}
+std::string CodeBuilder::toStringERR_NOTONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return " :You're not on that channel";
 }
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, MasterServer *server, Client *client, Channel *channel)
 {
