@@ -101,6 +101,7 @@ private:
 	bool execINVITE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execDIE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKILL(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execKICK(std::string base, t_client_ParsedCmd &parsed_command);
 };
 
 #endif /*...................MasterServer...............*/

@@ -191,6 +191,7 @@ COMMAND_FILES 	= 	ADMIN \
 					ignore_command \
 					INVITE \
 					JOIN \
+					KICK \
 					KILL \
 					MODE \
 					MOTD \
