@@ -23,7 +23,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["NAMES"] = std::make_pair(&Client::is_registered, &MasterServer::execNAMES);
 	map["LIST"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["INVITE"] = std::make_pair(&Client::is_registered, &MasterServer::execINVITE);
-	map["KICK"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["KICK"] = std::make_pair(&Client::is_registered, &MasterServer::execKICK);
 
 	//  sending message
 	map["PRIVMSG"] = std::make_pair(&Client::is_registered, &MasterServer::execPRIVMSG);

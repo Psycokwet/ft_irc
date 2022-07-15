@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/15 23:31:25 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/15 23:52:24 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -191,6 +191,7 @@ COMMAND_FILES 	= 	ADMIN \
 					ignore_command \
 					INVITE \
 					JOIN \
+					KICK \
 					KILL \
 					MODE \
 					MOTD \
