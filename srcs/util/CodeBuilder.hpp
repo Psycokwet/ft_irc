@@ -62,6 +62,8 @@ private:
 	static std::string toStringRPL_ENDOFMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOMOTD(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_ENDOFNAMES(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringERR_USERNOTINCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOSUCHCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOTONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_UNAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);

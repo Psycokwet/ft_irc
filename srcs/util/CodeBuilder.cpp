@@ -117,7 +117,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NICKNAMEINUSE] = &CodeBuilder::toStringERR_NICKNAMEINUSE;
 	map[ERR_NICKCOLLISION] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNAVAILRESOURCE] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringERR_USERNOTINCHANNEL;
 	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringERR_NOTONCHANNEL;
 	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOLOGIN] = &CodeBuilder::toStringPLACEHOLDER;
@@ -602,6 +602,7 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
+
 std::string CodeBuilder::toStringRPL_NOWAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
@@ -620,13 +621,30 @@ std::string CodeBuilder::toStringRPL_AWAY(std::string *s, MasterServer *server, 
 
 	return client->getNick() + " :" + client->get_awayMsg();
 }
-
-std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
+std::string CodeBuilder::toStringERR_USERNOTINCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
+	(void)s;
+	(void)channel;
+	std::string tmp = client->getNick() + " ";
+	if (channel)
+		tmp += channel->getName();
+	tmp += ":They aren't on that channel";
+	return tmp; //"<nick> <channel> :They aren't on that channel"
+}
+
+std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
 	(void)channel;
 
-	return *channel_name + " :You're not channel operator";
+	std::string tmp = "";
+	if (channel)
+		tmp += channel->getName();
+	tmp += ":You're not channel operator";
+	return tmp; //"<channel> :You're not channel operator"
 }
 /* ************************************************************************** */
