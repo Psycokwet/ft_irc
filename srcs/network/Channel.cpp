@@ -9,24 +9,24 @@ DEFINE_ENUM(e_mode_channel, E_MODE_CHANNEL_ENUM)
 t_char_channel_mode_dictionary Channel::initCharChannelModeDictionnary()
 {
 	t_char_channel_mode_dictionary map;
-	map['O'] = std::make_pair(_MOD_CHANNEL_FLAG_CREATOR, false);
-	map['o'] = std::make_pair(_MOD_CHANNEL_FLAG_OPERATOR, false);
-	map['v'] = std::make_pair(_MOD_CHANNEL_FLAG_VOICE, false);
-	map['a'] = std::make_pair(_MOD_CHANNEL_FLAG_ANONYMOUS, false);
-	map['i'] = std::make_pair(_MOD_CHANNEL_FLAG_INVITE_ONLY, false);
-	map['m'] = std::make_pair(_MOD_CHANNEL_FLAG_MODERATED, false);
-	map['n'] = std::make_pair(_MOD_CHANNEL_FLAG_NO_MESSAGE, false);
+	// map['O'] = std::make_pair(_MOD_CHANNEL_FLAG_CREATOR, NULL);
+	map['o'] = std::make_pair(_MOD_CHANNEL_FLAG_OPERATOR, &Channel::applyOperatorMode);
+	// map['v'] = std::make_pair(_MOD_CHANNEL_FLAG_VOICE, NULL);
+	// map['a'] = std::make_pair(_MOD_CHANNEL_FLAG_ANONYMOUS, NULL);
+	// map['i'] = std::make_pair(_MOD_CHANNEL_FLAG_INVITE_ONLY, NULL);
+	// map['m'] = std::make_pair(_MOD_CHANNEL_FLAG_MODERATED, NULL);
+	// map['n'] = std::make_pair(_MOD_CHANNEL_FLAG_NO_MESSAGE, NULL);
 
-	map['q'] = std::make_pair(_MOD_CHANNEL_FLAG_QUIET, false);
-	map['p'] = std::make_pair(_MOD_CHANNEL_FLAG_PRIVATE, false);
-	map['s'] = std::make_pair(_MOD_CHANNEL_FLAG_SECRET, false);
-	map['r'] = std::make_pair(_MOD_CHANNEL_FLAG_REOP, false);
-	map['t'] = std::make_pair(_MOD_CHANNEL_FLAG_TOPIC_SETTABLE, false);
-	map['k'] = std::make_pair(_MOD_CHANNEL_FLAG_KEY, false);
-	map['l'] = std::make_pair(_MOD_CHANNEL_FLAG_USER_LIMIT, false);
-	map['b'] = std::make_pair(_MOD_CHANNEL_FLAG_KEEP_OUT, false);
-	map['e'] = std::make_pair(_MOD_CHANNEL_FLAG_BAN_MASK, false);
-	map['I'] = std::make_pair(_MOD_CHANNEL_FLAG_INVITATION_MASK, false);
+	// map['q'] = std::make_pair(_MOD_CHANNEL_FLAG_QUIET, NULL);
+	// map['p'] = std::make_pair(_MOD_CHANNEL_FLAG_PRIVATE, NULL);
+	// map['s'] = std::make_pair(_MOD_CHANNEL_FLAG_SECRET, NULL);
+	// map['r'] = std::make_pair(_MOD_CHANNEL_FLAG_REOP, NULL);
+	// map['t'] = std::make_pair(_MOD_CHANNEL_FLAG_TOPIC_SETTABLE, NULL);
+	// map['k'] = std::make_pair(_MOD_CHANNEL_FLAG_KEY, NULL);
+	// map['l'] = std::make_pair(_MOD_CHANNEL_FLAG_USER_LIMIT, NULL);
+	// map['b'] = std::make_pair(_MOD_CHANNEL_FLAG_KEEP_OUT, NULL);
+	// map['e'] = std::make_pair(_MOD_CHANNEL_FLAG_BAN_MASK, NULL);
+	// map['I'] = std::make_pair(_MOD_CHANNEL_FLAG_INVITATION_MASK, NULL);
 	return map;
 };
 t_char_channel_mode_dictionary Channel::charChannelModeDictionnary = Channel::initCharChannelModeDictionnary();
@@ -97,14 +97,12 @@ std::string Channel::clientListToString(bool with_invisible)
 {
 	std::string acc = "";
 	std::string sep = "";
-	int flags = _MOD_NO_FLAGS;
 	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
-		flags = (*it).second.second;
 		if (with_invisible == false && HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_INVISIBLE))
 			continue;
 		acc += sep;
-		if (HAS_TYPE(flags, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE((*it).second.first->getMode(), _MOD_FLAG_OPERATOR))
+		if (isOperatorHere((*it).second.first))
 			acc += "@";
 		acc += (*it).second.first->getNick();
 		sep = " ";
@@ -154,7 +152,98 @@ std::string Channel::clientModesToString(Client *c)
 {
 	if (_clients.find(c->getFd()) == _clients.end())
 		return "";
-	return std::string("H") + ((HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR)) ? "@" : ""); // need to implement for real
+	return std::string("H") + (isOperatorHere(c) ? "@" : ""); // need to implement for real
+}
+
+bool Channel::isOperatorHere(Client *c)
+{
+	if (_clients.find(c->getFd()) == _clients.end())
+		return false;
+	return (HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR));
+}
+
+Client *Channel::findClient(std::string nick)
+{
+	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		if (it->second.first->getNick() == nick)
+			return it->second.first;
+	}
+	return NULL;
+}
+
+bool Channel::applyMode(std::string target_modes, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command)
+{
+	(void)serv;
+	(void)base;
+	(void)parsed_command;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+
+	if (_clients.find(client->getFd()) == _clients.end())
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));
+		return false;
+	}
+
+	if (!isOperatorHere(client))
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client, &base, this));
+		return false;
+	}
+	bool add = true;
+	if (target_modes.at(0) == '-' || target_modes.at(0) == '+')
+	{
+		if (target_modes.at(0) == '-')
+			add = false;
+		target_modes = target_modes.substr(1);
+	}
+
+	for (std::string::iterator it = target_modes.begin(); it != target_modes.end(); it++)
+	{
+		if (Channel::charChannelModeDictionnary.find(*it) == Channel::charChannelModeDictionnary.end())
+		{ // print error
+			return false;
+		}
+		if (!(this->*(Channel::charChannelModeDictionnary[*it].second))(add, serv, base, parsed_command))
+			return false;
+	}
+	return true;
+}
+
+bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command)
+{
+	(void)add;
+	(void)serv;
+	(void)base;
+	(void)parsed_command;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	if (params.size() < 2)
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, serv, client, &base, this));
+		return false;
+	}
+	params.pop_front();
+	for (lazyParsedSubType::iterator it = params.begin(); it != params.end(); it++)
+	{
+		Client *dest = findClient(*it);
+		if (!dest)
+		{
+			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));
+			return false;
+		}
+		// copié collé de la flemme, bad
+		bool success = false;
+		if (add)
+			success = addMode(dest->_fd, _MOD_CHANNEL_FLAG_OPERATOR);
+		else
+			success = minusMode(dest->_fd, _MOD_CHANNEL_FLAG_OPERATOR);
+		if (success)
+			serv->pushToQueue(dest->_fd, ":" + serv->getFullClientID(client) + " MODE " + dest->getNick() + " :" + (add ? "+" : "-") + "o" + END_OF_COMMAND);
+	}
+
+	return true;
 }
 
 /*
@@ -171,11 +260,37 @@ std::string Channel::getTopic()
 }
 std::string Channel::getModes()
 {
-	return "+t"; // modeToString(_modes); // need to implement for real
+	return modeToString(); // modeToString(_modes); // need to implement for real
 }
 t_client_modes &Channel::getClients()
 {
 	return _clients;
+}
+
+bool Channel::addMode(int fd, e_mode_channel mode)
+{
+	if (_clients.find(fd) == _clients.end())
+		return false;
+
+	unsigned int tmp = _clients[fd].second;
+	unsigned int new_modes = _clients[fd].second;
+	new_modes = _clients[fd].second | mode;
+	_clients[fd].second = static_cast<e_mode_channel>(new_modes);
+	if (tmp != static_cast<unsigned int>(_clients[fd].second))
+		return true;
+	return false;
+}
+bool Channel::minusMode(int fd, e_mode_channel mode)
+{
+	if (_clients.find(fd) == _clients.end())
+		return false;
+	unsigned int tmp = _clients[fd].second;
+	unsigned int new_modes = _clients[fd].second;
+	new_modes = _clients[fd].second - (_clients[fd].second & mode);
+	_clients[fd].second = static_cast<e_mode_channel>(new_modes);
+	if (tmp != static_cast<unsigned int>(_clients[fd].second))
+		return true;
+	return false;
 }
 
 /* ************************************************************************** */
