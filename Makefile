@@ -3,15 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
+#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/14 23:43:36 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/15 17:35:29 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 include .env
-export
 
 #
 # -------------------------------- Paths --------------------------------
@@ -194,6 +193,7 @@ COMMAND_FILES 	= 	ADMIN \
 					NAMES \
 					NICK \
 					OPER \
+					PART \
 					PASS \
 					PING \
 					PRIVMSG \
@@ -201,8 +201,7 @@ COMMAND_FILES 	= 	ADMIN \
 					TIME \
 					VERSION \
 					USER \
-					WHO \
-					PART
+					WHO
 
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
