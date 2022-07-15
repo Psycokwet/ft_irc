@@ -81,17 +81,16 @@
 **            RPL_UNIQOPIS
 **/
 
-bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (params.size() < 2)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
 		return true;
 	}
 	std::string nick = params.front();
@@ -100,7 +99,7 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 	params.pop_front();
 	if (nick != client->getNick())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERSDONTMATCH, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERSDONTMATCH, this, client));
 		return true;
 	}
 
@@ -118,7 +117,7 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 	}
 	catch (const Client::unknownModeException &e)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_UMODEUNKNOWNFLAG, this, client), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_UMODEUNKNOWNFLAG, this, client));
 		return true;
 	}
 	// catch (const Client::doubleSetModeException &e)
@@ -132,15 +131,14 @@ bool MasterServer::execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_
 		success = client->minusMode(modes);
 
 	if (success)
-		pushToQueue(client->_fd, ":" + getFullClientID(client) + " MODE " + client->getNick() + " :" + (add ? "+" : "-") + Client::modeToString(modes) + END_OF_COMMAND, respQueue);
+		pushToQueue(client->_fd, ":" + getFullClientID(client) + " MODE " + client->getNick() + " :" + (add ? "+" : "-") + Client::modeToString(modes) + END_OF_COMMAND);
 
 	return true;
 }
-bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
@@ -153,20 +151,20 @@ bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed
 			continue;
 		if (!params.size())
 		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, &base, chan), respQueue);
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, &base, chan));
 			continue;
 		}
-		if (!chan->applyMode(params.front(), this, base, parsed_command, respQueue))
+		if (!chan->applyMode(params.front(), this, base, parsed_command))
 			return true;
 	}
 	return true;
 }
-bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	if (!channels.size())
 	{
-		return execMODE_CLIENT(base, parsed_command, respQueue);
+		return execMODE_CLIENT(base, parsed_command);
 	}
-	return execMODE_CHANNEL(base, parsed_command, respQueue);
+	return execMODE_CHANNEL(base, parsed_command);
 }

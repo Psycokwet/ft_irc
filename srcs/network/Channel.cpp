@@ -109,17 +109,17 @@ std::string Channel::clientListToString(bool with_invisible)
 	}
 	return acc;
 }
-void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
+void Channel::sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		if (exclude && *exclude == *(it->second.first))
 			continue;
-		serv->pushToQueue(it->second.first->getFd(), message, respQueue);
+		serv->pushToQueue(it->second.first->getFd(), message);
 	}
 }
 
-void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
+void Channel::join(MasterServer *serv, Client *client)
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
@@ -127,17 +127,27 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_FLAG_OPERATOR);
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_NO_FLAGS);
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, respQueue);
-	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
-	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this), respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND);
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this));
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this));
+	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
-void Channel::quit(Client *client)
+bool Channel::quit(Client *client)
 {
 	if (_clients.find(client->getFd()) == _clients.end())
-		return;
+		return false;
 	_clients.erase(client->getFd());
+	return true;
 }
+bool Channel::quit_part(MasterServer *serv, Client *client, std::string base)
+{
+	if (!quit(client))
+		return false;
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND);
+	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+	return true;
+}
+
 std::string Channel::clientModesToString(Client *c)
 {
 	if (_clients.find(c->getFd()) == _clients.end())
@@ -162,23 +172,22 @@ Client *Channel::findClient(std::string nick)
 	return NULL;
 }
 
-bool Channel::applyMode(std::string target_modes, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool Channel::applyMode(std::string target_modes, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)serv;
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	if (_clients.find(client->getFd()) == _clients.end())
 	{
-		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this), respQueue);
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));
 		return false;
 	}
 
 	if (!isOperatorHere(client))
 	{
-		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client, &base, this), respQueue);
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client, &base, this));
 		return false;
 	}
 	bool add = true;
@@ -195,25 +204,24 @@ bool Channel::applyMode(std::string target_modes, MasterServer *serv, std::strin
 		{ // print error
 			return false;
 		}
-		if (!(this->*(Channel::charChannelModeDictionnary[*it].second))(add, serv, base, parsed_command, respQueue))
+		if (!(this->*(Channel::charChannelModeDictionnary[*it].second))(add, serv, base, parsed_command))
 			return false;
 	}
 	return true;
 }
 
-bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)add;
 	(void)serv;
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (params.size() < 2)
 	{
-		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, serv, client, &base, this), respQueue);
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, serv, client, &base, this));
 		return false;
 	}
 	params.pop_front();
@@ -222,7 +230,7 @@ bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, 
 		Client *dest = findClient(*it);
 		if (!dest)
 		{
-			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this), respQueue);
+			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));
 			return false;
 		}
 		// copié collé de la flemme, bad
@@ -232,7 +240,7 @@ bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, 
 		else
 			success = minusMode(dest->_fd, _MOD_CHANNEL_FLAG_OPERATOR);
 		if (success)
-			serv->pushToQueue(dest->_fd, ":" + serv->getFullClientID(client) + " MODE " + dest->getNick() + " :" + (add ? "+" : "-") + "o" + END_OF_COMMAND, respQueue);
+			serv->pushToQueue(dest->_fd, ":" + serv->getFullClientID(client) + " MODE " + dest->getNick() + " :" + (add ? "+" : "-") + "o" + END_OF_COMMAND);
 	}
 
 	return true;

@@ -1,6 +1,9 @@
 #include "../includes/ft_irc.hpp"
 #include "network/MasterServer.hpp"
 
+
+MasterServer *gMasterServer = NULL; 
+
 static bool checkArguments(int ac, char **av, int &port, std::string &password)
 {
 	if (ac != 3)
@@ -20,20 +23,38 @@ static bool checkArguments(int ac, char **av, int &port, std::string &password)
 	}
 	return true;
 }
+
+static void	cleanup()
+{
+	if (gMasterServer)
+		delete gMasterServer;
+}
+
+static void	handleSignal(int signum)
+{
+	if (signum == SIGINT) // hit Ctr + C
+		std::cout << "\nServer stopped. Good bye!\n" << std::endl;
+	exit(0);
+}
+
 int main(int ac, char **av)
 {
+	std::atexit(cleanup);
+	signal(SIGINT, handleSignal);
+
 	int port;
 	std::string password;
+
 	if (!checkArguments(ac, av, port, password))
 		exit(1);
 
-	MasterServer *myServer = new MasterServer(port, password);
+	gMasterServer = new MasterServer(port, password);
 
-	if (myServer->build() == EXIT_FAILURE)
+	if (gMasterServer->build() == EXIT_FAILURE)
 	{
-		delete myServer;
+		delete gMasterServer;
 		return (1);
 	}
-	myServer->run();
+	gMasterServer->run();
 	return (0);
 }

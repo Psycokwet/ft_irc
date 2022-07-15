@@ -37,32 +37,31 @@
 **	 Hexchat sends PING automatically to our server. OR Client can type: /ping or /PING on Hexchat.
 **/
 
-bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPING(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 
 	if (!message.size() && !params.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOORIGIN, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOORIGIN, this, client, &base));
 		return true;
 	}
 	std::stringstream ss;
 	switch (params.size())
 	{
 	case 0:
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHSERVER, this, client, &base));
 		break;
 	case 1:
 		ss << ":" << HOST << " PONG " << HOST << " :" << params.front() << END_OF_COMMAND;
-		pushToQueue(client->_fd, ss.str(), respQueue);
+		pushToQueue(client->_fd, ss.str());
 		break;
 	default:
-		pushToQueue(client->_fd, std::string(TOO_MANY_ARGS) + END_OF_COMMAND, respQueue); // not necessary regarding doc
+		pushToQueue(client->_fd, std::string(TOO_MANY_ARGS) + END_OF_COMMAND); // not necessary regarding doc
 		// too much params
 		break;
 	}

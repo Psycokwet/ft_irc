@@ -34,17 +34,16 @@
 **            RPL_TOPIC
 */
 
-bool MasterServer::execJOIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execJOIN(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	if (!channels.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
 		return true;
 	}
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
@@ -57,7 +56,7 @@ bool MasterServer::execJOIN(std::string base, t_client_ParsedCmd &parsed_command
 			std::cout << "Something wrong happened with channel, should not happen TAG#58\n";
 			return true;
 		}
-		chan->join(respQueue, this, client);
+		chan->join(this, client);
 		// join one after the other
 	}
 	return true;

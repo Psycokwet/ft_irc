@@ -14,32 +14,31 @@
 
    Numeric Replies:
 
-           ERR_NOSUCHSERVER
-           RPL_ADMINME                   RPL_ADMINLOC1
-           RPL_ADMINLOC2                 RPL_ADMINEMAIL
+		   ERR_NOSUCHSERVER
+		   RPL_ADMINME                   RPL_ADMINLOC1
+		   RPL_ADMINLOC2                 RPL_ADMINEMAIL
 
    Examples:
 
    ADMIN tolsun.oulu.fi            ; request an ADMIN reply from
-                                   tolsun.oulu.fi
+								   tolsun.oulu.fi
 
    ADMIN syrk                      ; ADMIN request for the server to
-                                   which the user syrk is connected
+								   which the user syrk is connected
 
 
 */
 
-bool MasterServer::execADMIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execADMIN(std::string base, t_client_ParsedCmd &parsed_command)
 {
-  (void)base;
-  (void)parsed_command;
-  (void)respQueue;
-  Client *client = parsed_command.first;
+	(void)base;
+	(void)parsed_command;
+	Client *client = parsed_command.first;
 
-  pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINME, this, client, &base), respQueue);
-  pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINLOC1, this, client, &base), respQueue);
-  pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINLOC2, this, client, &base), respQueue);
-  pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINEMAIL, this, client, &base), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINME, this, client, &base));
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINLOC1, this, client, &base));
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINLOC2, this, client, &base));
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ADMINEMAIL, this, client, &base));
 
-  return (true);
+	return (true);
 }

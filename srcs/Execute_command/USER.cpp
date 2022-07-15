@@ -18,49 +18,48 @@
 
    Numeric Replies:
 
-           ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+		   ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
    Example:
 
    USER guest 0 * :Ronnie Reagan   ; User registering themselves with a
-                                   username of "guest" and real name
-                                   "Ronnie Reagan".
+								   username of "guest" and real name
+								   "Ronnie Reagan".
 
    USER guest 8 * :Ronnie Reagan   ; User registering themselves with a
-                                   username of "guest" and real name
-                                   "Ronnie Reagan", and asking to be set
-                                   invisible.
+								   username of "guest" and real name
+								   "Ronnie Reagan", and asking to be set
+								   invisible.
 
 
 
 */
 
-bool MasterServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execUSER(std::string base, t_client_ParsedCmd &parsed_command)
 {
 
-    (void)base;
-    (void)parsed_command;
-    (void)respQueue;
-    Client *client = parsed_command.first; // should not be null regarding how we got here
+	(void)base;
+	(void)parsed_command;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
 
-    if (client->_userOnHost != "")
-    {
-        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client, &base), respQueue);
-        return true;
-    }
-    lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-    lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
-    if (!params.size() || !message.size())
-    {
-        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
-        return true;
-    }
-    std::string realName = message.front();
-    std::string userName = params.front();
-    client->_userOnHost = userName;
-    client->_realName = realName;
-    // mode stuff to do see later
-    client->validatedRegistration(respQueue, this);
+	if (client->_userOnHost != "")
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_ALREADYREGISTRED, this, client, &base));
+		return true;
+	}
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
+	if (!params.size() || !message.size())
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
+		return true;
+	}
+	std::string realName = message.front();
+	std::string userName = params.front();
+	client->_userOnHost = userName;
+	client->_realName = realName;
+	// mode stuff to do see later
+	client->validatedRegistration(this);
 
-    return true;
+	return true;
 }

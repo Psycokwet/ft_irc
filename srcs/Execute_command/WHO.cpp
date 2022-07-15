@@ -26,12 +26,10 @@
 **
 **/
 
-bool MasterServer::execWHO(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execWHO(std::string base, t_client_ParsedCmd &parsed_command)
 {
-
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
@@ -44,8 +42,8 @@ bool MasterServer::execWHO(std::string base, t_client_ParsedCmd &parsed_command,
 			return true;
 		}
 
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WHOREPLY, this, client, &base, chan), respQueue);
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFWHO, this, client, &base, chan), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_WHOREPLY, this, client, &base, chan));
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFWHO, this, client, &base, chan));
 		// join one after the other
 	}
 

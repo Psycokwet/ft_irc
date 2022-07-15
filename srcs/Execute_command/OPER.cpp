@@ -29,16 +29,15 @@
 #define OPER_USER ""
 #endif
 
-bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 	if (params.size() < 2)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
 		return true;
 	}
 	std::string username = params.front();
@@ -49,10 +48,10 @@ bool MasterServer::execOPER(std::string base, t_client_ParsedCmd &parsed_command
 	if (username == OPER_USER && password == OPER_PWD)
 	{
 		client->addMode(_MOD_FLAG_OPERATOR);
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOUREOPER, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_YOUREOPER, this, client, &base));
 		return true;
 	}
-	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_PASSWDMISMATCH, this, client, &base), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_PASSWDMISMATCH, this, client, &base));
 
 	return true;
 }
