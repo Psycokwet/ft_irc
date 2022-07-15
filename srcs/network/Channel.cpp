@@ -134,14 +134,14 @@ void Channel::join(MasterServer *serv, Client *client)
 }
 bool Channel::kick(std::string name_victim, MasterServer *serv, Client *client, std::string notification)
 {
-	Client *victim = findClientWithNick(name_victim);
+	Client *victim = findClient(name_victim);
 
 	if (!isOperatorHere(client))
 	{
 		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client));
 		return false;
 	}
-	if (!victim || !quit_part(serv, victim, "Kicked bye " + client->getNick() + " :" + notification) ||)
+	if (!victim || !quit_part(serv, victim, "PART " + getName() + " Kicked by " + client->getNick() + " with motif " + notification))
 	{
 		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &name_victim, this));
 		return false;

@@ -67,19 +67,19 @@ bool MasterServer::execKICK(std::string base, t_client_ParsedCmd &parsed_command
 				pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client, &base));
 				return true;
 			}
-			if (!chan->kick(params.front(), client, notification))
+			if (!chan->kick(params.front(), this, client, notification))
 				return true;
 		}
 	}
 	else
 	{
-		Channel *chan = findChanneWithName(*it);
+		Channel *chan = findChanneWithName(channels.front());
 		if (!chan)
 		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client, &base));
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client, &channels.front()));
 			return true;
 		}
-		chan->kick(params.front(), client, notification);
+		chan->kick(params.front(), this, client, notification);
 	}
 	return true;
 }
