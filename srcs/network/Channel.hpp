@@ -70,6 +70,7 @@ public:
 	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
 	void quit(Client *client);
+	bool isOperatorHere(Client *c);
 
 	static e_mode_channel stringToMode(std::string s);
 	static std::string modeToString(e_mode_channel modes);
