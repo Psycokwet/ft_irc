@@ -68,39 +68,19 @@ bool MasterServer::execTOPIC(std::string base, t_client_ParsedCmd &parsed_comman
 			if (message.front() == ":")
 			{
 				current_chan->setTopic("");
-				ss << ": some message on deleting topic of channel";
-				pushToQueue(client->_fd, ss.str());
+
+				ss << ":" << getFullClientID(client) << " TOPIC #" << channels.front() << " :" << END_OF_COMMAND;
 			}
 			else
 			{
-				ss << ": saying we changed the topic of channel";
-				pushToQueue(client->_fd, ss.str());
+				current_chan->setTopic(message.front());
+				ss << ":" << getFullClientID(client) << " TOPIC #" << channels.front() << " :" << message.front() << END_OF_COMMAND;
 			}
+			sendToWholeServer(ss.str(), NULL);
 		}
 		break;
-	default:
-		// too much message
+	default: // too much message
 		break;
 	}
-	// if (!message.size())
-	// {
-	// 	if (current_chan->getTopic() == "")
-	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOTOPIC, this, client, &base, current_chan));
-	// 	else
-	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_TOPIC, this, client, &base, current_chan));
-	// 	return true;
-	// }
-	// if (!current_chan->isOperatorHere(client))
-	// {
-	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, this, client, &base, current_chan));
-	// 	return true;
-	// }
-	// else
-	// {
-	// 	// set topic
-	// 	// delete topic
-	// 	pushToQueue(client->_fd, "Response to change topic\n");
-		
-	// }
 	return true;
 }

@@ -644,7 +644,7 @@ std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServ
 	std::string tmp = "";
 	if (channel)
 		tmp += channel->getName();
-	tmp += ":You're not channel operator";
+	tmp += " :You're not channel operator";
 	return tmp; //"<channel> :You're not channel operator"
 }
 
@@ -658,7 +658,7 @@ std::string CodeBuilder::toStringRPL_NOTOPIC(std::string *s, MasterServer *serve
 	std::string tmp = "";
 	if (channel)
 		tmp += channel->getName();
-	tmp += ":No topic is set";
+	tmp += " :No topic is set";
 	return tmp; //"<channel> :No topic is set"
 }
 /* ************************************************************************** */
