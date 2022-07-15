@@ -41,7 +41,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 
 	//  Optional features
 	map["AWAY"] = std::make_pair(&Client::is_registered, &MasterServer::execAWAY);
-	map["DIE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["DIE"] = std::make_pair(&Client::is_registered, &MasterServer::execDIE);
 
 	//  user based queries
 	map["WHO"] = std::make_pair(&Client::is_registered, &MasterServer::execWHO);
@@ -104,6 +104,7 @@ MasterServer::~MasterServer()
 {
 	util_delete(_clients);
 	util_delete(_channels);
+	_respQueue.clear();
 	close(_fdServer);
 }
 
