@@ -105,6 +105,7 @@ Client::~Client()
 {
 	std::cout << "Remove client " << _fd << std::endl;
 	close(_fd);
+	_received_command.clear();
 }
 
 /*
@@ -120,7 +121,7 @@ bool Client::operator==(const Client &rhs) const
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */
 
-bool Client::receiveCommand(std::string &command)
+bool Client::receiveCommand()
 {
 	ssize_t r = recv(_fd, _buffer, BUF_SIZE, 0);
 	if (r <= 0)
@@ -132,7 +133,7 @@ bool Client::receiveCommand(std::string &command)
 	std::size_t found = _commandTemp.find(END_OF_COMMAND, _commandTemp.size() - LEN_END_OF_COMMAND);
 	if (found != std::string::npos)
 	{
-		command = _commandTemp;
+		_received_command = _commandTemp;
 		_commandTemp.clear();
 	}
 	return true;

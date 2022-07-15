@@ -41,7 +41,7 @@ public:
 	~Client();
 	Client();
 	Client(int fd);
-	bool receiveCommand(std::string &command);
+	bool receiveCommand();
 	void sendResp(std::string const &resp);
 	std::string modeToString() const;
 	std::string get_awayMsg() const;
@@ -102,6 +102,7 @@ private:
 	std::string _awayMsg;
 	char _buffer[BUF_SIZE + 1];
 	std::string _commandTemp;
+	std::string _received_command;
 };
 
 #endif

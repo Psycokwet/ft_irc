@@ -303,12 +303,11 @@ void MasterServer::recvProcess(int totalFd)
 			else if (_disconnectList.find(fd) != _disconnectList.end()) // if fd client is not in disconnected list
 				continue;
 
-			std::string received_command;
 			lazyParsedType *parsed_command;
-			bool ret = _clients[fd]->receiveCommand(received_command);
+			bool ret = _clients[fd]->receiveCommand();
 			_command_list.clear();
-			_command_list = stringToListKeepTokenizer(received_command, END_OF_COMMAND);
-			received_command.clear();
+			_command_list = stringToListKeepTokenizer(_clients[fd]->_received_command, END_OF_COMMAND);
+			_clients[fd]->_received_command.clear();
 			for (std::list<std::string>::iterator it = _command_list.begin(); it != _command_list.end(); it++)
 			{
 				std::string base = removeTokenAtEnd(*it, END_OF_COMMAND);
