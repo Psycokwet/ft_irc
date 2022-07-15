@@ -36,7 +36,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["ADMIN"] = std::make_pair(&Client::is_registered, &MasterServer::execADMIN);
 
 	//  Miscellaneous messages
-	map["KILL"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["KILL"] = std::make_pair(&Client::is_registered, &MasterServer::execKILL);
 	map["PING"] = std::make_pair(&Client::is_registered, &MasterServer::execPING);
 
 	//  Optional features
@@ -104,6 +104,10 @@ MasterServer::~MasterServer()
 {
 	util_delete(_clients);
 	util_delete(_channels);
+
+	for (std::set<int>::iterator itDisconnect = _disconnectList.begin(); itDisconnect != _disconnectList.end(); ++itDisconnect)
+		removeClient(*itDisconnect);
+	_disconnectList.clear();
 	close(_fdServer);
 }
 
@@ -184,30 +188,24 @@ int MasterServer::build()
 void MasterServer::run() // ! do like main_loops
 {
 	int total_opened_fd;
-	std::vector<t_clientCmd>::iterator itRes;
-	std::set<int> disconnectList;
-	std::set<int>::iterator itDisconnect;
-
 	while (TRUE)
 	{
 		_respQueue.clear();
-		disconnectList.clear();
+		_disconnectList.clear();
 		total_opened_fd = setFDForReading();
 		if (total_opened_fd == -1)
 			break;
-		recvProcess(total_opened_fd, disconnectList);
+		recvProcess(total_opened_fd);
 
-		for (itRes = _respQueue.begin(); itRes != _respQueue.end(); ++itRes)
+		for (std::vector<t_clientCmd>::iterator itRes = _respQueue.begin(); itRes != _respQueue.end(); ++itRes)
 		{
 			int clientFd = itRes->first;
 			if (_clients.find(clientFd) != _clients.end())
 				_clients[clientFd]->sendResp(itRes->second);
 		}
 
-		for (itDisconnect = disconnectList.begin(); itDisconnect != disconnectList.end(); ++itDisconnect)
-		{
+		for (std::set<int>::iterator itDisconnect = _disconnectList.begin(); itDisconnect != _disconnectList.end(); ++itDisconnect)
 			removeClient(*itDisconnect);
-		}
 	}
 }
 
@@ -285,7 +283,7 @@ bool isLegalCmd(lazyParsedType **lad)
 	return true;
 }
 
-void MasterServer::recvProcess(int totalFd, std::set<int> &disconnectList)
+void MasterServer::recvProcess(int totalFd)
 {
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
 	// to read from 0 (stdin), 1 (stdout) and 2 (stderr)
@@ -301,7 +299,7 @@ void MasterServer::recvProcess(int totalFd, std::set<int> &disconnectList)
 				acceptClient(fd);
 				continue;
 			}
-			else if (disconnectList.find(fd) != disconnectList.end()) // if fd client is not in disconnected list
+			else if (_disconnectList.find(fd) != _disconnectList.end()) // if fd client is not in disconnected list
 				continue;
 
 			received_command.clear();
@@ -323,12 +321,9 @@ void MasterServer::recvProcess(int totalFd, std::set<int> &disconnectList)
 						 || !isLegalCmd(&parsed_command)			//
 						 || !processCommand(base, std::make_pair(_clients[fd], parsed_command)))
 				{
-					disconnectList.insert(fd);
+					_disconnectList.insert(fd);
 					break; // if a false, then stop treating client
 				}
-				// int killed_by_operater_fd = _MasterServer.getVictim();
-				// if (killed_by_operater_fd != -1)
-				// 	disconnectList.insert(killed_by_operater_fd);
 			}
 		}
 	}

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: idamouttou <idamouttou@student.42.fr>      +#+  +:+       +#+         #
+#    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/15 19:26:36 by idamouttou       ###   ########.fr        #
+#    Updated: 2022/07/15 22:15:35 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -185,9 +185,11 @@ SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 		
 COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	ADMIN \
+					AWAY \
 					example_command \
 					ignore_command \
 					JOIN \
+					KILL \
 					MODE \
 					MOTD \
 					NAMES \
@@ -201,7 +203,6 @@ COMMAND_FILES 	= 	ADMIN \
 					TIME \
 					VERSION \
 					USER \
-					AWAY \
 					WHO
 
 
