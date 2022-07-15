@@ -31,7 +31,10 @@ bool MasterServer::execDIE(std::string base, t_client_ParsedCmd &parsed_command)
 	(void)parsed_command;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	if (!HAS_TYPE(client->getMode(), _MOD_FLAG_OPERATOR))
+	{
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOPRIVILEGES, this, client));
+		return true;
+	}
 	exit(0);
 	return true;
 }
