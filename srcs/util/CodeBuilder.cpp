@@ -65,7 +65,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_UNIQOPIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_NOTOPIC] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TOPIC] = &CodeBuilder::toStringRPL_TOPIC;
-	map[RPL_INVITING] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_INVITING] = &CodeBuilder::toStringRPL_INVITING;
 	map[RPL_SUMMONING] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_INVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFINVITELIST] = &CodeBuilder::toStringPLACEHOLDER;
@@ -119,7 +119,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_UNAVAILRESOURCE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringERR_USERNOTINCHANNEL;
 	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringERR_NOTONCHANNEL;
-	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringERR_USERONCHANNEL;
 	map[ERR_NOLOGIN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_SUMMONDISABLED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_USERSDISABLED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -633,6 +633,33 @@ std::string CodeBuilder::toStringERR_USERNOTINCHANNEL(std::string *s, MasterServ
 	tmp += ":They aren't on that channel";
 	return tmp; //"<nick> <channel> :They aren't on that channel"
 }
+
+std::string CodeBuilder::toStringRPL_INVITING(std::string *clientDestNick, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	std::string tmp = "";
+	tmp += *clientDestNick;
+
+	if (channel)
+		tmp += " " + channel->getName();
+	return tmp;
+}
+//"<channel> <nick>"//Somehow wrong, I had to swap the order
+
+std::string CodeBuilder::toStringERR_USERONCHANNEL(std::string *target, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	std::string tmp = *target;
+	if (channel)
+		tmp += " " + channel->getName();
+	tmp += " :is already on channel";
+
+	return tmp;
+} //"<user> <channel> :is already on channel"
 
 std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {

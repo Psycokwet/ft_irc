@@ -92,7 +92,6 @@ Channel::~Channel()
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
-
 std::string Channel::clientListToString(bool with_invisible)
 {
 	std::string acc = "";
@@ -162,7 +161,7 @@ bool Channel::isOperatorHere(Client *c)
 	return (HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR));
 }
 
-Client *Channel::findClient(std::string nick)
+Client *Channel::findClientWithNick(std::string nick)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
@@ -227,7 +226,7 @@ bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, 
 	params.pop_front();
 	for (lazyParsedSubType::iterator it = params.begin(); it != params.end(); it++)
 	{
-		Client *dest = findClient(*it);
+		Client *dest = findClientWithNick(*it);
 		if (!dest)
 		{
 			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));

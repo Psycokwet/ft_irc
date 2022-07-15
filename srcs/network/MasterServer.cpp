@@ -22,7 +22,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["NAMES"] = std::make_pair(&Client::is_registered, &MasterServer::execNAMES);
 	map["LIST"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
-	map["INVITE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["INVITE"] = std::make_pair(&Client::is_registered, &MasterServer::execINVITE);
 	map["KICK"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 
 	//  sending message
@@ -381,10 +381,10 @@ std::string MasterServer::getFullClientID(Client *c) const
 {
 	return c->getNick() + "!" + c->getUserOnHost() + "@" + getHost();
 }
-Client *MasterServer::findClientWithNick(std::string new_nick)
+Client *MasterServer::findClientWithNick(std::string nick)
 {
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		if (it->second->getNick() == new_nick)
+		if (it->second->getNick() == nick)
 			return it->second;
 	return NULL;
 }
