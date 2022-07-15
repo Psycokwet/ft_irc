@@ -40,7 +40,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["PING"] = std::make_pair(&Client::is_registered, &MasterServer::execPING);
 
 	//  Optional features
-	map["AWAY"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["AWAY"] = std::make_pair(&Client::is_registered, &MasterServer::execAWAY);
 	map["DIE"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 
 	//  user based queries

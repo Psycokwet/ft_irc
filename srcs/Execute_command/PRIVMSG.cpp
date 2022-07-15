@@ -138,5 +138,7 @@ bool MasterServer::execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &pars
 		return true;
 	}
 	pushToQueue(destClient->_fd, ":" + getFullClientID(client) + " " + base + END_OF_COMMAND);
+	if (HAS_TYPE(destClient->getMode(), _MOD_FLAG_AWAY))
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_AWAY, this, destClient));
 	return true;
 }
