@@ -85,6 +85,7 @@ private:
 	bool execADMIN(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execMOTD(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execAWAY(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execKICK(std::string base, t_client_ParsedCmd &parsed_command);
 
 	bool execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command);
