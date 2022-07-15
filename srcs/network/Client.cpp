@@ -82,6 +82,10 @@ std::string Client::modeToString() const
 {
 	return modeToString(_modes);
 }
+std::string Client::get_awayMsg() const
+{
+	return _awayMsg;
+}
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------

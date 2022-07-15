@@ -44,6 +44,7 @@ public:
 	bool receiveCommand(std::string &command);
 	void sendResp(std::string const &resp);
 	std::string modeToString() const;
+	std::string get_awayMsg() const;
 
 	void setRealName(std::string realName);
 	std::string getNick() const;
@@ -98,6 +99,7 @@ private:
 	std::string _realName;
 	std::string _userOnHost;
 	e_mode_client _modes;
+	std::string _awayMsg;
 	char _buffer[BUF_SIZE + 1];
 	std::string _commandTemp;
 };
