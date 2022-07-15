@@ -94,6 +94,7 @@ private:
 	bool execPING(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execPART(std::string base, t_client_ParsedCmd &parsed_command);
 };
 
 #endif /*...................MasterServer...............*/

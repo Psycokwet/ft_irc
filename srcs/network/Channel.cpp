@@ -141,12 +141,12 @@ bool Channel::quit(Client *client)
 	_clients.erase(client->getFd());
 	return true;
 }
-bool Channel::quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
+bool Channel::quit_part(MasterServer *serv, Client *client, std::string base)
 {
 	if (!quit(client))
 		return false;
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND);
+	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 	return true;
 }
 
