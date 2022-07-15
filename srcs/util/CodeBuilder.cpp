@@ -117,7 +117,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NICKNAMEINUSE] = &CodeBuilder::toStringERR_NICKNAMEINUSE;
 	map[ERR_NICKCOLLISION] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNAVAILRESOURCE] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringERR_USERNOTINCHANNEL;
 	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOLOGIN] = &CodeBuilder::toStringPLACEHOLDER;
@@ -140,7 +140,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NOCHANMODES] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_BANLISTFULL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOPRIVILEGES] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_CHANOPRIVSNEEDED] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_CHANOPRIVSNEEDED] = &CodeBuilder::toStringERR_CHANOPRIVSNEEDED;
 	map[ERR_CANTKILLSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_RESTRICTED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNIQOPPRIVSNEEDED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -575,5 +575,31 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
+std::string CodeBuilder::toStringERR_USERNOTINCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
 
+	std::string tmp = client->getNick() + " ";
+	if (channel)
+		tmp += channel->getName();
+	tmp += ":They aren't on that channel";
+	return tmp; //"<nick> <channel> :They aren't on that channel"
+}
+
+std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::string tmp = "";
+	if (channel)
+		tmp += channel->getName();
+	tmp += ":You're not channel operator";
+	return tmp; //"<channel> :You're not channel operator"
+}
 /* ************************************************************************** */

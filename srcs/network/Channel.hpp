@@ -71,6 +71,9 @@ public:
 	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
 	void quit(Client *client);
 	bool isOperatorHere(Client *c);
+	bool addMode(int fd, e_mode_channel mode);
+	bool minusMode(int fd, e_mode_channel mode);
+	Client *findClient(std::string nick);
 
 	static e_mode_channel stringToMode(std::string s);
 	static std::string modeToString(e_mode_channel modes);

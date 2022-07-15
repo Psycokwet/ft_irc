@@ -144,24 +144,21 @@ bool MasterServer::execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 	(void)client;
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-	// if (!params.size())
-	// {
-	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client), respQueue);
-	// 	return true;
-	// }
+
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		Channel *chan = findChanneWithName(*it);
 		if (!chan)
+			continue;
+		if (!params.size())
 		{
-			// no chan
-			return true;
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, &base, chan), respQueue);
+			continue;
 		}
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_CHANNELMODEIS, this, client, NULL, chan), respQueue);
-		// join one after the other
+		if (!chan->applyMode(params.front(), this, base, parsed_command, respQueue))
+			return true;
 	}
-
 	return true;
 }
 bool MasterServer::execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)

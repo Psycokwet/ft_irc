@@ -152,13 +152,35 @@ bool Channel::isOperatorHere(Client *c)
 	return (HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR));
 }
 
+Client *Channel::findClient(std::string nick)
+{
+	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		if (it->second.first->getNick() == nick)
+			return it->second.first;
+	}
+	return NULL;
+}
+
 bool Channel::applyMode(std::string target_modes, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
 {
 	(void)serv;
 	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
 
+	if (_clients.find(client->getFd()) == _clients.end())
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this), respQueue);
+		return false;
+	}
+
+	if (!isOperatorHere(client))
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client, &base, this), respQueue);
+		return false;
+	}
 	bool add = true;
 	if (target_modes.at(0) == '-' || target_modes.at(0) == '+')
 	{
@@ -186,6 +208,32 @@ bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, 
 	(void)base;
 	(void)parsed_command;
 	(void)respQueue;
+	Client *client = parsed_command.first; // should not be null regarding how we got here
+
+	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
+	if (params.size() < 2)
+	{
+		serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, serv, client, &base, this), respQueue);
+		return false;
+	}
+	params.pop_front();
+	for (lazyParsedSubType::iterator it = params.begin(); it != params.end(); it++)
+	{
+		Client *dest = findClient(*it);
+		if (!dest)
+		{
+			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this), respQueue);
+			return false;
+		}
+		// copié collé de la flemme, bad
+		bool success = false;
+		if (add)
+			success = addMode(dest->_fd, _MOD_CHANNEL_FLAG_OPERATOR);
+		else
+			success = minusMode(dest->_fd, _MOD_CHANNEL_FLAG_OPERATOR);
+		if (success)
+			serv->pushToQueue(dest->_fd, ":" + serv->getFullClientID(client) + " MODE " + dest->getNick() + " :" + (add ? "+" : "-") + "o" + END_OF_COMMAND, respQueue);
+	}
 
 	return true;
 }
@@ -204,11 +252,37 @@ std::string Channel::getTopic()
 }
 std::string Channel::getModes()
 {
-	return "+t"; // modeToString(_modes); // need to implement for real
+	return modeToString(); // modeToString(_modes); // need to implement for real
 }
 t_client_modes &Channel::getClients()
 {
 	return _clients;
+}
+
+bool Channel::addMode(int fd, e_mode_channel mode)
+{
+	if (_clients.find(fd) == _clients.end())
+		return false;
+
+	unsigned int tmp = _clients[fd].second;
+	unsigned int new_modes = _clients[fd].second;
+	new_modes = _clients[fd].second | mode;
+	_clients[fd].second = static_cast<e_mode_channel>(new_modes);
+	if (tmp != static_cast<unsigned int>(_clients[fd].second))
+		return true;
+	return false;
+}
+bool Channel::minusMode(int fd, e_mode_channel mode)
+{
+	if (_clients.find(fd) == _clients.end())
+		return false;
+	unsigned int tmp = _clients[fd].second;
+	unsigned int new_modes = _clients[fd].second;
+	new_modes = _clients[fd].second - (_clients[fd].second & mode);
+	_clients[fd].second = static_cast<e_mode_channel>(new_modes);
+	if (tmp != static_cast<unsigned int>(_clients[fd].second))
+		return true;
+	return false;
 }
 
 /* ************************************************************************** */
