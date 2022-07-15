@@ -111,17 +111,17 @@ std::string Channel::clientListToString(bool with_invisible)
 	}
 	return acc;
 }
-void Channel::sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude)
+void Channel::sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		if (exclude && *exclude == *(it->second.first))
 			continue;
-		serv->pushToQueue(it->second.first->getFd(), message, respQueue);
+		serv->pushToQueue(it->second.first->getFd(), message);
 	}
 }
 
-void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client)
+void Channel::join(MasterServer *serv, Client *client)
 {
 	if (_clients.find(client->getFd()) != _clients.end())
 		return;
@@ -129,10 +129,10 @@ void Channel::join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Clie
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_FLAG_OPERATOR);
 	else
 		_clients[client->getFd()] = std::make_pair(client, _MOD_CHANNEL_NO_FLAGS);
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, respQueue);
-	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this), respQueue);
-	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this), respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND);
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_NAMREPLY, serv, client, NULL, this));
+	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this));
+	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
 bool Channel::quit(Client *client)
 {
@@ -141,12 +141,12 @@ bool Channel::quit(Client *client)
 	_clients.erase(client->getFd());
 	return true;
 }
-bool Channel::quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
+bool Channel::quit_part(MasterServer *serv, Client *client, std::string base)
 {
 	if (!quit(client))
 		return false;
-	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
-	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND);
+	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
 	return true;
 }
 

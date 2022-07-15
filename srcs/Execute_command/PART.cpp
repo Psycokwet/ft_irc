@@ -36,17 +36,16 @@ Command: PART
 
 */
 
-bool MasterServer::execPART(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execPART(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first;
 
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	if (!channels.size())
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
 		return true;
 	}
 	for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
@@ -54,12 +53,12 @@ bool MasterServer::execPART(std::string base, t_client_ParsedCmd &parsed_command
 		Channel *chan = findChanneWithName(*it);
 		if (!chan)
 		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client), respQueue);
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client));
 			continue;
 		}
-		if (chan->quit_part(respQueue, this, client, base) == false)
+		if (chan->quit_part(this, client, base) == false)
 		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTONCHANNEL, this, client), respQueue);
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTONCHANNEL, this, client));
 			continue;
 		}
 	}
