@@ -58,9 +58,9 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_WHOISIDLE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ENDOFWHOIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_LISTSTART] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_LIST] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_LISTEND] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_LISTSTART] = &CodeBuilder::toStringRPL_LISTSTART;
+	map[RPL_LIST] = &CodeBuilder::toStringRPL_LIST;
+	map[RPL_LISTEND] = &CodeBuilder::toStringRPL_LISTEND;
 	map[RPL_CHANNELMODEIS] = &CodeBuilder::toStringRPL_CHANNELMODEIS;
 	map[RPL_UNIQOPIS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_NOTOPIC] = &CodeBuilder::toStringRPL_NOTOPIC;
@@ -697,4 +697,39 @@ std::string CodeBuilder::toStringERR_NOPRIVILEGES(std::string *s, MasterServer *
 	return ":Permission Denied- You're not an IRC operator";
 }
 
+std::string CodeBuilder::toStringRPL_LISTSTART(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	return " Channel :Users Name";
+	//" Channel :Users Name"
+}
+
+std::string CodeBuilder::toStringRPL_LIST(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	std::stringstream ss;
+	
+	ss << " " << channel->getName() << " " << channel->getClients().size() << " :" << channel->getTopic() << END_OF_COMMAND;
+
+	return ss.str();
+}
+
+std::string CodeBuilder::toStringRPL_LISTEND(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	return " :End /LIST";
+	//" :End of /LIST"
+}
 /* ************************************************************************** */

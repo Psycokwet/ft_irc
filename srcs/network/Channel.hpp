@@ -64,6 +64,7 @@ public:
 	std::string getName();
 	std::string getTopic();
 	std::string getModes();
+	int &getTotalUsers();
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
 
@@ -106,6 +107,7 @@ private:
 	std::string _topic;
 	t_client_modes _clients;
 	e_mode_channel _modes;
+
 };
 
 std::ostream &operator<<(std::ostream &o, Channel const &i);
