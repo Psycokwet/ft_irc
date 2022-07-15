@@ -40,9 +40,9 @@ bool MasterServer::execTOPIC(std::string base, t_client_ParsedCmd &parsed_comman
 	(void)base;
 	(void)parsed_command;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
-	if (HAS_TYPE(client->getMode(), ))	   // Non tu dois voir le mode de CHANNEL pour ça thi-nguy :) Eventuellement, faut l'ajouter aux modes settable sur channel dans ce cas, sinon t'ignore juste et t'accepte que ça soit set
+	// if (HAS_TYPE(client->getMode(), ))	   // Non tu dois voir le mode de CHANNEL pour ça thi-nguy :) Eventuellement, faut l'ajouter aux modes settable sur channel dans ce cas, sinon t'ignore juste et t'accepte que ça soit set
 
-		lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
+	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
 
 	std::cout << "Channel:" << channels.front() << std::endl;

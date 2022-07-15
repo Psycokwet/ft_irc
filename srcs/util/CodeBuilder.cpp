@@ -621,15 +621,6 @@ std::string CodeBuilder::toStringRPL_AWAY(std::string *s, MasterServer *server, 
 	return client->getNick() + " :" + client->get_awayMsg();
 }
 
-std::string CodeBuilder::toStringERR_NOSUCHCHANNEL(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
-{
-	(void)server;
-	(void)client;
-	(void)channel;
-
-	return *channel_name + " :No such channel";
-}
-
 std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
