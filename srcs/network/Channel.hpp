@@ -75,6 +75,7 @@ public:
 	void join(MasterServer *serv, Client *client);
 	bool quit(Client *client);
 	bool quit_part(MasterServer *serv, Client *client, std::string base);
+	bool kick(std::string name_victim, MasterServer *serv, Client *client, std::string notification);
 
 	static e_mode_channel stringToMode(std::string s);
 	static std::string modeToString(e_mode_channel modes);

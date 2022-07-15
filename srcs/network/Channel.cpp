@@ -132,6 +132,23 @@ void Channel::join(MasterServer *serv, Client *client)
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this));
 	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
+bool Channel::kick(std::string name_victim, MasterServer *serv, Client *client, std::string notification)
+{
+	Client *victim = findClientWithNick(name_victim);
+
+	if (!isOperatorHere(client))
+	{
+		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client));
+		return false;
+	}
+	if (!victim || !quit_part(serv, victim, "Kicked bye " + client->getNick() + " :" + notification) ||)
+	{
+		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &name_victim, this));
+		return false;
+	}
+	return true;
+}
+
 bool Channel::quit(Client *client)
 {
 	if (_clients.find(client->getFd()) == _clients.end())
