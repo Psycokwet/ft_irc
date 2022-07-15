@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/15 23:31:25 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/16 00:08:08 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -332,7 +332,7 @@ define launch_exe_from_array_args
 		COUNT=$$(( 1 + $$COUNT ));\
 		LAST=$$ARG;\
 		[ "$(words $(2))" -eq $$COUNT ] && break ;\
-		./$(1) ;\
+		./$(1) $$LAST $(3);\
 	done ;\
 	./$(1) $$LAST $(3)
 endef

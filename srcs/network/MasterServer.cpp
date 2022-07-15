@@ -290,7 +290,6 @@ void MasterServer::recvProcess(int totalFd)
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
 	// to read from 0 (stdin), 1 (stdout) and 2 (stderr)
 
-	std::string received_command;
 	for (int fd = 3; fd <= _maxFD && totalFd; ++fd)
 	{
 		if (FD_ISSET(fd, &_fdReader))
@@ -304,11 +303,12 @@ void MasterServer::recvProcess(int totalFd)
 			else if (_disconnectList.find(fd) != _disconnectList.end()) // if fd client is not in disconnected list
 				continue;
 
-			received_command.clear();
+			std::string received_command;
 			lazyParsedType *parsed_command;
 			bool ret = _clients[fd]->receiveCommand(received_command);
 			_command_list.clear();
 			_command_list = stringToListKeepTokenizer(received_command, END_OF_COMMAND);
+			received_command.clear();
 			for (std::list<std::string>::iterator it = _command_list.begin(); it != _command_list.end(); it++)
 			{
 				std::string base = removeTokenAtEnd(*it, END_OF_COMMAND);
