@@ -1,1 +1,1 @@
-MODE #new_channel meo +i
+KICK #new_channel thi-nguy :Speaking_English

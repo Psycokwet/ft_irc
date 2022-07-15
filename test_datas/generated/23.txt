@@ -1,1 +1,1 @@
-NAMES #new_channel
+PRIVMSG thi-nguy :hello

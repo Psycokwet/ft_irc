@@ -1,1 +1,1 @@
-PING LAG1657476314910
+USER thi-nguy 0 * :realname

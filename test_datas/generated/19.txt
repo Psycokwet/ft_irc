@@ -1,1 +1,1 @@
-WHO #new_channel
+PRIVMSG #new_channel :bla bla

@@ -96,7 +96,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	// 400
 	map[ERR_NOSUCHNICK] = &CodeBuilder::toStringERR_NOSUCHNICK;
 	map[ERR_NOSUCHSERVER] = &CodeBuilder::toStringERR_NOSUCHSERVER;
-	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOSUCHCHANNEL] = &CodeBuilder::toStringERR_NOSUCHCHANNEL;
 	map[ERR_CANNOTSENDTOCHAN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_TOOMANYCHANNELS] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_WASNOSUCHNICK] = &CodeBuilder::toStringPLACEHOLDER;
@@ -140,7 +140,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NOCHANMODES] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_BANLISTFULL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOPRIVILEGES] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_CHANOPRIVSNEEDED] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_CHANOPRIVSNEEDED] = &CodeBuilder::toStringERR_CHANOPRIVSNEEDED;
 	map[ERR_CANTKILLSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_RESTRICTED] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNIQOPPRIVSNEEDED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -576,4 +576,21 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	//"<channel> :End of NAMES list"
 }
 
+std::string CodeBuilder::toStringERR_NOSUCHCHANNEL(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+
+	return *channel_name + " :No such channel";
+}
+
+std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+
+	return *channel_name + " :You're not channel operator";
+}
 /* ************************************************************************** */

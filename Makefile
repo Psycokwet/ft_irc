@@ -201,7 +201,8 @@ COMMAND_FILES 	= 	ADMIN \
 					TIME \
 					USER \
 					VERSION  \
-					WHO
+					WHO \
+					TOPIC
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))
 

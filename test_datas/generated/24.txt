@@ -1,1 +1,1 @@
-NAMES #new_channel,#other_channel
+NAMES #new_channel

@@ -1,1 +1,1 @@
-KICK #new_channel thi-nguy :Speaking_English
+NAMES #new_channel,#other_channel

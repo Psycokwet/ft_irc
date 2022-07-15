@@ -1,1 +1,1 @@
-PING :irc.funet.fi
+PING LAG1657476314910

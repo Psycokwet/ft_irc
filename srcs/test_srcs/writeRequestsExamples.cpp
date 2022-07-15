@@ -14,6 +14,7 @@ int main(int ac, char **av)
 	}
 	std::string folder_name = av[1];
 	int i = 0;
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan ::\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #chan\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #chan #chanchan\r\n");
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #kljon\r\n");

@@ -1,1 +1,1 @@
-NICK :ccbob
+PASS test

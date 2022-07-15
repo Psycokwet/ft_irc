@@ -1,1 +1,1 @@
-PRIVMSG thi-nguy :hello
+JOIN #new_channel

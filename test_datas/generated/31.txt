@@ -1,1 +1,1 @@
-PING WiZ tolsun.oulu.fi
+PING :irc.funet.fi

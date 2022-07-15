@@ -1,1 +1,1 @@
-PRIVMSG meomeo hello from cat
+PRIVMSG meomeo :hello from cat

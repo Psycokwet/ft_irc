@@ -1,1 +1,1 @@
-PRIVMSG #chan :hello
+NAMES #chan, #chanchan
