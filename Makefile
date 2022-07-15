@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/15 23:44:36 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/15 23:52:24 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -189,6 +189,7 @@ COMMAND_FILES 	= 	ADMIN \
 					DIE \
 					example_command \
 					ignore_command \
+					INVITE \
 					JOIN \
 					KICK \
 					KILL \
@@ -203,8 +204,8 @@ COMMAND_FILES 	= 	ADMIN \
 					PRIVMSG \
 					QUIT \
 					TIME \
-					VERSION \
 					USER \
+					VERSION \
 					WHO
 
 

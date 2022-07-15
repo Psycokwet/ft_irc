@@ -66,11 +66,11 @@ public:
 	std::string getModes();
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
-
 	bool isOperatorHere(Client *c);
+
+	Client *findClientWithNick(std::string nick);
 	bool addMode(int fd, e_mode_channel mode);
 	bool minusMode(int fd, e_mode_channel mode);
-	Client *findClient(std::string nick);
 	void sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(MasterServer *serv, Client *client);
 	bool quit(Client *client);

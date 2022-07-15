@@ -32,7 +32,7 @@ public:
 	int build();
 	void run();
 
-	Client *findClientWithNick(std::string new_nick);
+	Client *findClientWithNick(std::string nick);
 	Channel *findChanneWithName(std::string name);
 	Channel *createChannel(std::string name);
 
@@ -98,6 +98,7 @@ private:
 	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execPART(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execINVITE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execDIE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKILL(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKICK(std::string base, t_client_ParsedCmd &parsed_command);
