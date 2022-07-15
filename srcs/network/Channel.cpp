@@ -134,12 +134,22 @@ void Channel::join(MasterServer *serv, Client *client)
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this));
 	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
-void Channel::quit(Client *client)
+bool Channel::quit(Client *client)
 {
 	if (_clients.find(client->getFd()) == _clients.end())
-		return;
+		return false;
 	_clients.erase(client->getFd());
+	return true;
 }
+bool Channel::quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base)
+{
+	if (!quit(client))
+		return false;
+	serv->pushToQueue(client->getFd(), ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, respQueue);
+	sendToWholeChannel(respQueue, serv, ":" + serv->getFullClientID(client) + " " + base + END_OF_COMMAND, client);
+	return true;
+}
+
 std::string Channel::clientModesToString(Client *c)
 {
 	if (_clients.find(c->getFd()) == _clients.end())

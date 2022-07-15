@@ -17,7 +17,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 
 	// channel operation
 	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::execJOIN);
-	map["PART"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["PART"] = std::make_pair(&Client::is_registered, &MasterServer::execPART);
 	// MODE too
 	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["NAMES"] = std::make_pair(&Client::is_registered, &MasterServer::execNAMES);
@@ -368,6 +368,7 @@ void MasterServer::removeClient(int fdClient)
 {
 	if (_clients.find(fdClient) != _clients.end())
 	{
+
 		for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 			it->second->quit(_clients[fdClient]);
 		delete _clients[fdClient];
