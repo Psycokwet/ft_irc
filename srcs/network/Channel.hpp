@@ -67,6 +67,8 @@ public:
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
 
+	void setTopic(std::string new_topic);
+	
 	bool isOperatorHere(Client *c);
 	bool addMode(int fd, e_mode_channel mode);
 	bool minusMode(int fd, e_mode_channel mode);
@@ -99,7 +101,7 @@ private:
 	Channel &operator=(Channel const &rhs);
 
 	const std::string _name;
-	const std::string _topic;
+	std::string _topic;
 	t_client_modes _clients;
 	e_mode_channel _modes;
 };

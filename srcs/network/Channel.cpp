@@ -293,4 +293,9 @@ bool Channel::minusMode(int fd, e_mode_channel mode)
 	return false;
 }
 
+void Channel::setTopic(std::string new_topic)
+{
+	this->_topic = new_topic;
+}
+
 /* ************************************************************************** */

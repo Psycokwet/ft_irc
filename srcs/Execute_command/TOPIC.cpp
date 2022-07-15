@@ -27,7 +27,7 @@
 **                                     to "another topic".
 **
 **     TOPIC #test :                   ; Command to clear the topic on
-**                                     #test.
+**                                     #test. --> can not do this on Hexchat
 **
 **     TOPIC #test                     ; Command to check the topic for
 **                                     #test.
@@ -40,20 +40,67 @@ bool MasterServer::execTOPIC(std::string base, t_client_ParsedCmd &parsed_comman
 	(void)base;
 	(void)parsed_command;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
-	// if (HAS_TYPE(client->getMode(), ))	   // Non tu dois voir le mode de CHANNEL pour ça thi-nguy :) Eventuellement, faut l'ajouter aux modes settable sur channel dans ce cas, sinon t'ignore juste et t'accepte que ça soit set
-
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
-	lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
-
-	std::cout << "Channel:" << channels.front() << std::endl;
-	std::cout << "Channel:" << channels.front() << std::endl;
+	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 
 	Channel *current_chan = findChanneWithName(channels.front());
 	if (!current_chan)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client, &channels.front()));
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client, &base));
 		return true;
 	}
-
+	std::stringstream ss;
+	switch (message.size())
+	{
+	case 0:
+		if (current_chan->getTopic() == "")
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOTOPIC, this, client, &base, current_chan));
+		else
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_TOPIC, this, client, &base, current_chan));
+		break;
+	case 1:
+		if (!current_chan->isOperatorHere(client))
+		{
+			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, this, client, &base, current_chan));
+		}
+		else
+		{
+			if (message.front() == ":")
+			{
+				current_chan->setTopic("");
+				ss << ": some message on deleting topic of channel";
+				pushToQueue(client->_fd, ss.str());
+			}
+			else
+			{
+				ss << ": saying we changed the topic of channel";
+				pushToQueue(client->_fd, ss.str());
+			}
+		}
+		break;
+	default:
+		// too much message
+		break;
+	}
+	// if (!message.size())
+	// {
+	// 	if (current_chan->getTopic() == "")
+	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOTOPIC, this, client, &base, current_chan));
+	// 	else
+	// 		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_TOPIC, this, client, &base, current_chan));
+	// 	return true;
+	// }
+	// if (!current_chan->isOperatorHere(client))
+	// {
+	// 	pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, this, client, &base, current_chan));
+	// 	return true;
+	// }
+	// else
+	// {
+	// 	// set topic
+	// 	// delete topic
+	// 	pushToQueue(client->_fd, "Response to change topic\n");
+		
+	// }
 	return true;
 }
