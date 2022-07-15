@@ -60,6 +60,7 @@ private:
 	std::string const _password;
 	std::vector<t_clientCmd> _respQueue;
 	std::set<int> _disconnectList;
+	std::list<std::string> _command_list;
 
 	int setFDForReading();
 	void recvProcess(int totalFf);

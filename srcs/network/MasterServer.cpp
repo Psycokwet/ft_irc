@@ -109,6 +109,7 @@ MasterServer::~MasterServer()
 		removeClient(*itDisconnect);
 	_disconnectList.clear();
 	_respQueue.clear();
+	_command_list.clear();
 	close(_fdServer);
 }
 
@@ -306,9 +307,9 @@ void MasterServer::recvProcess(int totalFd)
 			received_command.clear();
 			lazyParsedType *parsed_command;
 			bool ret = _clients[fd]->receiveCommand(received_command);
-
-			std::list<std::string> command_list(stringToListKeepTokenizer(received_command, END_OF_COMMAND));
-			for (std::list<std::string>::iterator it = command_list.begin(); it != command_list.end(); it++)
+			_command_list.clear();
+			_command_list = stringToListKeepTokenizer(received_command, END_OF_COMMAND);
+			for (std::list<std::string>::iterator it = _command_list.begin(); it != _command_list.end(); it++)
 			{
 				std::string base = removeTokenAtEnd(*it, END_OF_COMMAND);
 				if (it->size() == 0)

@@ -35,6 +35,8 @@ bool MasterServer::execDIE(std::string base, t_client_ParsedCmd &parsed_command)
 		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOPRIVILEGES, this, client));
 		return true;
 	}
+	parsed_command.second->clear();
+	delete parsed_command.second;
 	exit(0);
 	return true;
 }
