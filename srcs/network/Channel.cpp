@@ -133,7 +133,7 @@ void Channel::join(MasterServer *serv, Client *client)
 }
 bool Channel::kick(std::string name_victim, MasterServer *serv, Client *client, std::string notification)
 {
-	Client *victim = findClient(name_victim);
+	Client *victim = findClientWithNick(name_victim);
 
 	if (!isOperatorHere(client))
 	{
