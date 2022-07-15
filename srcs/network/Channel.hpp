@@ -49,8 +49,8 @@
 //   									 the invite-only flag;
 
 DECLARE_ENUM(e_mode_channel, E_MODE_CHANNEL_ENUM)
-//				id				value			placeholder
-typedef std::map<char, std::pair<e_mode_channel, bool> > t_char_channel_mode_dictionary;
+//				id				value			applyMode			if add is false, then it's getting rid of
+typedef std::map<char, std::pair<e_mode_channel, bool (Channel::*)(bool, MasterServer *, std::string, t_client_ParsedCmd &)> > t_char_channel_mode_dictionary;
 
 // fd							client		flags
 typedef std::map<int, std::pair<Client *, int> > t_client_modes;
@@ -69,6 +69,8 @@ public:
 	bool isOperatorHere(Client *c);
 
 	Client *findClientWithNick(std::string nick);
+	bool addMode(int fd, e_mode_channel mode);
+	bool minusMode(int fd, e_mode_channel mode);
 	void sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(MasterServer *serv, Client *client);
 	bool quit(Client *client);
@@ -80,6 +82,8 @@ public:
 	static t_char_channel_mode_dictionary charChannelModeDictionnary;
 	static t_char_channel_mode_dictionary initCharChannelModeDictionnary();
 
+	bool applyMode(std::string target_modes, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command);
+	bool applyOperatorMode(bool add, MasterServer *serv, std::string base, t_client_ParsedCmd &parsed_command);
 	class unknownModeException : public std::exception
 	{
 	public:

@@ -5,8 +5,6 @@
 class CodeBuilder;
 class Client;
 class Channel;
-#include "Client.hpp"
-#include "Channel.hpp"
 #include "../util/CodeBuilder.hpp"
 #include "../util/deleteContainers.hpp"
 #include "../util/containerTo.hpp"
@@ -14,6 +12,8 @@ class Channel;
 
 typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd; // it: fd client, lazyParsedType: parsed command
 
+#include "Client.hpp"
+#include "Channel.hpp"
 #define COMMAND_METHODS_PROTOTYPE bool (MasterServer::*)(std::string base, t_client_ParsedCmd &)
 #define CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE bool (Client::*)()
 typedef std::map<std::string, std::pair<CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE, COMMAND_METHODS_PROTOTYPE> > t_commands_dictionary;
