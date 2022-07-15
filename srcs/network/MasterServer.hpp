@@ -14,7 +14,7 @@ class Channel;
 
 typedef std::pair<Client *, lazyParsedType *> t_client_ParsedCmd; // it: fd client, lazyParsedType: parsed command
 
-#define COMMAND_METHODS_PROTOTYPE bool (MasterServer::*)(std::string base, t_client_ParsedCmd &, std::vector<t_clientCmd> &)
+#define COMMAND_METHODS_PROTOTYPE bool (MasterServer::*)(std::string base, t_client_ParsedCmd &)
 #define CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE bool (Client::*)()
 typedef std::map<std::string, std::pair<CHECK_COMMAND_VALIDITY_METHODS_PROTOTYPE, COMMAND_METHODS_PROTOTYPE> > t_commands_dictionary;
 
@@ -45,7 +45,7 @@ public:
 
 	std::string getFullClientID(Client *c) const;
 
-	bool processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool processCommand(std::string base, t_client_ParsedCmd parsed_command);
 
 	static t_commands_dictionary _commandsDictionnary;
 	static t_commands_dictionary initCommandsDictionnary();
@@ -58,43 +58,44 @@ private:
 	fd_set _fdReader; // Structure to select client FD for reading
 	int _port;
 	std::string const _password;
+	std::vector<t_clientCmd> _respQueue;
 
 	int setFDForReading();
-	void recvProcess(int totalFf, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList);
+	void recvProcess(int totalFf, std::set<int> &disconnectList);
 	void acceptClient(int fdServer);
 	void removeClient(int fdClient);
 
-	void pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const;
-	void sendToWholeServer(std::vector<t_clientCmd> &respQueue, std::string message, Client *exclude);
+	void pushToQueue(int fd, std::string const &msg);
+	void sendToWholeServer(std::string message, Client *exclude);
 
 	// COMMANDS definitions
-	bool ignore_command(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);	 // please add needed arg as specified in "command_method"
-	bool example_command(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue); // please add needed arg as specified in "command_method"
+	bool ignore_command(std::string base, t_client_ParsedCmd &parsed_command);	// please add needed arg as specified in "command_method"
+	bool example_command(std::string base, t_client_ParsedCmd &parsed_command); // please add needed arg as specified in "command_method"
 
-	bool execPASS(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execNICK(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execUSER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue, bool silentError);
-	bool execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue, bool silentError);
-	bool execJOIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execQUIT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execVERSION(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execTIME(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execADMIN(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execMOTD(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execPART(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execAWAY(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execPASS(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execNICK(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execUSER(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execPRIVMSG(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, bool silentError);
+	bool execPRIVMSG_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, bool silentError);
+	bool execJOIN(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execQUIT(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execVERSION(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execTIME(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execADMIN(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execMOTD(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execAWAY(std::string base, t_client_ParsedCmd &parsed_command);
 
-	bool execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execMODE(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execMODE_CHANNEL(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execMODE_CLIENT(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execMODE(std::string base, t_client_ParsedCmd &parsed_command);
 
-	bool execWHO(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execWHO(std::string base, t_client_ParsedCmd &parsed_command);
 
-	bool execPING(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
-	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue);
+	bool execPING(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execPART(std::string base, t_client_ParsedCmd &parsed_command);
 };
 
 #endif /*...................MasterServer...............*/

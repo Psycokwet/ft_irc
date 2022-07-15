@@ -60,7 +60,7 @@ public:
 	bool is_not_connected();
 	bool is_connected();
 	bool is_registered();
-	void validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv);
+	void validatedRegistration(MasterServer *serv);
 
 	bool operator==(const Client &rhs) const;
 	// static

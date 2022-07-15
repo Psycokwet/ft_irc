@@ -67,10 +67,10 @@ public:
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
 
-	void sendToWholeChannel(std::vector<t_clientCmd> &respQueue, MasterServer *serv, std::string message, Client *exclude = NULL);
-	void join(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client);
+	void sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude = NULL);
+	void join(MasterServer *serv, Client *client);
 	bool quit(Client *client);
-	bool quit_part(std::vector<t_clientCmd> &respQueue, MasterServer *serv, Client *client, std::string base);
+	bool quit_part(MasterServer *serv, Client *client, std::string base);
 
 	static e_mode_channel stringToMode(std::string s);
 	static std::string modeToString(e_mode_channel modes);

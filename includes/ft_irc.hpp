@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <cstdlib>      // atoi
+#include <cstdlib>      // atoi, atexit
 #include <sys/select.h> // select FD_CLR, FD_ZERO, FD_SET, FD_ISSET macros
 #include <map>
 #include <vector>
@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <sys/socket.h> //socket accept listen send recv bind connect setsockopt getsockname
 #include <netinet/in.h> // sockaddr_in
+#include <csignal> // signal
 
 #include "../srcs/util/parse.hpp" //parsing
 

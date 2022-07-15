@@ -27,11 +27,10 @@
 
 */
 
-bool MasterServer::execAWAY(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execAWAY(std::string base, t_client_ParsedCmd &parsed_command)
 {
     (void)base;
     (void)parsed_command;
-    (void)respQueue;
     Client *client = parsed_command.first; // should not be null regarding how we got here
 
     lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
@@ -40,14 +39,14 @@ bool MasterServer::execAWAY(std::string base, t_client_ParsedCmd &parsed_command
 
         client->addMode(_MOD_FLAG_AWAY);
         client->_awayMsg = message.front();
-        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOWAWAY, this, client, &base), respQueue);
+        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOWAWAY, this, client, &base));
         return true;
     }
     else
     {
         client->_awayMsg = "";
         client->minusMode(_MOD_FLAG_AWAY);
-        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_UNAWAY, this, client, &base), respQueue);
+        pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_UNAWAY, this, client, &base));
     }
     return true;
 }
