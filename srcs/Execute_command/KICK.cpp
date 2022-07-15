@@ -21,36 +21,41 @@
    Numeric Replies:
 
            -ERR_NEEDMOREPARAMS              -ERR_NOSUCHCHANNEL
-           ERR_BADCHANMASK                 ERR_CHANOPRIVSNEEDED=op
+           ERR_BADCHANMASK                 -ERR_CHANOPRIVSNEEDED=op
            ERR_USERNOTINCHANNEL            -ERR_NOTONCHANNEL
 */
 
 bool MasterServer::execKICK(std::string base, t_client_ParsedCmd &parsed_command)
 {
-	(void)base;
-	(void)parsed_command;
-	Client *client = parsed_command.first;
+    (void)base;
+    (void)parsed_command;
+    Client *client = parsed_command.first;
 
+    lazyParsedSubType params(((*(parsed_command.second))[PARAMS]));
     lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
-	if (!channels.size())
-	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
-		return true;
-	}
+    if (params.size())
+    {
+        pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
+        return true;
+    }
     for (lazyParsedSubType::iterator it = channels.begin(); it != channels.end(); it++)
-	{
-		Channel *chan = findChanneWithName(*it);
-		if (!chan)
-		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client));
-			continue;
-		}
-		if (chan->quit_part(this, client, base) == false)
-		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTONCHANNEL, this, client));
-			continue;
-		}
-	}
-
-	return (true);
+    {
+        Channel *chan = findChanneWithName(*it);
+        if (!chan)
+        {
+            pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHCHANNEL, this, client));
+            continue;
+        }
+        if (chan->quit_part(this, client, base) == false)
+        {
+            pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOTONCHANNEL, this, client));
+            continue;
+        }
+        if (!chan->isOperatorHere(client))
+        {
+            pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, this, client));
+            continue;
+        }
+    }
+    return true;
 }
