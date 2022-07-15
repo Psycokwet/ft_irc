@@ -45,11 +45,11 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_TRACEEND] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TRYAGAIN] = &CodeBuilder::toStringPLACEHOLDER;
 	// 300
-	map[RPL_AWAY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_AWAY] = &CodeBuilder::toStringRPL_AWAY;
 	map[RPL_USERHOST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ISON] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_UNAWAY] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_NOWAWAY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_UNAWAY] = &CodeBuilder::toStringRPL_UNAWAY;
+	map[RPL_NOWAWAY] = &CodeBuilder::toStringRPL_NOWAWAY;
 	map[RPL_WHOISUSER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISOPERATOR] = &CodeBuilder::toStringPLACEHOLDER;
@@ -576,6 +576,15 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, Mast
 
 	return *server_name + " :No such server";
 }
+std::string CodeBuilder::toStringRPL_UNAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":You are no longer marked as being away";
+}
 
 std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
@@ -593,13 +602,31 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 	return tmp;
 	//"<channel> :End of NAMES list"
 }
+
+std::string CodeBuilder::toStringRPL_NOWAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":You have been marked as being away";
+}
+std::string CodeBuilder::toStringRPL_AWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return client->getNick() + " :" + client->get_awayMsg();
+}
 std::string CodeBuilder::toStringERR_USERNOTINCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)s;
 	(void)channel;
-
 	std::string tmp = client->getNick() + " ";
 	if (channel)
 		tmp += channel->getName();
