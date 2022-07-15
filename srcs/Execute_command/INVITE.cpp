@@ -51,13 +51,11 @@ bool MasterServer::execINVITE(std::string base, t_client_ParsedCmd &parsed_comma
 	}
 
 	Channel *targetChannel = this->findChanneWithName(channels.front());
-	std::cout << "Trying to invite on " << targetChannel->getName() << std::endl;
 	if (!targetChannel)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &(channels.front())));
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, "#" + channels.front()));
 		return true;
 	}
-	std::cout << "Trying to invite user : " << params.front() << std::endl;
 	Client *destClient = findClientWithNick(params.front());
 	if (!destClient)
 	{
