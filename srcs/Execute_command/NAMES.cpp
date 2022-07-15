@@ -53,11 +53,10 @@
 **  user not in #chan, request /name #chan
 */
 
-bool MasterServer::execNAMES(std::string base, t_client_ParsedCmd &parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::execNAMES(std::string base, t_client_ParsedCmd &parsed_command)
 {
 	(void)base;
 	(void)parsed_command;
-	(void)respQueue;
 	Client *client = parsed_command.first; // should not be null regarding how we got here
 
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
@@ -67,28 +66,28 @@ bool MasterServer::execNAMES(std::string base, t_client_ParsedCmd &parsed_comman
 	{
 		if (params.size()) // This never happends on Hexchat because it always sends Names with something
 		{
-			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &params.front()), respQueue);
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &params.front()));
 			return true;
 		}
 		// List all channels with their users.
 		for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		{
 			Channel *chan = it->second;
-			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NAMREPLY, this, client, &base, chan), respQueue);
+			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NAMREPLY, this, client, &base, chan));
 		}
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &base), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &base));
 		return true;
 	}
 	Channel *current_chan = findChanneWithName(channels.front());
 
 	if (!current_chan)
 	{
-		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &channels.front()), respQueue);
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &channels.front()));
 		return true;
 	}
 
 	//  List all users of that channel.
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NAMREPLY, this, client, &base, current_chan), respQueue);
-	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &base, current_chan), respQueue);
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NAMREPLY, this, client, &base, current_chan));
+	pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_ENDOFNAMES, this, client, &base, current_chan));
 	return true;
 }

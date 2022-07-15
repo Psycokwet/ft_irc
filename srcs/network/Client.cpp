@@ -82,6 +82,10 @@ std::string Client::modeToString() const
 {
 	return modeToString(_modes);
 }
+std::string Client::get_awayMsg() const
+{
+	return _awayMsg;
+}
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -160,19 +164,19 @@ bool Client::is_registered()
 	return _passOK && _registered;
 }
 
-void Client::validatedRegistration(std::vector<t_clientCmd> &respQueue, MasterServer *serv)
+void Client::validatedRegistration(MasterServer *serv)
 {
 	if (_nick == UNDEFINED_NICK || _userOnHost == "")
 		return;
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_WELCOME, serv, this), respQueue);
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_YOURHOST, serv, this), respQueue);
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_CREATED, serv, this), respQueue);
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MYINFO, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_WELCOME, serv, this));
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_YOURHOST, serv, this));
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_CREATED, serv, this));
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MYINFO, serv, this));
 
 	// MOTD
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTDSTART, serv, this), respQueue);
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTD, serv, this), respQueue);
-	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_ENDOFMOTD, serv, this), respQueue);
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTDSTART, serv, this));
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_MOTD, serv, this));
+	serv->pushToQueue(_fd, CodeBuilder::errorToString(RPL_ENDOFMOTD, serv, this));
 	_registered = true;
 }
 

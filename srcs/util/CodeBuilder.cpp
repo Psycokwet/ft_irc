@@ -45,11 +45,11 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_TRACEEND] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_TRYAGAIN] = &CodeBuilder::toStringPLACEHOLDER;
 	// 300
-	map[RPL_AWAY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_AWAY] = &CodeBuilder::toStringRPL_AWAY;
 	map[RPL_USERHOST] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_ISON] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_UNAWAY] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_NOWAWAY] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_UNAWAY] = &CodeBuilder::toStringRPL_UNAWAY;
+	map[RPL_NOWAWAY] = &CodeBuilder::toStringRPL_NOWAWAY;
 	map[RPL_WHOISUSER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_WHOISOPERATOR] = &CodeBuilder::toStringPLACEHOLDER;
@@ -118,7 +118,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_NICKCOLLISION] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_UNAVAILRESOURCE] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_USERNOTINCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOTONCHANNEL] = &CodeBuilder::toStringERR_NOTONCHANNEL;
 	map[ERR_USERONCHANNEL] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOLOGIN] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_SUMMONDISABLED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -550,6 +550,24 @@ std::string CodeBuilder::toStringERR_NOMOTD(std::string *s, MasterServer *server
 
 	return ":MOTD File is missing";
 }
+std::string CodeBuilder::toStringERR_NOSUCHCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return " :No such channel";
+}
+std::string CodeBuilder::toStringERR_NOTONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return " :You're not on that channel";
+}
 std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
@@ -557,6 +575,15 @@ std::string CodeBuilder::toStringERR_NOSUCHSERVER(std::string *server_name, Mast
 	(void)channel;
 
 	return *server_name + " :No such server";
+}
+std::string CodeBuilder::toStringRPL_UNAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":You are no longer marked as being away";
 }
 
 std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *server, Client *client, Channel *channel)
@@ -574,6 +601,24 @@ std::string CodeBuilder::toStringRPL_ENDOFNAMES(std::string *s, MasterServer *se
 		tmp = (*s) + str;
 	return tmp;
 	//"<channel> :End of NAMES list"
+}
+std::string CodeBuilder::toStringRPL_NOWAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return ":You have been marked as being away";
+}
+std::string CodeBuilder::toStringRPL_AWAY(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)channel;
+	(void)s;
+
+	return client->getNick() + " :" + client->get_awayMsg();
 }
 
 std::string CodeBuilder::toStringERR_NOSUCHCHANNEL(std::string *channel_name, MasterServer *server, Client *client, Channel *channel)
