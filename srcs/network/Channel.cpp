@@ -92,7 +92,6 @@ Channel::~Channel()
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
-
 std::string Channel::clientListToString(bool with_invisible)
 {
 	std::string acc = "";
@@ -132,6 +131,23 @@ void Channel::join(MasterServer *serv, Client *client)
 	serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(RPL_ENDOFNAMES, serv, client, NULL, this));
 	sendToWholeChannel(serv, ":" + serv->getFullClientID(client) + " JOIN " + getName() + END_OF_COMMAND, client);
 }
+bool Channel::kick(std::string name_victim, MasterServer *serv, Client *client, std::string notification)
+{
+	Client *victim = findClientWithNick(name_victim);
+
+	if (!isOperatorHere(client))
+	{
+		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, serv, client));
+		return false;
+	}
+	if (!victim || !quit_part(serv, victim, "PART " + getName() + " Kicked by " + client->getNick() + " with motif " + notification))
+	{
+		serv->pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &name_victim, this));
+		return false;
+	}
+	return true;
+}
+
 bool Channel::quit(Client *client)
 {
 	if (_clients.find(client->getFd()) == _clients.end())
@@ -162,7 +178,7 @@ bool Channel::isOperatorHere(Client *c)
 	return (HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR));
 }
 
-Client *Channel::findClient(std::string nick)
+Client *Channel::findClientWithNick(std::string nick)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
@@ -227,7 +243,7 @@ bool Channel::applyOperatorMode(bool add, MasterServer *serv, std::string base, 
 	params.pop_front();
 	for (lazyParsedSubType::iterator it = params.begin(); it != params.end(); it++)
 	{
-		Client *dest = findClient(*it);
+		Client *dest = findClientWithNick(*it);
 		if (!dest)
 		{
 			serv->pushToQueue(client->getFd(), CodeBuilder::errorToString(ERR_USERNOTINCHANNEL, serv, client, &base, this));
