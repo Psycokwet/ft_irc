@@ -67,6 +67,8 @@ private:
 	static std::string toStringRPL_UNAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_NOWAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_AWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_INVITING(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringERR_USERONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
 	// 500
 	static std::string toStringERR_UMODEUNKNOWNFLAG(std::string *s, MasterServer *server, Client *client, Channel *channel);

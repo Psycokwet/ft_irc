@@ -67,6 +67,7 @@ public:
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
 
+	Client *findClientWithNick(std::string nick);
 	void sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude = NULL);
 	void join(MasterServer *serv, Client *client);
 	bool quit(Client *client);

@@ -157,6 +157,14 @@ std::string Channel::clientModesToString(Client *c)
 	return std::string("H") + ((HAS_TYPE(_clients[c->getFd()].second, _MOD_CHANNEL_FLAG_OPERATOR) || HAS_TYPE(_clients[c->getFd()].first->getMode(), _MOD_FLAG_OPERATOR)) ? "@" : ""); // need to implement for real
 }
 
+Client *Channel::findClientWithNick(std::string nick)
+{
+	for (t_client_modes::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if (it->second.first->getNick() == nick)
+			return it->second.first;
+	return NULL;
+}
+
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */

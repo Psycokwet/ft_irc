@@ -117,7 +117,6 @@ bool MasterServer::execPRIVMSG_CHANNEL(std::string base, t_client_ParsedCmd &par
 	if (!destChannel)
 	{
 		if (!silentError)
-
 			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NOSUCHNICK, this, client, &destChannelName));
 		return true;
 	}
