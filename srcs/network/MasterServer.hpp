@@ -59,9 +59,11 @@ private:
 	int _port;
 	std::string const _password;
 	std::vector<t_clientCmd> _respQueue;
+	std::set<int> _disconnectList;
+	std::list<std::string> _command_list;
 
 	int setFDForReading();
-	void recvProcess(int totalFf, std::set<int> &disconnectList);
+	void recvProcess(int totalFf);
 	void acceptClient(int fdServer);
 	void removeClient(int fdClient);
 
@@ -97,6 +99,8 @@ private:
 	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execPART(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execINVITE(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execDIE(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execKILL(std::string base, t_client_ParsedCmd &parsed_command);
 };
 
 #endif /*...................MasterServer...............*/

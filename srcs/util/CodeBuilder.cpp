@@ -139,7 +139,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[ERR_BADCHANMASK] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_NOCHANMODES] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_BANLISTFULL] = &CodeBuilder::toStringPLACEHOLDER;
-	map[ERR_NOPRIVILEGES] = &CodeBuilder::toStringPLACEHOLDER;
+	map[ERR_NOPRIVILEGES] = &CodeBuilder::toStringERR_NOPRIVILEGES;
 	map[ERR_CHANOPRIVSNEEDED] = &CodeBuilder::toStringERR_CHANOPRIVSNEEDED;
 	map[ERR_CANTKILLSERVER] = &CodeBuilder::toStringPLACEHOLDER;
 	map[ERR_RESTRICTED] = &CodeBuilder::toStringPLACEHOLDER;
@@ -674,4 +674,15 @@ std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServ
 	tmp += ":You're not channel operator";
 	return tmp; //"<channel> :You're not channel operator"
 }
+
+std::string CodeBuilder::toStringERR_NOPRIVILEGES(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
+
+	return ":Permission Denied- You're not an IRC operator";
+}
+
 /* ************************************************************************** */

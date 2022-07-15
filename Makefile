@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/15 21:02:15 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/15 23:31:25 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -186,10 +186,12 @@ SRCS_FILES 		+=	$(addprefix $(NETWORK_PATH), $(NETWORK_FILES))
 COMMAND_PATH	=	Execute_command/
 COMMAND_FILES 	= 	ADMIN \
 					AWAY \
+					DIE \
 					example_command \
 					ignore_command \
 					INVITE \
 					JOIN \
+					KILL \
 					MODE \
 					MOTD \
 					NAMES \
