@@ -184,21 +184,20 @@ int MasterServer::build()
 void MasterServer::run() // ! do like main_loops
 {
 	int total_opened_fd;
-	std::vector<t_clientCmd> responseQueue;
 	std::vector<t_clientCmd>::iterator itRes;
 	std::set<int> disconnectList;
 	std::set<int>::iterator itDisconnect;
 
 	while (TRUE)
 	{
-		responseQueue.clear();
+		_respQueue.clear();
 		disconnectList.clear();
 		total_opened_fd = setFDForReading();
 		if (total_opened_fd == -1)
 			break;
-		recvProcess(total_opened_fd, responseQueue, disconnectList);
+		recvProcess(total_opened_fd, disconnectList);
 
-		for (itRes = responseQueue.begin(); itRes != responseQueue.end(); ++itRes)
+		for (itRes = _respQueue.begin(); itRes != _respQueue.end(); ++itRes)
 		{
 			int clientFd = itRes->first;
 			if (_clients.find(clientFd) != _clients.end())
@@ -215,7 +214,7 @@ void MasterServer::run() // ! do like main_loops
 /*
 ** ------------------------- PRIVATE METHODS ----------------------------------
 */
-bool MasterServer::processCommand(std::string base, t_client_ParsedCmd parsed_command, std::vector<t_clientCmd> &respQueue)
+bool MasterServer::processCommand(std::string base, t_client_ParsedCmd parsed_command)
 {
 	std::string cmd_name = ((*(parsed_command.second))[COMMAND]).front(); // if we got in here, we already check that there is something here
 	for (t_commands_dictionary::iterator it = MasterServer::_commandsDictionnary.begin(); it != MasterServer::_commandsDictionnary.end(); it++)
@@ -230,7 +229,7 @@ bool MasterServer::processCommand(std::string base, t_client_ParsedCmd parsed_co
 				std::cout << "Command not valid at this point of client use, ignore.\n";
 				return true;
 			}
-			if (!(this->*(it->second.second))(base, parsed_command, respQueue))
+			if (!(this->*(it->second.second))(base, parsed_command))
 			{
 				delete parsed_command.second; // if NULL then we never got inside process command in the first place
 
@@ -286,7 +285,7 @@ bool isLegalCmd(lazyParsedType **lad)
 	return true;
 }
 
-void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, std::set<int> &disconnectList)
+void MasterServer::recvProcess(int totalFd, std::set<int> &disconnectList)
 {
 	// Checking each socket for reading, starting from FD 3 because there should be nothing
 	// to read from 0 (stdin), 1 (stdout) and 2 (stderr)
@@ -322,7 +321,7 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 				}
 				else if (!(parsed_command = LazyRequestParser(*it)) //
 						 || !isLegalCmd(&parsed_command)			//
-						 || !processCommand(base, std::make_pair(_clients[fd], parsed_command), resQueue))
+						 || !processCommand(base, std::make_pair(_clients[fd], parsed_command)))
 				{
 					disconnectList.insert(fd);
 					break; // if a false, then stop treating client
@@ -339,13 +338,13 @@ void MasterServer::recvProcess(int totalFd, std::vector<t_clientCmd> &resQueue, 
 ** --------------------------------- CLIENTS management ---------------------------------
 */
 
-void MasterServer::sendToWholeServer(std::vector<t_clientCmd> &respQueue, std::string message, Client *exclude)
+void MasterServer::sendToWholeServer(std::string message, Client *exclude)
 {
 	for (std::map<int, Client *>::const_iterator it = _clients.begin(); it != _clients.end(); it++)
 	{
 		if (exclude && *exclude == *(it->second))
 			continue;
-		pushToQueue(it->second->getFd(), message, respQueue);
+		pushToQueue(it->second->getFd(), message);
 	}
 }
 
@@ -376,9 +375,9 @@ void MasterServer::removeClient(int fdClient)
 	}
 }
 
-void MasterServer::pushToQueue(int fd, std::string const &msg, std::vector<t_clientCmd> &respQueue) const
+void MasterServer::pushToQueue(int fd, std::string const &msg)
 {
-	respQueue.push_back(std::make_pair(fd, msg));
+	_respQueue.push_back(std::make_pair(fd, msg));
 }
 std::string MasterServer::getFullClientID(Client *c) const
 {
