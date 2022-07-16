@@ -138,9 +138,10 @@ bool Client::receiveCommand(std::string &command)
 	return true;
 }
 
-void Client::sendResp(std::string const &resp)
+bool Client::sendResp(std::string const &resp)
 {
-	send(_fd, resp.c_str(), resp.size(), 0);
+	unsigned int tmp = send(_fd, resp.c_str(), resp.size(), 0);
+	return tmp != static_cast<unsigned int>(-1);
 }
 
 bool Client::always_true()

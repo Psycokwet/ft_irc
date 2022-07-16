@@ -42,7 +42,7 @@ public:
 	Client();
 	Client(int fd);
 	bool receiveCommand(std::string &command);
-	void sendResp(std::string const &resp);
+	bool sendResp(std::string const &resp);
 	std::string modeToString() const;
 	std::string get_awayMsg() const;
 
