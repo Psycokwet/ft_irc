@@ -69,6 +69,7 @@ private:
 	static std::string toStringRPL_UNAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_NOWAWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_AWAY(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_NOTOPIC(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringRPL_INVITING(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_USERONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOPRIVILEGES(std::string *s, MasterServer *server, Client *client, Channel *channel);
@@ -77,7 +78,7 @@ private:
 	static std::string toStringERR_UMODEUNKNOWNFLAG(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_USERSDONTMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
-	static std::string toStringPLACEHOLDER(std::string *nick, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringPLACEHOLDER(std::string *channel_name,MasterServer *server, Client *client, Channel *channel);
 
 	CodeBuilder();
 	CodeBuilder(CodeBuilder const &src);

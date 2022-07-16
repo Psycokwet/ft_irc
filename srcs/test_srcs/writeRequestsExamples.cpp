@@ -14,38 +14,34 @@ int main(int ac, char **av)
 	}
 	std::string folder_name = av[1];
 	int i = 0;
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #chan\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #chan #chanchan\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #kljon\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #kajserj #chan\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES ljkr\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES kajserj #chan\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #chan, #chanchan\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG #chan :hello\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG meomeo :hello from cat\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG meomeo hello from cat\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PASS test\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NICK :ccbob\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "QUIT :Leaving\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "JOIN #services\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "MODE #hackbbs\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "WHO #hackbbs\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "JOIN #hackbbs\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG charlie_gnarly :hello\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG #new_channel :bla bla\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "WHO #new_channel\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PART #new_channel :I quit\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "JOIN #new_channel\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PRIVMSG thi-nguy :hello\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #new_channel\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NAMES #new_channel,#other_channel\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "KICK #new_channel thi-nguy :Speaking_English\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "MODE #new_channel meo +i\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NICK thi-nguy\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "USER thi-nguy 0 * :realname\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PING LAG1657476314910\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PING :irc.funet.fi\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "PING WiZ tolsun.oulu.fi\r\n");
-	gen_file_logger(folder_name + SSTR(i++) + ".txt", "NOTICE thi-nguy :PING 1657491395742\r\n"); // this is sent when we click on the button "PING" on Hexchat
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan\r\n"); 
+	// :ft-irc.42.fr 331 meo #chanchan :No topic is set\r\n
+	// appears on Hexchat
+
+	// :luna.AfterNET.Org 332 meo #cha :xxx\r\n
+    //  :luna.AfterNET.Org 333 meo #cha nnhung2!nnhung2@AN-89A16EB4.w90-92.abo.wanadoo.fr 1657918408\r\n
+	// appears on Hexchat
+
+	// all users can do this on existing channel. won't appear message if user does not belong to that channel.
+
+
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #lajel\r\n");
+	// :ft-irc.42.fr 482 nnhung2 #chanchan :You're not channel operator\r\n
+	// appears on Hexchat
+
+	// :ft-irc.42.fr 403 nnhung2 #balkdj :No such channel\r\n
+	// not appeare on Hexchat
+
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan :toptop tik tik\r\n");
+	// :ft-irc.42.fr 482 nnhung2 #chanchan :You're not channel operator\r\n
+	// appears on Hexchat
+
+	// :meo!nnhung2@user.ft-irc.42.fr TOPIC #chanchan :tiktok\r\n
+	// appears on Hexchat (sent to all clients on that channel)
+
+
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan ::toptop\r\n");
+
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan ::\r\n");
 	return 0;
 }

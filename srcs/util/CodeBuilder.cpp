@@ -63,7 +63,7 @@ t_code_dictionary CodeBuilder::initCodeDictionnary()
 	map[RPL_LISTEND] = &CodeBuilder::toStringPLACEHOLDER;
 	map[RPL_CHANNELMODEIS] = &CodeBuilder::toStringRPL_CHANNELMODEIS;
 	map[RPL_UNIQOPIS] = &CodeBuilder::toStringPLACEHOLDER;
-	map[RPL_NOTOPIC] = &CodeBuilder::toStringPLACEHOLDER;
+	map[RPL_NOTOPIC] = &CodeBuilder::toStringRPL_NOTOPIC;
 	map[RPL_TOPIC] = &CodeBuilder::toStringRPL_TOPIC;
 	map[RPL_INVITING] = &CodeBuilder::toStringRPL_INVITING;
 	map[RPL_SUMMONING] = &CodeBuilder::toStringPLACEHOLDER;
@@ -333,7 +333,7 @@ std::string CodeBuilder::toStringRPL_TOPIC(std::string *s, MasterServer *server,
 	(void)channel;
 	(void)s;
 
-	std::string tmp = " : ";
+	std::string tmp = " :";
 	if (channel)
 		tmp = channel->getName() + tmp + channel->getTopic();
 	return tmp;
@@ -671,17 +671,29 @@ std::string CodeBuilder::toStringERR_CHANOPRIVSNEEDED(std::string *s, MasterServ
 	std::string tmp = "";
 	if (channel)
 		tmp += channel->getName();
-	tmp += ":You're not channel operator";
+	tmp += " :You're not channel operator";
 	return tmp; //"<channel> :You're not channel operator"
 }
 
-std::string CodeBuilder::toStringERR_NOPRIVILEGES(std::string *s, MasterServer *server, Client *client, Channel *channel)
+std::string CodeBuilder::toStringRPL_NOTOPIC(std::string *s, MasterServer *server, Client *client, Channel *channel)
 {
 	(void)server;
 	(void)client;
 	(void)s;
 	(void)channel;
 
+	std::string tmp = "";
+	if (channel)
+		tmp += channel->getName();
+	tmp += " :No topic is set";
+	return tmp; //"<channel> :No topic is set"
+}
+std::string CodeBuilder::toStringERR_NOPRIVILEGES(std::string *s, MasterServer *server, Client *client, Channel *channel)
+{
+	(void)server;
+	(void)client;
+	(void)s;
+	(void)channel;
 	return ":Permission Denied- You're not an IRC operator";
 }
 

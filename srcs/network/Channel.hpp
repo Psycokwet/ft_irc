@@ -66,6 +66,9 @@ public:
 	std::string getModes();
 	t_client_modes &getClients();
 	std::string clientModesToString(Client *c);
+
+	void setTopic(std::string new_topic);
+	
 	bool isOperatorHere(Client *c);
 
 	Client *findClientWithNick(std::string nick);
@@ -100,7 +103,7 @@ private:
 	Channel &operator=(Channel const &rhs);
 
 	const std::string _name;
-	const std::string _topic;
+	std::string _topic;
 	t_client_modes _clients;
 	e_mode_channel _modes;
 };

@@ -98,6 +98,7 @@ private:
 	bool execNAMES(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execOPER(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execPART(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execTOPIC(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execINVITE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execDIE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKILL(std::string base, t_client_ParsedCmd &parsed_command);

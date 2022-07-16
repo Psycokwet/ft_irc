@@ -1,1 +1,1 @@
-NAMES #chan
+TOPIC #chan

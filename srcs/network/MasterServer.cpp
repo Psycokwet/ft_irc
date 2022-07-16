@@ -19,7 +19,7 @@ t_commands_dictionary MasterServer::initCommandsDictionnary()
 	map["JOIN"] = std::make_pair(&Client::is_registered, &MasterServer::execJOIN);
 	map["PART"] = std::make_pair(&Client::is_registered, &MasterServer::execPART);
 	// MODE too
-	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
+	map["TOPIC"] = std::make_pair(&Client::is_registered, &MasterServer::execTOPIC);
 	map["NAMES"] = std::make_pair(&Client::is_registered, &MasterServer::execNAMES);
 	map["LIST"] = std::make_pair(&Client::is_registered, &MasterServer::example_command);
 	map["INVITE"] = std::make_pair(&Client::is_registered, &MasterServer::execINVITE);
@@ -203,7 +203,8 @@ void MasterServer::run() // ! do like main_loops
 		{
 			int clientFd = itRes->first;
 			if (_clients.find(clientFd) != _clients.end())
-				_clients[clientFd]->sendResp(itRes->second);
+				if (!_clients[clientFd]->sendResp(itRes->second))
+					_disconnectList.insert(clientFd);
 		}
 
 		for (std::set<int>::iterator itDisconnect = _disconnectList.begin(); itDisconnect != _disconnectList.end(); ++itDisconnect)
@@ -307,6 +308,14 @@ void MasterServer::recvProcess(int totalFd)
 			received_command.clear();
 			lazyParsedType *parsed_command;
 			bool ret = _clients[fd]->receiveCommand(received_command);
+
+			if (ret == false)
+			{
+				// _disconnectList.insert(fd);
+				// _MasterServer.removeDisconnectUser(fd);
+				removeClient(fd);
+				continue;
+			}
 			_command_list.clear();
 			_command_list = stringToListKeepTokenizer(received_command, END_OF_COMMAND);
 			for (std::list<std::string>::iterator it = _command_list.begin(); it != _command_list.end(); it++)
@@ -314,11 +323,6 @@ void MasterServer::recvProcess(int totalFd)
 				std::string base = removeTokenAtEnd(*it, END_OF_COMMAND);
 				if (it->size() == 0)
 					continue;
-				if (ret == false)
-				{
-					// _MasterServer.removeDisconnectUser(fd);
-					removeClient(fd);
-				}
 				else if (!(parsed_command = LazyRequestParser(*it)) //
 						 || !isLegalCmd(&parsed_command)			//
 						 || !processCommand(base, std::make_pair(_clients[fd], parsed_command)))
@@ -365,9 +369,8 @@ void MasterServer::removeClient(int fdClient)
 {
 	if (_clients.find(fdClient) != _clients.end())
 	{
-
 		for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-			it->second->quit(_clients[fdClient]);
+			it->second->quit_part(this, _clients[fdClient], "PART " + it->second->getName() + " :disconnected");
 		delete _clients[fdClient];
 		_clients.erase(fdClient);
 	}
