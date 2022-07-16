@@ -103,6 +103,7 @@ private:
 	bool execDIE(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKILL(std::string base, t_client_ParsedCmd &parsed_command);
 	bool execKICK(std::string base, t_client_ParsedCmd &parsed_command);
+	bool execLIST(std::string base, t_client_ParsedCmd &parsed_command);
 };
 
 #endif /*...................MasterServer...............*/

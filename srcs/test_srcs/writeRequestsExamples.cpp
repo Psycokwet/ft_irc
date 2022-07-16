@@ -43,5 +43,12 @@ int main(int ac, char **av)
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan ::toptop\r\n");
 
 	gen_file_logger(folder_name + SSTR(i++) + ".txt", "TOPIC #chan ::\r\n");
+
+	gen_file_logger(folder_name + SSTR(i++) + ".txt", "LIST\r\n");
+
+	// :luna.AfterNET.Org 321 nnhung2 Channel :Users  Name\r\n
+	// :luna.AfterNET.Org 322 nnhung2 #lovenation 10 :Channel's topic\r\n
+	// :luna.AfterNET.Org 323 nnhung2 :End of /LIST\r\n
+
 	return 0;
 }
