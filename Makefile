@@ -6,7 +6,7 @@
 #    By: thi-nguy <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/16 00:08:08 by scarboni         ###   ########.fr        #
+#    Updated: 2022/07/16 00:58:12 by thi-nguy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -207,7 +207,8 @@ COMMAND_FILES 	= 	ADMIN \
 					AWAY \
 					WHO \
 					TOPIC \
-					VERSION 
+					VERSION \
+					LIST
 
 
 SRCS_FILES 		+=	$(addprefix $(COMMAND_PATH), $(COMMAND_FILES))

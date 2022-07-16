@@ -108,6 +108,7 @@ std::string Channel::clientListToString(bool with_invisible)
 	}
 	return acc;
 }
+
 void Channel::sendToWholeChannel(MasterServer *serv, std::string message, Client *exclude)
 {
 	for (t_client_modes::const_iterator it = _clients.begin(); it != _clients.end(); it++)
@@ -155,6 +156,7 @@ bool Channel::quit(Client *client)
 	_clients.erase(client->getFd());
 	return true;
 }
+
 bool Channel::quit_part(MasterServer *serv, Client *client, std::string base)
 {
 	if (!quit(client))

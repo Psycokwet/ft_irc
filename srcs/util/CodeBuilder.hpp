@@ -73,10 +73,14 @@ private:
 	static std::string toStringRPL_INVITING(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_USERONCHANNEL(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_NOPRIVILEGES(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_LISTSTART(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_LIST(std::string *s, MasterServer *server, Client *client, Channel *channel);
+	static std::string toStringRPL_LISTEND(std::string *s, MasterServer *server, Client *client, Channel *channel);
 
 	// 500
 	static std::string toStringERR_UMODEUNKNOWNFLAG(std::string *s, MasterServer *server, Client *client, Channel *channel);
 	static std::string toStringERR_USERSDONTMATCH(std::string *s, MasterServer *server, Client *client, Channel *channel);
+
 
 	static std::string toStringPLACEHOLDER(std::string *channel_name,MasterServer *server, Client *client, Channel *channel);
 
