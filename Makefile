@@ -335,7 +335,7 @@ define launch_exe_from_array_args
 		COUNT=$$(( 1 + $$COUNT ));\
 		LAST=$$ARG;\
 		[ "$(words $(2))" -eq $$COUNT ] && break ;\
-		./$(1) ;\
+		./$(1) $$LAST $(3);\
 	done ;\
 	./$(1) $$LAST $(3)
 endef
