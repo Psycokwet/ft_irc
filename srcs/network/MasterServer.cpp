@@ -369,9 +369,8 @@ void MasterServer::removeClient(int fdClient)
 {
 	if (_clients.find(fdClient) != _clients.end())
 	{
-
 		for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-			it->second->quit(_clients[fdClient]);
+			it->second->quit_part(this, _clients[fdClient], "PART " + it->second->getName() + " :disconnected");
 		delete _clients[fdClient];
 		_clients.erase(fdClient);
 	}
