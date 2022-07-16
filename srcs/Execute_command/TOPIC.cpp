@@ -43,6 +43,11 @@ bool MasterServer::execTOPIC(std::string base, t_client_ParsedCmd &parsed_comman
 	lazyParsedSubType channels(((*(parsed_command.second))[CHANNELS]));
 	lazyParsedSubType message(((*(parsed_command.second))[MESSAGE]));
 
+	if (!channels.size())
+	{
+		pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_NEEDMOREPARAMS, this, client, &base));
+		return true;
+	}
 	Channel *current_chan = findChanneWithName(channels.front());
 	if (!current_chan)
 	{
@@ -54,30 +59,21 @@ bool MasterServer::execTOPIC(std::string base, t_client_ParsedCmd &parsed_comman
 	{
 	case 0:
 		if (current_chan->getTopic() == "")
+		{
 			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_NOTOPIC, this, client, &base, current_chan));
-		else
-			pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_TOPIC, this, client, &base, current_chan));
+			return true;
+		}
+		pushToQueue(client->_fd, CodeBuilder::errorToString(RPL_TOPIC, this, client, &base, current_chan));
 		break;
 	case 1:
 		if (!current_chan->isOperatorHere(client))
 		{
 			pushToQueue(client->_fd, CodeBuilder::errorToString(ERR_CHANOPRIVSNEEDED, this, client, &base, current_chan));
+			return true;
 		}
-		else
-		{
-			if (message.front() == ":")
-			{
-				current_chan->setTopic("");
-
-				ss << ":" << getFullClientID(client) << " TOPIC #" << channels.front() << " :" << END_OF_COMMAND;
-			}
-			else
-			{
-				current_chan->setTopic(message.front());
-				ss << ":" << getFullClientID(client) << " TOPIC #" << channels.front() << " :" << message.front() << END_OF_COMMAND;
-			}
-			sendToWholeServer(ss.str(), NULL);
-		}
+		current_chan->setTopic(message.front());
+		ss << ":" << getFullClientID(client) << " TOPIC #" << channels.front() << " :" << message.front() << END_OF_COMMAND;
+		sendToWholeServer(ss.str(), NULL);
 		break;
 	default: // too much message
 		break;
